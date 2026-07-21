@@ -73,7 +73,9 @@ Lütfen şu JSON formatında yanıt ver:
     {{"german": "das Buch", "turkish": "kitap", "article": "das", "plural": "die Bücher"}}
   ],
   "examples": [
-    {{"german": "Ich lerne jeden Tag Deutsch.", "turkish": "Her gün Almanca öğreniyorum."}}
+    {{"german": "Örnek 1...", "turkish": "Çeviri 1..."}},
+    {{"german": "Örnek 2...", "turkish": "Çeviri 2..."}},
+    {{"german": "Örnek 3...", "turkish": "Çeviri 3..."}}
   ],
   "common_mistakes": [
     "Konuya özel sık yapılan bir hata örneği (Lütfen aşağıdaki örneği kopyalama, konuya özgü üret!)",

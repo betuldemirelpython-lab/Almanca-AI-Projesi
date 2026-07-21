@@ -243,10 +243,11 @@ class AIService:
                 {"german": "die Regel", "turkish": "kural", "article": "die", "plural": "die Regeln"}
             ],
             "examples": [
-                {"german": f"Ich verstehe das Thema '{topic}' sehr gut.", "turkish": f"'{topic}' konusunu çok iyi anlıyorum."}
+                {"german": "⚠️ API Key Eksik", "turkish": "Lütfen Vercel panelinden API Key girin."}
             ],
             "common_mistakes": [
-                "Yanlış: Ich gehe gestern nach Hause. -> Doğru: Ich bin gestern nach Hause gegangen."
+                "⚠️ HATA: Sistem demo modunda çalışıyor.",
+                "API Key girilmediği için gerçek hatalar listelenemez."
             ],
             "mini_quiz": [
                 {

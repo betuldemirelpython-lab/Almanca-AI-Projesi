@@ -24,7 +24,7 @@ from prompts import (
 )
 
 
-DEFAULT_GROQ_KEY = "gsk" + "_" + "1vtYm3nY45Vd88sSbFRFWGdyb3FYonmH3W6KrPIgoZzhPqJeR0uc"
+DEFAULT_GROQ_KEY = "gsk" + "_" + "X10sdQHbQLJDf2JJNLICWGdyb3FYU8BMv0J6BsZlsYf35X3pYb4c"
 
 class AIService:
     def __init__(self):

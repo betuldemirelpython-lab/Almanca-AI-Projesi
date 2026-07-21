@@ -1529,14 +1529,14 @@ ${currentStoryData.full_translation_tr}
                 } catch (err) {
                     renderDictCard({
                         source_text: text,
-                        main_translation: `Çeviri: ${text}`,
+                        main_translation: `⚠️ API Key Eksik (Demo Çeviri): ${text}`,
                         dictionary_entry: {
                             german: text,
-                            turkish: `Türkçe Karşılık (${text})`,
+                            turkish: `Lütfen gerçek çeviri için .env veya Vercel'den API Key girin.`,
                             article: "das",
                             plural: "die Wörter",
                             phonetic: "[vɔrt]",
-                            examples: [{ german: `Das ist ${text}.`, turkish: `Bu ${text} örneğidir.` }]
+                            examples: [{ german: `API Key bulunamadı.`, turkish: `Sistem demo modunda çalışıyor.` }]
                         }
                     });
                 } finally {

@@ -960,6 +960,11 @@
                         <p id="analysisSummaryText" style="line-height: 1.6; color: var(--text-main); font-size: 0.95rem;"></p>
                     </div>
 
+                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h4 style="color: #3B82F6; margin-bottom: 0.75rem;"><i class="fa-solid fa-list-ul"></i> Örnek Cümleler</h4>
+                        <div id="analysisExamplesList" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                    </div>
+
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
                         <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
                             <h4 style="color: var(--accent-emerald); margin-bottom: 0.75rem;"><i class="fa-solid fa-check-double"></i> Ana Dilbilgisi Kuralları</h4>
@@ -1647,6 +1652,19 @@ ${currentStoryData.full_translation_tr}
             const mistakesUl = document.getElementById('analysisMistakesList');
             mistakesUl.innerHTML = '';
             (data.common_mistakes || []).forEach(m => mistakesUl.innerHTML += `<li>${m}</li>`);
+
+            const examplesList = document.getElementById('analysisExamplesList');
+            if (examplesList) {
+                examplesList.innerHTML = '';
+                (data.examples || []).forEach(ex => {
+                    examplesList.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 8px; border-left: 3px solid var(--accent-primary);">
+                            <div style="font-weight: 600; font-size: 1rem;">${ex.german}</div>
+                            <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">${ex.turkish}</div>
+                        </div>
+                    `;
+                });
+            }
         }
 
         function renderMockTopicAnalysis(topic, level) {

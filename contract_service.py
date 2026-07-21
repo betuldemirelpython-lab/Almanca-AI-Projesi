@@ -22,6 +22,8 @@ from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
 
 
 class ContractService:
@@ -76,11 +78,25 @@ class ContractService:
 
         styles = getSampleStyleSheet()
         
+        # Font Kayıt İşlemi (Türkçe Karakter Desteği İçin Roboto TTF)
+        font_dir = os.path.join(os.path.dirname(__file__), "fonts")
+        roboto_reg = os.path.join(font_dir, "Roboto-Regular.ttf")
+        roboto_bold = os.path.join(font_dir, "Roboto-Bold.ttf")
+        
+        if os.path.exists(roboto_reg) and os.path.exists(roboto_bold):
+            pdfmetrics.registerFont(TTFont('Roboto', roboto_reg))
+            pdfmetrics.registerFont(TTFont('Roboto-Bold', roboto_bold))
+            default_font = 'Roboto'
+            bold_font = 'Roboto-Bold'
+        else:
+            default_font = 'Helvetica'
+            bold_font = 'Helvetica-Bold'
+        
         # Özel Stil Tanımlamaları
         title_style = ParagraphStyle(
             'CustomTitle',
             parent=styles['Heading1'],
-            fontName='Helvetica-Bold',
+            fontName=bold_font,
             fontSize=22,
             leading=26,
             textColor=colors.HexColor('#1E293B'),
@@ -91,7 +107,7 @@ class ContractService:
         subtitle_style = ParagraphStyle(
             'CustomSubTitle',
             parent=styles['Normal'],
-            fontName='Helvetica',
+            fontName=default_font,
             fontSize=11,
             leading=14,
             textColor=colors.HexColor('#475569'),
@@ -101,7 +117,7 @@ class ContractService:
         heading2_style = ParagraphStyle(
             'CustomH2',
             parent=styles['Heading2'],
-            fontName='Helvetica-Bold',
+            fontName=bold_font,
             fontSize=14,
             leading=18,
             textColor=colors.HexColor('#2563EB'),
@@ -112,7 +128,7 @@ class ContractService:
         body_style = ParagraphStyle(
             'CustomBody',
             parent=styles['BodyText'],
-            fontName='Helvetica',
+            fontName=default_font,
             fontSize=10,
             leading=14,
             textColor=colors.HexColor('#334155'),

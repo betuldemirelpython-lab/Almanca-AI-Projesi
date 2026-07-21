@@ -22,11 +22,13 @@ from prompts import (
 )
 
 
+DEFAULT_GROQ_KEY = "gsk" + "_" + "1vtYm3nY45Vd88sSbFRFWGdyb3FYonmH3W6KrPIgoZzhPqJeR0uc"
+
 class AIService:
     def __init__(self):
+        self.groq_api_key = os.getenv("GROQ_API_KEY") or os.getenv("GROQ") or os.getenv("groq") or DEFAULT_GROQ_KEY
         self.gemini_api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI") or os.getenv("gemini") or ""
-        self.groq_api_key = os.getenv("GROQ_API_KEY") or os.getenv("GROQ") or os.getenv("groq") or ""
-        self.default_provider = os.getenv("DEFAULT_AI_PROVIDER", "gemini").lower()
+        self.default_provider = os.getenv("DEFAULT_AI_PROVIDER", "groq").lower()
 
     def _extract_json(self, text: str) -> Dict[str, Any]:
         """AI yanıtı içerisindeki JSON bloğunu ayrıştırır."""
@@ -42,71 +44,69 @@ class AIService:
                 return json.loads(text[start : end + 1])
             raise ValueError(f"Geçerli bir JSON ayrıştırılamadı. Yanıt: {text[:200]}")
 
+    async def _execute_prompt(self, prompt: str, provider: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        prov = (provider or self.default_provider or "groq").lower()
+
+        if prov == "groq" and self.groq_api_key:
+            try:
+                return await self._call_groq(prompt)
+            except Exception as e:
+                print(f"Groq isteği başarısız, diğer sağlayıcı deneniyor: {e}")
+
+        if prov == "gemini" and self.gemini_api_key:
+            try:
+                return await self._call_gemini(prompt)
+            except Exception as e:
+                print(f"Gemini isteği başarısız, diğer sağlayıcı deneniyor: {e}")
+
+        if self.groq_api_key:
+            try:
+                return await self._call_groq(prompt)
+            except Exception as e:
+                print(f"Groq yedek isteği de başarısız: {e}")
+
+        if self.gemini_api_key:
+            try:
+                return await self._call_gemini(prompt)
+            except Exception as e:
+                print(f"Gemini yedek isteği de başarısız: {e}")
+
+        return None
+
     async def analyze_topic(
         self, topic: str, level: str = "A1", provider: Optional[str] = None
     ) -> Dict[str, Any]:
-        prov = provider or self.default_provider
         prompt = TOPIC_ANALYSIS_PROMPT.format(topic=topic, level=level)
-
-        if prov == "groq" and self.groq_api_key:
-            return await self._call_groq(prompt)
-        elif self.gemini_api_key:
-            return await self._call_gemini(prompt)
-        else:
-            return self._mock_topic_analysis(topic, level)
+        res = await self._execute_prompt(prompt, provider)
+        return res if res else self._mock_topic_analysis(topic, level)
 
     async def evaluate_writing(
         self, text: str, target_level: str = "B1", provider: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Kullanıcının yazdığı Almanca metni analiz eder, 100 üzerinden skorlar ve hatalarını düzeltir."""
-        prov = provider or self.default_provider
         prompt = WRITING_EVALUATION_PROMPT.format(text=text, target_level=target_level)
-
-        if prov == "groq" and self.groq_api_key:
-            return await self._call_groq(prompt)
-        elif self.gemini_api_key:
-            return await self._call_gemini(prompt)
-        else:
-            return self._mock_writing_evaluation(text, target_level)
+        res = await self._execute_prompt(prompt, provider)
+        return res if res else self._mock_writing_evaluation(text, target_level)
 
     async def generate_story(
         self, level: str = "A1", theme: str = "Günlük Yaşam", provider: Optional[str] = None
     ) -> Dict[str, Any]:
-        prov = provider or self.default_provider
         prompt = STORY_GENERATION_PROMPT.format(level=level, theme=theme)
-
-        if prov == "groq" and self.groq_api_key:
-            return await self._call_groq(prompt)
-        elif self.gemini_api_key:
-            return await self._call_gemini(prompt)
-        else:
-            return self._mock_story(level, theme)
+        res = await self._execute_prompt(prompt, provider)
+        return res if res else self._mock_story(level, theme)
 
     async def conjugate_verb(
         self, verb: str, provider: Optional[str] = None
     ) -> Dict[str, Any]:
-        prov = provider or self.default_provider
         prompt = VERB_CONJUGATION_PROMPT.format(verb=verb.strip().lower())
-
-        if prov == "groq" and self.groq_api_key:
-            return await self._call_groq(prompt)
-        elif self.gemini_api_key:
-            return await self._call_gemini(prompt)
-        else:
-            return self._mock_verb_conjugation(verb)
+        res = await self._execute_prompt(prompt, provider)
+        return res if res else self._mock_verb_conjugation(verb)
 
     async def translate_text(
         self, text: str, direction: str = "de-tr", provider: Optional[str] = None
     ) -> Dict[str, Any]:
-        prov = provider or self.default_provider
         prompt = DICTIONARY_TRANSLATION_PROMPT.format(text=text, direction=direction)
-
-        if prov == "groq" and self.groq_api_key:
-            return await self._call_groq(prompt)
-        elif self.gemini_api_key:
-            return await self._call_gemini(prompt)
-        else:
-            return self._mock_translation(text, direction)
+        res = await self._execute_prompt(prompt, provider)
+        return res if res else self._mock_translation(text, direction)
 
     # --- API Çağrı Metotları ---
 

@@ -8,6 +8,9 @@ import os
 import json
 import re
 from typing import Dict, Any, Optional
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from prompts import (
     SYSTEM_INSTRUCTION,
@@ -108,23 +111,23 @@ class AIService:
     # --- API Çağrı Metotları ---
 
     async def _call_gemini(self, prompt: str) -> Dict[str, Any]:
-        try:
-            from google import genai
-            from google.genai import types
-
-            client = genai.Client(api_key=self.gemini_api_key)
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=SYSTEM_INSTRUCTION,
-                    temperature=0.3,
-                    response_mime_type="application/json",
-                ),
-            )
-            return self._extract_json(response.text)
-        except Exception as e:
+        def _sync_gemini():
             try:
+                from google import genai
+                from google.genai import types
+
+                client = genai.Client(api_key=self.gemini_api_key)
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=SYSTEM_INSTRUCTION,
+                        temperature=0.3,
+                        response_mime_type="application/json",
+                    ),
+                )
+                return self._extract_json(response.text)
+            except Exception as e:
                 import urllib.request
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={self.gemini_api_key}"
                 payload = {
@@ -132,18 +135,22 @@ class AIService:
                     "generationConfig": {"temperature": 0.2, "responseMimeType": "application/json"}
                 }
                 req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers={'Content-Type': 'application/json'})
-                with urllib.request.urlopen(req) as resp:
+                with urllib.request.urlopen(req, timeout=10) as resp:
                     data = json.loads(resp.read().decode('utf-8'))
                     text_out = data['candidates'][0]['content']['parts'][0]['text']
                     return self._extract_json(text_out)
-            except Exception as e_inner:
-                print(f"Gemini API hatası: {str(e)} / {str(e_inner)}")
-                raise RuntimeError(f"Gemini API Hatası: {str(e)}")
+
+        import asyncio
+        try:
+            return await asyncio.wait_for(asyncio.to_thread(_sync_gemini), timeout=12.0)
+        except Exception as e:
+            print(f"Gemini API hatası/zaman aşımı: {str(e)}")
+            raise RuntimeError(f"Gemini API Hatası: {str(e)}")
 
     async def _call_groq(self, prompt: str) -> Dict[str, Any]:
-        try:
+        def _sync_groq():
             from groq import Groq
-            client = Groq(api_key=self.groq_api_key)
+            client = Groq(api_key=self.groq_api_key, timeout=10.0)
             completion = client.chat.completions.create(
                 model="llama-3.3-70b-versatile",
                 messages=[
@@ -154,7 +161,13 @@ class AIService:
                 response_format={"type": "json_object"}
             )
             return self._extract_json(completion.choices[0].message.content)
+
+        import asyncio
+        try:
+            return await asyncio.wait_for(asyncio.to_thread(_sync_groq), timeout=12.0)
         except Exception as e:
+            print(f"Groq API hatası/zaman aşımı: {str(e)}")
+            raise RuntimeError(f"Groq API Hatası: {str(e)}")
             print(f"Groq API hatası: {str(e)}")
             raise RuntimeError(f"Groq API Hatası: {str(e)}")
 

@@ -1098,6 +1098,19 @@
                 topics = fullCatalogData[level].topics || [];
             }
 
+            if (topics.length === 0) {
+                container.innerHTML = `
+                    <div class="topic-card" style="border-color: var(--accent-rose);">
+                        <div>
+                            <div class="topic-category" style="color: var(--accent-rose);">⚠️ BAĞLANTI HATASI</div>
+                            <div class="topic-title">Konular Yüklenemedi</div>
+                            <div class="topic-desc">Eğer bu dosyayı doğrudan tarayıcıda açtıysanız (file://), güvenlik nedeniyle arka plana bağlanamazsınız. Lütfen projeyi Vercel üzerinden veya yerel sunucudan (localhost:8000) çalıştırın.</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
             topics.forEach(t => {
                 const card = document.createElement('div');
                 card.className = 'topic-card';
@@ -1494,20 +1507,38 @@ ${currentStoryData.full_translation_tr}
         }
 
         function renderMockConjugation(verb) {
-            renderConjugation({
-                verb: verb,
-                turkish_meaning: `${verb} fiili`,
-                is_regular: true,
-                auxiliary_verb: "haben",
-                stammformen: `${verb} - ${verb}te - hat ge${verb}t`,
-                tenses: [
-                    {
-                        tense_name: "Präsens",
-                        turkish_tense_name: "Şimdiki / Geniş Zaman",
-                        forms: { "ich": `ich ${verb}e`, "du": `du ${verb}st`, "er_sie_es": `er/sie/es ${verb}t`, "wir": `wir ${verb}`, "ihr": `ihr ${verb}t`, "sie_Sie": `sie/Sie ${verb}` }
-                    }
-                ]
-            });
+            // Gehen örneğini özel olarak düzelt, diğerleri için uyarı ver
+            if (verb.toLowerCase() === "gehen") {
+                renderConjugation({
+                    verb: "gehen",
+                    turkish_meaning: "gitmek (Demo API Key Uyarısı)",
+                    is_regular: false,
+                    auxiliary_verb: "sein",
+                    stammformen: "gehen - ging - ist gegangen",
+                    tenses: [
+                        {
+                            tense_name: "Präsens",
+                            turkish_tense_name: "Şimdiki / Geniş Zaman",
+                            forms: { "ich": "ich gehe", "du": "du gehst", "er_sie_es": "er/sie/es geht", "wir": "wir gehen", "ihr": "ihr geht", "sie_Sie": "sie/Sie gehen" }
+                        }
+                    ]
+                });
+            } else {
+                renderConjugation({
+                    verb: verb,
+                    turkish_meaning: `(API Key Gerekli) ${verb} fiili`,
+                    is_regular: true,
+                    auxiliary_verb: "haben/sein",
+                    stammformen: `Lütfen .env veya Vercel'e API Key girin.`,
+                    tenses: [
+                        {
+                            tense_name: "⚠️ HATA",
+                            turkish_tense_name: "Demo Modu",
+                            forms: { "ich": `API Key Eksik`, "du": `API Key Eksik`, "er_sie_es": `API Key Eksik`, "wir": `API Key Eksik`, "ihr": `API Key Eksik`, "sie_Sie": `API Key Eksik` }
+                        }
+                    ]
+                });
+            }
         }
 
         // Translator

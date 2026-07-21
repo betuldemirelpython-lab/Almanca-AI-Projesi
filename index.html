@@ -1622,14 +1622,14 @@ ${currentStoryData.full_translation_tr}
             renderTopicAnalysis({
                 topic: topic,
                 level: level,
-                summary_tr: `'${topic}' konusu (${level} seviyesi), Almancada cümlenin kuruluş mantığını kavrayabilmek için kritik bir yere sahiptir. Kurallara ve fiil pozisyonuna dikkat edilmesi tavsiye edilir.`,
+                summary_tr: `⚠️ DİKKAT: Şu anda API Key girilmediği için geçici (Demo) veriler görüyorsunuz.\n\n'${topic}' konusu (${level} seviyesi) normalde yapay zeka tarafından burada çok detaylı bir şekilde açıklanacaktır. Gerçek analiz sonuçlarını görmek için lütfen API Key'lerinizi .env dosyasına (yerelde) veya Vercel paneline ekleyin.`,
                 key_grammar_rules: [
-                    "Almanca kurallı ana cümlede fiil her zaman 2. pozisyondadır.",
-                    "İsmin halleri (Kasus) artikel değişimlerini belirler."
+                    "API Key eksik olduğu için kurallar listelenemiyor.",
+                    "Lütfen geçerli bir Gemini veya Groq anahtarı girin."
                 ],
                 common_mistakes: [
-                    "Yanlış artikel kullanımı",
-                    "Fiilin cümlenin yanlış yerine koyulması"
+                    "Demo Hata: API Key olmadan yapay zeka analizi yapılamaz.",
+                    "Lütfen .env veya Vercel'den anahtarlarınızı yapılandırın."
                 ]
             });
         }

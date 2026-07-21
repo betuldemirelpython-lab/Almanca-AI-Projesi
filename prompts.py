@@ -76,7 +76,8 @@ Lütfen şu JSON formatında yanıt ver:
     {{"german": "Ich lerne jeden Tag Deutsch.", "turkish": "Her gün Almanca öğreniyorum."}}
   ],
   "common_mistakes": [
-    "Yanlış: Ich gehe nach Hause gelernt -> Doğru: Ich habe gelernt"
+    "Konuya özel sık yapılan bir hata örneği (Lütfen aşağıdaki örneği kopyalama, konuya özgü üret!)",
+    "Yanlış: [Yanlış Kullanım] -> Doğru: [Doğru Kullanım]"
   ],
   "mini_quiz": [
     {{

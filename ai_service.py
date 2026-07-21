@@ -8,9 +8,11 @@ import os
 import json
 import re
 from typing import Dict, Any, Optional
-from dotenv import load_dotenv
-
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception as e:
+    print(f"dotenv yukleme uyarisi: {e}")
 
 from prompts import (
     SYSTEM_INSTRUCTION,

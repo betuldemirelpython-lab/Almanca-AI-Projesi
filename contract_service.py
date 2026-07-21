@@ -28,7 +28,12 @@ from reportlab.pdfbase import pdfmetrics
 
 class ContractService:
     def __init__(self, upload_dir: Optional[str] = None):
-        self.upload_dir = upload_dir or os.path.join(os.path.dirname(__file__), "uploads")
+        if os.getenv("VERCEL"):
+            default_dir = "/tmp/uploads"
+        else:
+            default_dir = os.path.join(os.path.dirname(__file__), "uploads")
+        
+        self.upload_dir = upload_dir or default_dir
         os.makedirs(self.upload_dir, exist_ok=True)
 
     def extract_text_from_file(self, file_bytes: bytes, filename: str) -> str:

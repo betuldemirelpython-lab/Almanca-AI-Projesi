@@ -9,7 +9,11 @@ from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, JSON, Boolean
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
-DB_DIR = os.path.join(os.path.dirname(__file__), "data")
+if os.getenv("VERCEL"):
+    DB_DIR = "/tmp/data"
+else:
+    DB_DIR = os.path.join(os.path.dirname(__file__), "data")
+
 os.makedirs(DB_DIR, exist_ok=True)
 DB_PATH = os.path.join(DB_DIR, "german_ai.db")
 

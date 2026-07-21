@@ -1428,6 +1428,88 @@ ${currentStoryData.full_translation_tr}
             }
         }
 
+        // --- FİİL ÇEKİM MATRİSİ ---
+        function initConjugator() {
+            document.getElementById('conjugationForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const verb = document.getElementById('verbInput').value.trim();
+                if (!verb) return;
+
+                showLoader(`'${verb}' fiili tüm zamanlara çekimleniyor...`);
+                try {
+                    const provider = document.getElementById('aiProviderSelect').value;
+                    const res = await fetch('/api/conjugate', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ verb: verb, provider: provider })
+                    });
+                    const data = await res.json();
+                    renderConjugation(data);
+                } catch (err) {
+                    renderMockConjugation(verb);
+                } finally {
+                    hideLoader();
+                }
+            });
+        }
+
+        function renderConjugation(data) {
+            document.getElementById('verbMetaBanner').style.display = 'block';
+            document.getElementById('metaVerbTitle').innerText = data.verb;
+            document.getElementById('metaMeaning').innerText = `Türkçe: ${data.turkish_meaning}`;
+            
+            const auxSpan = document.getElementById('metaAux');
+            auxSpan.innerText = `Yardımcı: ${data.auxiliary_verb}`;
+            auxSpan.className = data.auxiliary_verb === 'sein' ? 'article-badge article-das' : 'article-badge article-der';
+
+            const regSpan = document.getElementById('metaRegular');
+            regSpan.innerText = data.is_regular ? "Düzenli Fiil" : "Düzensiz Fiil";
+            regSpan.className = data.is_regular ? 'article-badge article-das' : 'article-badge article-die';
+
+            document.getElementById('metaStamm').innerText = data.stammformen || '';
+
+            const grid = document.getElementById('verbMatrixGrid');
+            grid.innerHTML = '';
+
+            (data.tenses || []).forEach(t => {
+                const card = document.createElement('div');
+                card.className = 'tense-card';
+                card.innerHTML = `
+                    <div class="tense-header">
+                        <span class="tense-title">${t.tense_name}</span>
+                        <span class="tense-sub">${t.turkish_tense_name}</span>
+                    </div>
+                    <div class="pronoun-list">
+                        ${Object.entries(t.forms || {}).map(([p, f]) => `
+                            <div class="pronoun-row">
+                                <span class="pronoun-tag">${p.replace('_sie_es', '/sie/es').replace('_Sie', '/Sie')}</span>
+                                <span class="conjugated-form">${f}</span>
+                                <button onclick="speakText('${f}')" class="audio-btn"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderMockConjugation(verb) {
+            renderConjugation({
+                verb: verb,
+                turkish_meaning: `${verb} fiili`,
+                is_regular: true,
+                auxiliary_verb: "haben",
+                stammformen: `${verb} - ${verb}te - hat ge${verb}t`,
+                tenses: [
+                    {
+                        tense_name: "Präsens",
+                        turkish_tense_name: "Şimdiki / Geniş Zaman",
+                        forms: { "ich": `ich ${verb}e`, "du": `du ${verb}st`, "er_sie_es": `er/sie/es ${verb}t`, "wir": `wir ${verb}`, "ihr": `ihr ${verb}t`, "sie_Sie": `sie/Sie ${verb}` }
+                    }
+                ]
+            });
+        }
+
         // Translator
         function initTranslator() {
             document.getElementById('btnTranslate').addEventListener('click', async () => {

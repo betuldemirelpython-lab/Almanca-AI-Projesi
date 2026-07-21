@@ -261,32 +261,26 @@ class AIService:
 
     def _mock_verb_conjugation(self, verb: str) -> Dict[str, Any]:
         v = verb.strip().lower()
-        is_sein_verb = v in ["gehen", "kommen", "laufen", "fliegen", "fahren", "sein", "werden", "bleiben"]
-        aux = "sein" if is_sein_verb else "haben"
-        
         return {
             "verb": v,
-            "turkish_meaning": f"'{v}' fiili",
-            "is_regular": v not in ["sein", "haben", "werden", "gehen", "kommen"],
-            "auxiliary_verb": aux,
-            "stammformen": f"{v} - {v}te/ging - ist/hat ge{v}t",
+            "turkish_meaning": f"'{v}' fiili (⚠️ API KEY EKSİK)",
+            "is_regular": True,
+            "auxiliary_verb": "haben/sein",
+            "stammformen": "Lütfen Vercel'den API Key girin.",
             "tenses": [
                 {
-                    "tense_name": "Präsens",
-                    "turkish_tense_name": "Şimdiki / Geniş Zaman",
-                    "auxiliary_verb": aux,
+                    "tense_name": "⚠️ HATA",
+                    "turkish_tense_name": "Sistem Demo Modunda",
+                    "auxiliary_verb": "Yok",
                     "forms": {
-                        "ich": f"ich {v[:-2] if v.endswith('en') else v}e",
-                        "du": f"du {v[:-2] if v.endswith('en') else v}st",
-                        "er_sie_es": f"er/sie/es {v[:-2] if v.endswith('en') else v}t",
-                        "wir": f"wir {v}",
-                        "ihr": f"ihr {v[:-2] if v.endswith('en') else v}t",
-                        "sie_Sie": f"sie/Sie {v}"
+                        "ich": "API Key Eksik",
+                        "du": "API Key Eksik",
+                        "er_sie_es": "API Key Eksik",
+                        "wir": "API Key Eksik",
+                        "ihr": "API Key Eksik",
+                        "sie_Sie": "API Key Eksik"
                     }
                 }
-            ],
-            "example_sentences": [
-                {"german": f"Ich {v[:-2] if v.endswith('en') else v}e jeden Tag.", "turkish": f"Her gün {v} eylemini yapıyorum."}
             ]
         }
 

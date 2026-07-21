@@ -21,8 +21,8 @@ from prompts import (
 
 class AIService:
     def __init__(self):
-        self.gemini_api_key = os.getenv("GEMINI_API_KEY", "")
-        self.groq_api_key = os.getenv("GROQ_API_KEY", "")
+        self.gemini_api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI") or os.getenv("gemini") or ""
+        self.groq_api_key = os.getenv("GROQ_API_KEY") or os.getenv("GROQ") or os.getenv("groq") or ""
         self.default_provider = os.getenv("DEFAULT_AI_PROVIDER", "gemini").lower()
 
     def _extract_json(self, text: str) -> Dict[str, Any]:

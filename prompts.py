@@ -94,7 +94,7 @@ Lütfen şu JSON formatında yanıt ver:
 """
 
 STORY_GENERATION_PROMPT = """
-Aşağıdaki seviyeye ve temaya uygun kısa bir Almanca Öğrenme Hikayesi oluştur.
+Aşağıdaki seviyeye ve temaya uygun, en az 4-5 paragraftan (150-250 kelime) oluşan detaylı ve uzun bir Almanca Öğrenme Hikayesi oluştur. Hikaye çok kısa OLMAMALIDIR.
 Her kelimenin üzerine gelindiğinde Türkçe anlamının gösterilebilmesi için CÜMLERİ KELİME KELİME ANOTASYON İLE İŞLE.
 ÖNEMLİ: "german_text" ve "words" içerisindeki "w" alanlarına ASLA HTML etiketi (<font>, <b> vb.) veya Markdown (**der**) KULLANMA. Sadece saf metin (plain text) kullan.
 

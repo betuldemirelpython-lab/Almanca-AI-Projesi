@@ -31,16 +31,20 @@
             --die-color: #EC4899;
             --das-color: #10B981;
             --shadow-glow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
+            --body-gradient: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 400px), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 400px);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
 
         .light-theme {
-            --bg-primary: #F8FAFC;
+            --bg-primary: #F4F7FB;
             --bg-secondary: #FFFFFF;
             --bg-glass: rgba(255, 255, 255, 0.85);
-            --border-color: rgba(0, 0, 0, 0.08);
-            --text-main: #0F172A;
+            --border-color: rgba(15, 23, 42, 0.08);
+            --text-main: #1E293B;
             --text-muted: #64748B;
-            --shadow-glow: 0 10px 30px -10px rgba(59, 130, 246, 0.15);
+            --shadow-glow: 0 10px 30px -10px rgba(59, 130, 246, 0.2);
+            --body-gradient: linear-gradient(135deg, #F0F4F8 0%, #E2E8F0 100%);
+            --card-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.08);
         }
 
         * {
@@ -53,6 +57,8 @@
 
         body {
             background-color: var(--bg-primary);
+            background-image: var(--body-gradient);
+            background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -208,12 +214,13 @@
         /* Card System */
         .glass-card {
             background: var(--bg-glass);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 1.75rem;
             margin-bottom: 1.5rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
+            box-shadow: var(--card-shadow);
         }
 
         /* Score Badge */
@@ -244,7 +251,7 @@
 
         /* Audio Player Control Bar */
         .audio-player-bar {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+            background: var(--bg-secondary);
             border: 1px solid var(--accent-primary);
             border-radius: 14px;
             padding: 1rem 1.5rem;

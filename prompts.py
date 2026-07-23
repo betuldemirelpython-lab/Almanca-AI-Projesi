@@ -225,7 +225,8 @@ Lütfen tam olarak aşağıdaki JSON formatında yanıt dön:
 """
 
 DICTIONARY_TRANSLATION_PROMPT = """
-Metni çevir ve detaylı dilbilgisi / sözlük analizi yap.
+Aşağıdaki metni (kelime veya cümle olabilir) çevir ve detaylı dilbilgisi / sözlük analizi yap.
+Eğer girdi birden fazla kelimeden veya cümleden oluşuyorsa, main_translation kısmına tam çeviriyi yaz, dictionary_entry kısmında ise cümlenin en önemli kelimesini (özne veya fiil) analiz et.
 
 Metin: {text}
 Yön: {direction}
@@ -238,8 +239,8 @@ Lütfen aşağıdaki JSON formatında yanıt ver:
   "dictionary_entry": {{
     "german": "Almanca Sözcük / Cümle",
     "turkish": "Türkçe Karşılık",
-    "article": "der / die / das",
-    "plural": "Çoğul biçimi",
+    "article": "der / die / das (Yoksa Yok yaz)",
+    "plural": "Çoğul biçimi (Yoksa Yok yaz)",
     "word_type": "Nomen / Verb / Adjektiv / Adverb",
     "phonetic": "Okunuş rehberi",
     "examples": [

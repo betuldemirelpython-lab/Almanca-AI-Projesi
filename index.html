@@ -910,6 +910,10 @@
                             <p>Çeviri sonucunu görmek için sol taraftan arama yapın.</p>
                         </div>
                         <div id="dictContentActive" style="display: none;">
+                            <div id="mainTranslationBox" style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--accent-primary); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: none;">
+                                <h4 style="font-size: 0.85rem; color: var(--accent-primary); margin-bottom: 0.3rem;">Tam Çeviri</h4>
+                                <p id="mainTranslationText" style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);"></p>
+                            </div>
                             <div style="margin-bottom: 1rem;">
                                 <span id="dictArticleBadge" class="article-badge article-das">das</span>
                                 <span id="dictGermanWord" style="font-size: 1.4rem; font-weight: 800;">Wort</span>
@@ -1587,6 +1591,15 @@ ${currentStoryData.full_translation_tr}
             document.getElementById('dictContentEmpty').style.display = 'none';
             document.getElementById('dictContentActive').style.display = 'block';
 
+            const mainTransBox = document.getElementById('mainTranslationBox');
+            const mainTransText = document.getElementById('mainTranslationText');
+            if (data.main_translation) {
+                mainTransBox.style.display = 'block';
+                mainTransText.innerText = data.main_translation;
+            } else {
+                mainTransBox.style.display = 'none';
+            }
+
             const entry = data.dictionary_entry || {};
             const artBadge = document.getElementById('dictArticleBadge');
             if (entry.article) {
@@ -1599,7 +1612,7 @@ ${currentStoryData.full_translation_tr}
 
             document.getElementById('dictGermanWord').innerText = entry.german || data.source_text;
             document.getElementById('dictPhonetic').innerText = entry.phonetic || '';
-            document.getElementById('dictTurkishWord').innerText = `Türkçe: ${entry.turkish || data.main_translation}`;
+            document.getElementById('dictTurkishWord').innerText = `Türkçe: ${entry.turkish || 'Belirtilmedi'}`;
             document.getElementById('dictPlural').innerHTML = `<b>Çoğul:</b> ${entry.plural || 'Belirtilmedi'}`;
 
             const exList = document.getElementById('dictExamplesList');

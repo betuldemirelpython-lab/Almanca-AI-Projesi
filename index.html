@@ -975,31 +975,52 @@
 
                 <div id="topicAnalysisResult" style="display: none;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h3 id="analysisTitle" style="font-size: 1.4rem;">Passiv im Präsens</h3>
+                        <h3 id="analysisTitle" style="font-size: 1.4rem;"></h3>
                         <button id="btnExportPDFCurrent" class="btn-submit" style="background: linear-gradient(135deg, var(--accent-rose), #E11D48); font-size: 0.85rem; padding: 0.5rem 1rem;">
                             <i class="fa-solid fa-file-pdf"></i> PDF Raporunu İndir
                         </button>
                     </div>
 
-                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                        <h4 style="color: var(--accent-primary); margin-bottom: 0.5rem;"><i class="fa-solid fa-book"></i> Konu Özeti</h4>
-                        <p id="analysisSummaryText" style="line-height: 1.6; color: var(--text-main); font-size: 0.95rem;"></p>
+                    <!-- Formula Box -->
+                    <div id="analysisFormulaBox" style="display:none; background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(139,92,246,0.15)); border: 1px solid rgba(59,130,246,0.4); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; text-align: center;">
+                        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-primary);">Formül / Yapı</span>
+                        <p id="analysisFormulaText" style="font-size: 1.1rem; font-weight: 700; margin-top: 0.25rem; color: var(--text-main); font-family: monospace;"></p>
                     </div>
 
+                    <!-- Özet -->
                     <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                        <h4 style="color: #3B82F6; margin-bottom: 0.75rem;"><i class="fa-solid fa-list-ul"></i> Örnek Cümleler</h4>
+                        <h4 style="color: var(--accent-primary); margin-bottom: 0.75rem;"><i class="fa-solid fa-book-open"></i> Konu Özeti</h4>
+                        <div id="analysisSummaryText" style="line-height: 1.8; color: var(--text-main); font-size: 0.95rem;"></div>
+                    </div>
+
+                    <!-- Örnek Cümleler -->
+                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h4 style="color: #3B82F6; margin-bottom: 0.75rem;"><i class="fa-solid fa-comments"></i> Örnek Cümleler</h4>
                         <div id="analysisExamplesList" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
                     </div>
 
+                    <!-- Kurallar + Hatalar -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
                         <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
                             <h4 style="color: var(--accent-emerald); margin-bottom: 0.75rem;"><i class="fa-solid fa-check-double"></i> Ana Dilbilgisi Kuralları</h4>
-                            <ul id="analysisRulesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;"></ul>
+                            <ul id="analysisRulesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.9;"></ul>
                         </div>
                         <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
                             <h4 style="color: var(--accent-amber); margin-bottom: 0.75rem;"><i class="fa-solid fa-triangle-exclamation"></i> Sık Yapılan Hatalar</h4>
-                            <ul id="analysisMistakesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; color: var(--accent-rose);"></ul>
+                            <ul id="analysisMistakesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.9; color: var(--accent-rose);"></ul>
                         </div>
+                    </div>
+
+                    <!-- Mini Quiz -->
+                    <div style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(59,130,246,0.1)); border: 1px solid rgba(16,185,129,0.3); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                            <h4 style="color: var(--accent-emerald); font-size: 1.1rem;"><i class="fa-solid fa-graduation-cap"></i> Mini Test (5 Soru)</h4>
+                            <div id="quizScoreDisplay" style="display:none; background: var(--accent-emerald); color: white; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem;"></div>
+                        </div>
+                        <div id="analysisQuizArea" style="display: flex; flex-direction: column; gap: 1.25rem;"></div>
+                        <button id="btnCheckQuiz" onclick="checkQuizAnswers()" style="display:none; margin-top: 1.25rem; background: linear-gradient(135deg, var(--accent-emerald), #059669); color:white; border:none; padding: 0.75rem 2rem; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.95rem; width: 100%;">
+                            <i class="fa-solid fa-check-circle"></i> Cevapları Kontrol Et
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1676,27 +1697,145 @@ ${currentStoryData.full_translation_tr}
             currentActiveAnalysisData = data;
             document.getElementById('topicAnalysisResult').style.display = 'block';
             document.getElementById('analysisTitle').innerText = `${data.level} - ${data.topic}`;
-            document.getElementById('analysisSummaryText').innerText = data.summary_tr;
 
+            // Formula Box
+            const formulaBox = document.getElementById('analysisFormulaBox');
+            const formulaText = document.getElementById('analysisFormulaText');
+            if (data.formula_structure) {
+                formulaBox.style.display = 'block';
+                formulaText.innerText = data.formula_structure;
+            } else {
+                formulaBox.style.display = 'none';
+            }
+
+            // Detayli ozet - her paragraf ayri render
+            const summaryDiv = document.getElementById('analysisSummaryText');
+            const summaryParts = (data.summary_tr || '').split('\n\n').filter(p => p.trim());
+            if (summaryParts.length > 1) {
+                summaryDiv.innerHTML = summaryParts.map(p => `<p style="margin-bottom: 1rem; line-height: 1.8;">${p.replace(/\n/g, '<br>')}</p>`).join('');
+            } else {
+                summaryDiv.innerHTML = `<p style="line-height: 1.8;">${(data.summary_tr || '').replace(/\n/g, '<br>')}</p>`;
+            }
+
+            // Dilbilgisi Kurallari
             const rulesUl = document.getElementById('analysisRulesList');
             rulesUl.innerHTML = '';
-            (data.key_grammar_rules || []).forEach(r => rulesUl.innerHTML += `<li>${r}</li>`);
+            (data.key_grammar_rules || []).forEach(r => {
+                rulesUl.innerHTML += `<li style="margin-bottom: 0.5rem;">${r}</li>`;
+            });
 
+            // Sik Yapilan Hatalar
             const mistakesUl = document.getElementById('analysisMistakesList');
             mistakesUl.innerHTML = '';
-            (data.common_mistakes || []).forEach(m => mistakesUl.innerHTML += `<li>${m}</li>`);
+            (data.common_mistakes || []).forEach(m => {
+                mistakesUl.innerHTML += `<li style="margin-bottom: 0.5rem;">${m}</li>`;
+            });
 
+            // Ornek Cumleler - ses butonu ile
             const examplesList = document.getElementById('analysisExamplesList');
-            if (examplesList) {
-                examplesList.innerHTML = '';
-                (data.examples || []).forEach(ex => {
-                    examplesList.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 8px; border-left: 3px solid var(--accent-primary);">
-                            <div style="font-weight: 600; font-size: 1rem;">${ex.german}</div>
-                            <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">${ex.turkish}</div>
+            examplesList.innerHTML = '';
+            (data.examples || []).forEach((ex, i) => {
+                const safeDE = (ex.german || '').replace(/'/g, "\\'");
+                examplesList.innerHTML += `
+                    <div style="background: rgba(255,255,255,0.03); padding: 0.9rem 1rem; border-radius: 10px; border-left: 3px solid var(--accent-primary); display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.2rem;">${ex.german}</div>
+                            <div style="color: var(--text-muted); font-size: 0.85rem;">${ex.turkish}</div>
                         </div>
+                        <button onclick="speakText('${safeDE}')" title="Sesli dinle" style="background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: var(--accent-primary); padding: 0.4rem 0.7rem; border-radius: 8px; cursor: pointer; flex-shrink: 0;">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            // Mini Quiz render
+            const quizArea = document.getElementById('analysisQuizArea');
+            const btnCheck = document.getElementById('btnCheckQuiz');
+            const scoreDisplay = document.getElementById('quizScoreDisplay');
+            quizArea.innerHTML = '';
+            scoreDisplay.style.display = 'none';
+
+            const quizData = data.mini_quiz || [];
+            if (quizData.length > 0) {
+                quizData.forEach((q, qi) => {
+                    const qDiv = document.createElement('div');
+                    qDiv.style.cssText = 'background: rgba(255,255,255,0.04); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.1rem 1.25rem;';
+                    qDiv.setAttribute('data-correct', q.correct_answer);
+                    qDiv.setAttribute('data-explanation', q.explanation || '');
+                    qDiv.innerHTML = `
+                        <p style="font-weight: 700; margin-bottom: 0.85rem; font-size: 0.95rem;"><span style="color: var(--accent-emerald); margin-right: 0.5rem;">${qi + 1}.</span>${q.question}</p>
+                        <div class="quiz-options-${qi}" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            ${(q.options || []).map((opt, oi) => `
+                                <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='transparent'">
+                                    <input type="radio" name="quiz_q${qi}" value="${opt}" style="accent-color: var(--accent-emerald);">
+                                    <span style="font-size: 0.9rem;">${opt}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                        <div class="quiz-feedback-${qi}" style="display:none; margin-top: 0.75rem; padding: 0.6rem 0.85rem; border-radius: 8px; font-size: 0.85rem;"></div>
                     `;
+                    quizArea.appendChild(qDiv);
                 });
+                btnCheck.style.display = 'block';
+            } else {
+                btnCheck.style.display = 'none';
+            }
+        }
+
+        function checkQuizAnswers() {
+            const quizArea = document.getElementById('analysisQuizArea');
+            const scoreDisplay = document.getElementById('quizScoreDisplay');
+            const questions = quizArea.querySelectorAll('[data-correct]');
+            let score = 0;
+            let answered = 0;
+
+            questions.forEach((qDiv, qi) => {
+                const correct = qDiv.getAttribute('data-correct');
+                const explanation = qDiv.getAttribute('data-explanation');
+                const selected = qDiv.querySelector(`input[name="quiz_q${qi}"]:checked`);
+                const feedbackDiv = qDiv.querySelector(`.quiz-feedback-${qi}`);
+
+                if (!selected) return;
+                answered++;
+
+                const isCorrect = selected.value.trim() === correct.trim();
+                if (isCorrect) score++;
+
+                // Tum secenekleri boya
+                qDiv.querySelectorAll('label').forEach(lbl => {
+                    const val = lbl.querySelector('input').value;
+                    if (val.trim() === correct.trim()) {
+                        lbl.style.background = 'rgba(16,185,129,0.2)';
+                        lbl.style.borderColor = 'var(--accent-emerald)';
+                    } else if (selected && val === selected.value && !isCorrect) {
+                        lbl.style.background = 'rgba(239,68,68,0.2)';
+                        lbl.style.borderColor = 'var(--accent-rose)';
+                    }
+                    lbl.style.pointerEvents = 'none';
+                    const radio = lbl.querySelector('input');
+                    if (radio) radio.disabled = true;
+                });
+
+                feedbackDiv.style.display = 'block';
+                if (isCorrect) {
+                    feedbackDiv.style.background = 'rgba(16,185,129,0.15)';
+                    feedbackDiv.style.borderLeft = '3px solid var(--accent-emerald)';
+                    feedbackDiv.innerHTML = `<i class="fa-solid fa-check" style="color: var(--accent-emerald);"></i> <b style="color: var(--accent-emerald);">Dogru!</b> ${explanation}`;
+                } else {
+                    feedbackDiv.style.background = 'rgba(239,68,68,0.12)';
+                    feedbackDiv.style.borderLeft = '3px solid var(--accent-rose)';
+                    feedbackDiv.innerHTML = `<i class="fa-solid fa-xmark" style="color: var(--accent-rose);"></i> <b style="color: var(--accent-rose);">Yanlis.</b> Dogru: <b>${correct}</b>. ${explanation}`;
+                }
+            });
+
+            if (answered > 0) {
+                const pct = Math.round((score / questions.length) * 100);
+                scoreDisplay.style.display = 'block';
+                scoreDisplay.innerText = `Skor: ${score} / ${questions.length} (${pct}%)`;
+                scoreDisplay.style.background = pct >= 80 ? 'var(--accent-emerald)' : pct >= 50 ? 'var(--accent-amber)' : 'var(--accent-rose)';
+                document.getElementById('btnCheckQuiz').style.display = 'none';
+                scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
@@ -1704,14 +1843,26 @@ ${currentStoryData.full_translation_tr}
             renderTopicAnalysis({
                 topic: topic,
                 level: level,
-                summary_tr: `⚠️ DİKKAT: Şu anda API Key girilmediği için geçici (Demo) veriler görüyorsunuz.\n\n'${topic}' konusu (${level} seviyesi) normalde yapay zeka tarafından burada çok detaylı bir şekilde açıklanacaktır. Gerçek analiz sonuçlarını görmek için lütfen API Key'lerinizi .env dosyasına (yerelde) veya Vercel paneline ekleyin.`,
+                formula_structure: 'API Key gerekli - gercek formul burada gorunecek',
+                summary_tr: 'DIKKAT: Gercek AI analizi icin API Key gerekli.\n\n' + topic + ' konusu (' + level + ' seviyesi) normalde yapay zeka tarafindan cok detayli bir sekilde aciklanacaktir.\n\nGercek analiz sonuclarini gormek icin lutfen Gemini veya Groq API Key giriniz.',
                 key_grammar_rules: [
-                    "API Key eksik olduğu için kurallar listelenemiyor.",
-                    "Lütfen geçerli bir Gemini veya Groq anahtarı girin."
+                    '1. API Key eksik oldugu icin kurallar listelenemiyor.',
+                    '2. Lutfen gecerli bir Gemini veya Groq anahtari girin.'
+                ],
+                examples: [
+                    { german: 'Demo cumle - gercek ornek icin API Key gerekli.', turkish: 'Demo: Gercek ornek icin API Key giriniz.' }
                 ],
                 common_mistakes: [
-                    "Demo Hata: API Key olmadan yapay zeka analizi yapılamaz.",
-                    "Lütfen .env veya Vercel'den anahtarlarınızı yapılandırın."
+                    'Demo Hata: API Key olmadan yapay zeka analizi yapilamaz.',
+                    'Lutfen .env veya Vercel den anahtarlarinizi yapilandirin.'
+                ],
+                mini_quiz: [
+                    {
+                        question: 'Demo Soru: ' + topic + ' konusunda hangi secenek dogrudur?',
+                        options: ['A) API Key gerekli', 'B) Demo secenek', 'C) Demo secenek', 'D) Demo secenek'],
+                        correct_answer: 'A) API Key gerekli',
+                        explanation: 'Gercek quiz sorulari icin API Key giriniz.'
+                    }
                 ]
             });
         }

@@ -1,6 +1,6 @@
 """
-Yapay Zeka Destekli Almanca ├û─şrenme Projesi
-Developer: Bet├╝l Alt─▒nkaynak Demirel
+Yapay Zeka Destekli Almanca Öğrenme Projesi
+Developer: Betül Altınkaynak Demirel
 FastAPI Backend Application (api.py)
 """
 
@@ -27,8 +27,8 @@ from contract_service import ContractService
 
 # App Initialization
 app = FastAPI(
-    title="Yapay Zeka Destekli Almanca ├û─şrenme Projesi API",
-    description="Google Gemini 2.5 Flash / Groq LLaMA 3.3 Destekli Almanca ├û─şrenme Servisi - Dev: Bet├╝l Alt─▒nkaynak Demirel",
+    title="Yapay Zeka Destekli Almanca Öğrenme Projesi API",
+    description="Google Gemini 2.5 Flash / Groq LLaMA 3.3 Destekli Almanca Öğrenme Servisi - Dev: Betül Altınkaynak Demirel",
     version="2.2.0"
 )
 
@@ -49,15 +49,15 @@ contract_service = ContractService()
 @app.on_event("startup")
 def on_startup():
     init_db()
-    print("­şÜÇ FastAPI Server Started Successfully with AI Writing Coach & Evaluator!")
+    print("🚀 FastAPI Server Started Successfully with AI Writing Coach & Evaluator!")
 
 
 @app.get("/api/health")
 def health_check():
     return {
         "status": "online",
-        "project": "Yapay Zeka Destekli Almanca ├û─şrenme Projesi",
-        "developer": "Bet├╝l Alt─▒nkaynak Demirel",
+        "project": "Yapay Zeka Destekli Almanca Öğrenme Projesi",
+        "developer": "Betül Altınkaynak Demirel",
         "ai_models": ["Google Gemini 2.5 Flash", "Groq LLaMA 3.3"],
         "modules": ["A1-C2 Curriculum", "AI Writing Evaluator & Coach", "Audio Interactive Stories", "Verb Conjugation Matrix", "Dictionary", "PDF Export"],
         "version": "2.2.0"
@@ -93,12 +93,12 @@ async def analyze_topic(request: TopicSummaryRequest, db: Session = Depends(get_
 
         return TopicSummaryResponse(**result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Konu analizi hatas─▒: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Konu analizi hatası: {str(e)}")
 
 
 @app.post("/api/evaluate-writing", response_model=WritingAnalysisResponse)
 async def evaluate_writing(request: WritingAnalysisRequest):
-    """Kullan─▒c─▒n─▒n yazd─▒─ş─▒ Almanca metni analiz eder, 100 ├╝zerinden skorlar ve hatalar─▒n─▒ d├╝zeltir."""
+    """Kullanıcının yazdığı Almanca metni analiz eder, 100 üzerinden skorlar ve hatalarını düzeltir."""
     try:
         result = await ai_service.evaluate_writing(
             text=request.text,
@@ -107,7 +107,7 @@ async def evaluate_writing(request: WritingAnalysisRequest):
         )
         return WritingAnalysisResponse(**result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Metin de─şerlendirme hatas─▒: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Metin değerlendirme hatası: {str(e)}")
 
 
 @app.post("/api/generate-story", response_model=StoryResponse)
@@ -115,12 +115,12 @@ async def generate_story(request: StoryRequest):
     try:
         result = await ai_service.generate_story(
             level=request.level.value if request.level else "A1",
-            theme=request.topic_theme or "G├╝nl├╝k Ya┼şam",
+            theme=request.topic_theme or "Günlük Yaşam",
             provider=request.provider.value if request.provider else "gemini"
         )
         return StoryResponse(**result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Hikaye ├╝retme hatas─▒: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Hikaye üretme hatası: {str(e)}")
 
 
 @app.post("/api/conjugate", response_model=VerbConjugationResponse)
@@ -145,7 +145,7 @@ async def conjugate_verb(request: VerbConjugationRequest, db: Session = Depends(
 
         return VerbConjugationResponse(**result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Fiil ├ğekimi hatas─▒: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Fiil çekimi hatası: {str(e)}")
 
 
 @app.post("/api/translate", response_model=TranslationResponse)
@@ -158,7 +158,7 @@ async def translate_text(request: TranslationRequest):
         )
         return TranslationResponse(**result)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"├çeviri hatas─▒: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Çeviri hatası: {str(e)}")
 
 
 @app.post("/api/upload-document")
@@ -184,7 +184,7 @@ async def upload_document(
             "analysis": analysis_result
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Belge i┼şleme hatas─▒: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Belge işleme hatası: {str(e)}")
 
 
 @app.post("/api/export-pdf")
@@ -193,8 +193,8 @@ async def export_pdf(request: PDFExportRequest):
         pdf_bytes = contract_service.generate_pdf_report(
             title=request.title,
             content_markdown=request.content_markdown,
-            author=request.author or "Bet├╝l Alt─▒nkaynak Demirel",
-            subtitle=request.subtitle or "Yapay Zeka Destekli Almanca ├û─şrenme Raporu"
+            author=request.author or "Betül Altınkaynak Demirel",
+            subtitle=request.subtitle or "Yapay Zeka Destekli Almanca Öğrenme Raporu"
         )
         
         headers = {
@@ -202,7 +202,7 @@ async def export_pdf(request: PDFExportRequest):
         }
         return Response(content=pdf_bytes, media_type="application/pdf", headers=headers)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"PDF olu┼şturma hatas─▒: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"PDF oluşturma hatası: {str(e)}")
 
 
 @app.get("/api/history")

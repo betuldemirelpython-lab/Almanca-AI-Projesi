@@ -111,9 +111,13 @@ Lütfen yanıtı KESİNLİKLE aşağıdaki JSON formatında ver:
 """
 
 STORY_GENERATION_PROMPT = """
-Aşağıdaki seviyeye ve temaya uygun, en az 4-5 paragraftan (150-250 kelime) oluşan detaylı ve uzun bir Almanca Öğrenme Hikayesi oluştur. Hikaye çok kısa OLMAMALIDIR.
-Her kelimenin üzerine gelindiğinde Türkçe anlamının gösterilebilmesi için CÜMLERİ KELİME KELİME ANOTASYON İLE İŞLE.
-ÖNEMLİ: "german_text" ve "words" içerisindeki "w" alanlarına ASLA HTML etiketi (<font>, <b> vb.) veya Markdown (**der**) KULLANMA. Sadece saf metin (plain text) kullan.
+Aşağıdaki seviyeye ve temaya uygun, en az 5-7 kapsamlı paragraftan (300-500 kelime) oluşan detaylı, akıcı, zengin olay örgüsüne sahip UZUN bir Almanca Öğrenme Hikayesi oluştur. Hikaye KESİNLİKLE kısa tutulmamalıdır!
+
+ÖNEMLİ KURALLAR:
+1. Hikaye hedeflenen seviyenin ({level}) gramer ve kelime dağarcığına %100 uygun olmalıdır.
+2. Her bir paragrafın içindeki HER KELİMENİN Türkçe karşılığı, kelime türü (Nomen, Verb, Adjektiv vb.) ve isimse artikeli ("der"/"die"/"das") "words" dizisi altında ANOTASYON ile verilmelidir.
+3. "german_text" ve "words" içerisindeki "w" alanlarına ASLA HTML etiketi (<font>, <b> vb.) veya Markdown (**der**) KULLANMA. Sadece saf metin (plain text) kullan.
+4. "full_translation_tr" kısmında tüm hikayenin akıcı Türkçe çevirisini sun.
 
 Seviye: {level}
 Tema/Konu: {theme}
@@ -125,18 +129,22 @@ Lütfen kesinlikle aşağıdaki JSON formatında yanıt ver:
   "level": "{level}",
   "paragraphs": [
     {{
-      "german_text": "Heute geht Lukas in den Supermarkt.",
+      "german_text": "Heute steht Lukas früh auf und macht das Fenster auf.",
       "words": [
         {{"w": "Heute", "tr": "Bugün", "type": "Adverb"}},
-        {{"w": "geht", "tr": "gidiyor (gehen)", "type": "Verb"}},
-        {{"w": "Lukas", "tr": "Lukas (İsim)", "type": "Nomen"}},
-        {{"w": "in", "tr": "-e, içine", "type": "Präposition"}},
-        {{"w": "den", "tr": "belirli artikel (Akk. eril)", "type": "Artikel"}},
-        {{"w": "Supermarkt.", "tr": "süpermarket", "type": "Nomen", "article": "der", "plural": "die Supermärkte"}}
+        {{"w": "steht", "tr": "kalkıyor (aufstehen)", "type": "Verb"}},
+        {{"w": "Lukas", "tr": "Lukas (Özel isim)", "type": "Nomen"}},
+        {{"w": "früh", "tr": "erken", "type": "Adjektiv"}},
+        {{"w": "auf", "tr": "kalkmak (ayrılan ek)", "type": "Verb-Präfix"}},
+        {{"w": "und", "tr": "ve", "type": "Konnektor"}},
+        {{"w": "macht", "tr": "açıyor (machen)", "type": "Verb"}},
+        {{"w": "das", "tr": "belirli artikel (nötr)", "type": "Artikel"}},
+        {{"w": "Fenster", "tr": "pencere", "type": "Nomen", "article": "das", "plural": "die Fenster"}},
+        {{"w": "auf.", "tr": "açmak (ayrılan ek)", "type": "Verb-Präfix"}}
       ]
     }}
   ],
-  "full_translation_tr": "Hikayenin tam Türkçe çevirisi...",
+  "full_translation_tr": "Hikayenin tüm paragraflarının eksiksiz Türkçe çevirisi...",
   "key_vocabulary": [
     {{"german": "der Supermarkt", "turkish": "süpermarket", "article": "der", "plural": "die Supermärkte"}}
   ]

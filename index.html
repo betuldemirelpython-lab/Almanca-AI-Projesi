@@ -1468,33 +1468,48 @@ ${currentStoryData.full_translation_tr}
 
         function renderMockInteractiveStory(level, theme) {
             renderInteractiveStory({
-                title_de: `Ein Tag in Deutschland (${level})`,
-                title_tr: `Almanya'da Bir Gün (${level} Seviyesi - ${theme})`,
+                title_de: `Ein unvergesslicher Tag in Deutschland (${level})`,
+                title_tr: `Almanya'da Unutulmaz Bir Gün (${level} Seviyesi - ${theme})`,
                 level: level,
                 paragraphs: [
                     {
-                        german_text: "Heute geht Lukas in den Supermarkt.",
+                        german_text: "Heute steht Lukas früh am Morgen auf und öffnet das Fenster.",
                         words: [
                             { w: "Heute", tr: "Bugün", type: "Adverb" },
-                            { w: "geht", tr: "gidiyor (gehen)", type: "Verb" },
-                            { w: "Lukas", tr: "Lukas (Özel isim)", type: "Nomen" },
-                            { w: "in", tr: "-e, içine", type: "Präposition" },
-                            { w: "den", tr: "belirli artikel (Akk. eril)", type: "Artikel" },
-                            { w: "Supermarkt.", tr: "süpermarket", type: "Nomen", article: "der" }
+                            { w: "steht", tr: "kalkıyor (aufstehen)", type: "Verb" },
+                            { w: "Lukas", tr: "Lukas", type: "Nomen" },
+                            { w: "früh", tr: "erken", type: "Adjektiv" },
+                            { w: "am", tr: "sabahleyin", type: "Präposition" },
+                            { w: "Morgen", tr: "sabah", type: "Nomen", article: "der" },
+                            { w: "auf", tr: "kalkmak (ayrılan ek)", type: "Verb-Präfix" },
+                            { w: "und", tr: "ve", type: "Konnektor" },
+                            { w: "öffnet", tr: "açıyor (öffnen)", type: "Verb" },
+                            { w: "das", tr: "belirli artikel", type: "Artikel" },
+                            { w: "Fenster.", tr: "pencere", type: "Nomen", article: "das" }
                         ]
                     },
                     {
-                        german_text: "Er kauft frisches Brot und frische Milch.",
+                        german_text: "Die Sonne scheint hell und das Wetter ist wirklich wunderschön.",
                         words: [
-                            { w: "Er", tr: "O (eril)", type: "Zamir" },
-                            { w: "kauft", tr: "satın alıyor (kaufen)", type: "Verb" },
-                            { w: "frisches", tr: "taze", type: "Sıfat" },
-                            { w: "Brot", tr: "ekmek", type: "Nomen", article: "das" },
-                            { w: "und", tr: "ve", type: "Bağlaç" },
-                            { w: "frische", tr: "taze", type: "Sıfat" },
-                            { w: "Milch.", tr: "süt", type: "Nomen", article: "die" }
+                            { w: "Die", tr: "belirli artikel", type: "Artikel" },
+                            { w: "Sonne", tr: "güneş", type: "Nomen", article: "die" },
+                            { w: "scheint", tr: "parlıyor", type: "Verb" },
+                            { w: "hell", tr: "parlak", type: "Adjektiv" },
+                            { w: "und", tr: "ve", type: "Konnektor" },
+                            { w: "das", tr: "belirli artikel", type: "Artikel" },
+                            { w: "Wetter", tr: "hava", type: "Nomen", article: "das" },
+                            { w: "ist", tr: "-dir", type: "Verb" },
+                            { w: "wirklich", tr: "gerçekten", type: "Adverb" },
+                            { w: "wunderschön.", tr: "harika", type: "Adjektiv" }
                         ]
-                    }
+                    },
+                    {
+                        german_text: "Lukas geht zuerst in die Bäckerei und kauft frische Brötchen.",
+                        words: [
+                            { w: "Lukas", tr: "Lukas", type: "Nomen" },
+                            { w: "geht", tr: "gidiyor", type: "Verb" },
+                            { w: "zuerst", tr: "öncelikle", type: "Adverb" },
+                            { w: "in", tr: "-e, içine", type: "Präposition" },
                 ],
                 full_translation_tr: "Bugün Lukas süpermarkete gidiyor. Taze ekmek ve taze süt satın alıyor."
             });

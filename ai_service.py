@@ -209,37 +209,91 @@ class AIService:
 
     def _mock_story(self, level: str, theme: str) -> Dict[str, Any]:
         return {
-            "title_de": f"Ein Tag in Deutschland ({level})",
-            "title_tr": f"Almanya'da Bir Gün ({level} Seviyesi - {theme})",
+            "title_de": f"Ein unvergesslicher Tag in Deutschland ({level})",
+            "title_tr": f"Almanya'da Unutulmaz Bir Gün ({level} Seviyesi - {theme})",
             "level": level,
             "paragraphs": [
                 {
-                    "german_text": "Heute geht Lukas in den Supermarkt.",
+                    "german_text": "Heute steht Lukas früh am Morgen auf und öffnet das Fenster.",
                     "words": [
                         {"w": "Heute", "tr": "Bugün", "type": "Adverb"},
-                        {"w": "geht", "tr": "gidiyor (gehen)", "type": "Verb"},
-                        {"w": "Lukas", "tr": "Lukas (İsim)", "type": "Nomen"},
-                        {"w": "in", "tr": "-e, içine", "type": "Präposition"},
-                        {"w": "den", "tr": "belirli artikel (Akk. eril)", "type": "Artikel"},
-                        {"w": "Supermarkt.", "tr": "süpermarket", "type": "Nomen", "article": "der", "plural": "die Supermärkte"}
+                        {"w": "steht", "tr": "kalkıyor (aufstehen)", "type": "Verb"},
+                        {"w": "Lukas", "tr": "Lukas", "type": "Nomen"},
+                        {"w": "früh", "tr": "erken", "type": "Adjektiv"},
+                        {"w": "am", "tr": "sabahleyin (an dem)", "type": "Präposition"},
+                        {"w": "Morgen", "tr": "sabah", "type": "Nomen", "article": "der"},
+                        {"w": "auf", "tr": "kalkmak (ayrılan ek)", "type": "Verb-Präfix"},
+                        {"w": "und", "tr": "ve", "type": "Konnektor"},
+                        {"w": "öffnet", "tr": "açıyor (öffnen)", "type": "Verb"},
+                        {"w": "das", "tr": "belirli artikel (nötr)", "type": "Artikel"},
+                        {"w": "Fenster.", "tr": "pencere", "type": "Nomen", "article": "das", "plural": "die Fenster"}
                     ]
                 },
                 {
-                    "german_text": "Er kauft frisches Brot und frische Milch.",
+                    "german_text": "Die Sonne scheint hell und das Wetter ist wirklich wunderschön.",
                     "words": [
-                        {"w": "Er", "tr": "O (eril)", "type": "Personalpronomen"},
-                        {"w": "kauft", "tr": "satın alıyor (kaufen)", "type": "Verb"},
-                        {"w": "frisches", "tr": "taze", "type": "Adjektiv"},
-                        {"w": "Brot", "tr": "ekmek", "type": "Nomen", "article": "das", "plural": "die Brote"},
+                        {"w": "Die", "tr": "belirli artikel (dişil)", "type": "Artikel"},
+                        {"w": "Sonne", "tr": "güneş", "type": "Nomen", "article": "die"},
+                        {"w": "scheint", "tr": "parlıyor (scheinen)", "type": "Verb"},
+                        {"w": "hell", "tr": "parlak", "type": "Adjektiv"},
                         {"w": "und", "tr": "ve", "type": "Konnektor"},
+                        {"w": "das", "tr": "belirli artikel (nötr)", "type": "Artikel"},
+                        {"w": "Wetter", "tr": "hava", "type": "Nomen", "article": "das"},
+                        {"w": "ist", "tr": "-dir (sein)", "type": "Verb"},
+                        {"w": "wirklich", "tr": "gerçekten", "type": "Adverb"},
+                        {"w": "wunderschön.", "tr": "harika / çok güzel", "type": "Adjektiv"}
+                    ]
+                },
+                {
+                    "german_text": "Lukas geht zuerst in die Bäckerei und kauft frische Brötchen.",
+                    "words": [
+                        {"w": "Lukas", "tr": "Lukas", "type": "Nomen"},
+                        {"w": "geht", "tr": "gidiyor (gehen)", "type": "Verb"},
+                        {"w": "zuerst", "tr": "öncelikle", "type": "Adverb"},
+                        {"w": "in", "tr": "-e, içine", "type": "Präposition"},
+                        {"w": "die", "tr": "belirli artikel (Akk. dişil)", "type": "Artikel"},
+                        {"w": "Bäckerei", "tr": "fırın", "type": "Nomen", "article": "die", "plural": "die Bäckereien"},
+                        {"w": "und", "tr": "ve", "type": "Konnektor"},
+                        {"w": "kauft", "tr": "satın alıyor (kaufen)", "type": "Verb"},
                         {"w": "frische", "tr": "taze", "type": "Adjektiv"},
-                        {"w": "Milch.", "tr": "süt", "type": "Nomen", "article": "die", "plural": "Milch"}
+                        {"w": "Brötchen.", "tr": "ekmekçikler / poğaça", "type": "Nomen", "article": "das", "plural": "die Brötchen"}
+                    ]
+                },
+                {
+                    "german_text": "Danach trifft er seine Freundin Anna im Park zum Kaffee.",
+                    "words": [
+                        {"w": "Danach", "tr": "sonrasında", "type": "Adverb"},
+                        {"w": "trifft", "tr": "buluşuyor (treffen)", "type": "Verb"},
+                        {"w": "er", "tr": "o (eril)", "type": "Personalpronomen"},
+                        {"w": "seine", "tr": "onun (iyelik)", "type": "Possessivpronomen"},
+                        {"w": "Freundin", "tr": "kız arkadaş", "type": "Nomen", "article": "die"},
+                        {"w": "Anna", "tr": "Anna", "type": "Nomen"},
+                        {"w": "im", "tr": "parkta (in dem)", "type": "Präposition"},
+                        {"w": "Park", "tr": "park", "type": "Nomen", "article": "der"},
+                        {"w": "zum", "tr": "kahve için (zu dem)", "type": "Präposition"},
+                        {"w": "Kaffee.", "tr": "kahve", "type": "Nomen", "article": "der"}
+                    ]
+                },
+                {
+                    "german_text": "Sie sprechen über ihre Zukunft und lernen zusammen Deutsch.",
+                    "words": [
+                        {"w": "Sie", "tr": "onlar", "type": "Personalpronomen"},
+                        {"w": "sprechen", "tr": "konuşuyorlar (sprechen)", "type": "Verb"},
+                        {"w": "über", "tr": "hakkında", "type": "Präposition"},
+                        {"w": "ihre", "tr": "kendi (iyelik)", "type": "Possessivpronomen"},
+                        {"w": "Zukunft", "tr": "gelecek", "type": "Nomen", "article": "die"},
+                        {"w": "und", "tr": "ve", "type": "Konnektor"},
+                        {"w": "lernen", "tr": "öğreniyorlar (lernen)", "type": "Verb"},
+                        {"w": "zusammen", "tr": "birlikte", "type": "Adverb"},
+                        {"w": "Deutsch.", "tr": "Almanca", "type": "Nomen"}
                     ]
                 }
             ],
-            "full_translation_tr": "Bugün Lukas süpermarkete gidiyor. Taze ekmek ve taze süt satın alıyor.",
+            "full_translation_tr": "Bugün Lukas sabah erken kalkıyor ve pencereyi açıyor. Güneş parlakça açıyor ve hava gerçekten harika. Lukas öncelikle fırına gidiyor ve taze ekmekler satın alıyor. Sonrasında parkta kız arkadaşı Anna ile kahve içmek için buluşuyor. Gelecekleri hakkında konuşuyorlar ve birlikte Almanca öğreniyorlar.",
             "key_vocabulary": [
-                {"german": "der Supermarkt", "turkish": "süpermarket", "article": "der", "plural": "die Supermärkte"}
+                {"german": "die Bäckerei", "turkish": "fırın", "article": "die", "plural": "die Bäckereien"},
+                {"german": "das Wetter", "turkish": "hava", "article": "das", "plural": None},
+                {"german": "der Kaffee", "turkish": "kahve", "article": "der", "plural": "die Kaffees"}
             ]
         }
 

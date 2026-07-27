@@ -5,6 +5,8 @@ FastAPI Backend Application (api.py)
 """
 
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from typing import Optional, List, Dict, Any
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Response, Form
 from fastapi.middleware.cors import CORSMiddleware
@@ -49,7 +51,7 @@ contract_service = ContractService()
 @app.on_event("startup")
 def on_startup():
     init_db()
-    print("🚀 FastAPI Server Started Successfully with AI Writing Coach & Evaluator!")
+    print("FastAPI Server Started Successfully with AI Writing Coach & Evaluator!")
 
 
 @app.get("/api/health")

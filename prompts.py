@@ -4,6 +4,16 @@ Developer: Betül Altınkaynak Demirel
 AI System Promptları, Yazım Değerlendirme Promptu ve A1-C2 Konu Kataloğu
 """
 
+# German proficiency levels catalog
+GERMAN_LEVELS_CATALOG = {
+    "A1": "Beginner",
+    "A2": "Elementary",
+    "B1": "Intermediate",
+    "B2": "Upper Intermediate",
+    "C1": "Advanced",
+    "C2": "Proficiency"
+}
+
 SYSTEM_INSTRUCTION = """
 Sen Betül Altınkaynak Demirel tarafından geliştirilen "Yapay Zeka Destekli Almanca Öğrenme Platformu"nun uzman Almanca Eğitmeni ve Dilbilimci AI asistanısın.
 Amacın Türk kullanıcılara Almancayı en anlaşılır, sistemli ve pedagojik yöntemlerle öğretmektir.

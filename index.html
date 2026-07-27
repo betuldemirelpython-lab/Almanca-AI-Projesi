@@ -198,12 +198,12 @@
         }
 
         .tab-content {
-            display: none;
+            display: none !important;
             animation: fadeIn 0.3s ease;
         }
 
         .tab-content.active {
-            display: block;
+            display: block !important;
         }
 
         @keyframes fadeIn {
@@ -755,28 +755,28 @@
     <!-- Navigation Tabs -->
     <div class="nav-tabs-wrapper">
         <nav class="nav-tabs">
-            <button class="tab-btn active" data-tab="tab-levels">
+            <button class="tab-btn active" data-tab="tab-levels" onclick="switchTab('tab-levels')">
                 <i class="fa-solid fa-layer-group"></i> Eksiksiz Seviye Kataloğu (A1-C2)
             </button>
-            <button class="tab-btn" data-tab="tab-writing">
+            <button class="tab-btn" data-tab="tab-writing" onclick="switchTab('tab-writing')">
                 <i class="fa-solid fa-pen-nib"></i> AI Yazım Koçu (Skor & Düzeltme)
             </button>
-            <button class="tab-btn" data-tab="tab-story">
+            <button class="tab-btn" data-tab="tab-story" onclick="switchTab('tab-story')">
                 <i class="fa-solid fa-circle-play"></i> Sesli Hikayeler (Sesli Dinleme & Hover)
             </button>
-            <button class="tab-btn" data-tab="tab-conjugator">
+            <button class="tab-btn" data-tab="tab-conjugator" onclick="switchTab('tab-conjugator')">
                 <i class="fa-solid fa-table-cells"></i> Fiil Çekim Matrisi
             </button>
-            <button class="tab-btn" data-tab="tab-translator">
+            <button class="tab-btn" data-tab="tab-translator" onclick="switchTab('tab-translator')">
                 <i class="fa-solid fa-language"></i> Sözlük & Çeviri
             </button>
-            <button class="tab-btn" data-tab="tab-summarizer">
+            <button class="tab-btn" data-tab="tab-summarizer" onclick="switchTab('tab-summarizer')">
                 <i class="fa-solid fa-brain"></i> AI Konu Analizi
             </button>
-            <button class="tab-btn" data-tab="tab-document">
+            <button class="tab-btn" data-tab="tab-document" onclick="switchTab('tab-document')">
                 <i class="fa-solid fa-file-pdf"></i> Belge & PDF Export
             </button>
-            <button class="tab-btn" data-tab="tab-grammar-element">
+            <button class="tab-btn" data-tab="tab-grammar-element" onclick="switchTab('tab-grammar-element')">
                 <i class="fa-solid fa-puzzle-piece"></i> Edat · Zamir · Bağlaç · Sıfat
             </button>
         </nav>

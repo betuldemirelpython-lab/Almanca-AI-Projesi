@@ -1287,27 +1287,46 @@
             });
         }
 
-        // Tab Navigation
+        // Tab Navigation - style.display ile CSS override sorununu tamamen gecer
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-            const btn = document.querySelector('[data-tab="' + tabId + '"]');
-            if (btn) btn.classList.add('active');
-            const content = document.getElementById(tabId);
-            if (content) content.classList.add('active');
+            // Tum butonlardan active kaldir
+            document.querySelectorAll('.tab-btn').forEach(function(b) {
+                b.classList.remove('active');
+            });
+            // Tum icerik alanlarini gizle (inline style ile - !important'tan bile guclu)
+            document.querySelectorAll('.tab-content').forEach(function(tc) {
+                tc.style.display = 'none';
+                tc.classList.remove('active');
+            });
+            // Aktif butonu sec
+            var activeBtn = document.querySelector('[data-tab="' + tabId + '"]');
+            if (activeBtn) activeBtn.classList.add('active');
+            // Aktif icerik alanini goster
+            var activeContent = document.getElementById(tabId);
+            if (activeContent) {
+                activeContent.style.display = 'block';
+                activeContent.classList.add('active');
+            }
         }
 
         function initTabs() {
-            const buttons = document.querySelectorAll('.tab-btn');
-            if (!buttons || buttons.length === 0) {
-                console.error('Tab buttons not found!');
-                return;
-            }
-            buttons.forEach(btn => {
+            // Sayfa yuklendiginde tum tab-content'leri gizle, sadece ilkini goster
+            var allContents = document.querySelectorAll('.tab-content');
+            allContents.forEach(function(tc, i) {
+                if (i === 0) {
+                    tc.style.display = 'block';
+                    tc.classList.add('active');
+                } else {
+                    tc.style.display = 'none';
+                    tc.classList.remove('active');
+                }
+            });
+            // Event listener ekle (onclick zaten var, bu yedek)
+            var buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    if (!tabId) return;
-                    switchTab(tabId);
+                    var tabId = this.getAttribute('data-tab');
+                    if (tabId) switchTab(tabId);
                 });
             });
         }

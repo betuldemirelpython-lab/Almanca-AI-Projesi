@@ -1252,18 +1252,18 @@
         let isAudioPlaying = false;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            initTabs();
-            initLevelChips();
-            await fetchLevelsCatalog();
-            initWritingCoach();
-            initStoryModule();
-            initAudioPlayer();
-            initConjugator();
-            initTranslator();
-            initSummarizer();
-            initPDFExport();
-            initThemeToggle();
-            initGrammarElement();
+            try { initTabs(); } catch(e) { console.error('initTabs failed:', e); }
+            try { initLevelChips(); } catch(e) { console.error('initLevelChips failed:', e); }
+            try { await fetchLevelsCatalog(); } catch(e) { console.error('fetchLevelsCatalog failed:', e); }
+            try { initWritingCoach(); } catch(e) { console.error('initWritingCoach failed:', e); }
+            try { initStoryModule(); } catch(e) { console.error('initStoryModule failed:', e); }
+            try { initAudioPlayer(); } catch(e) { console.error('initAudioPlayer failed:', e); }
+            try { initConjugator(); } catch(e) { console.error('initConjugator failed:', e); }
+            try { initTranslator(); } catch(e) { console.error('initTranslator failed:', e); }
+            try { initSummarizer(); } catch(e) { console.error('initSummarizer failed:', e); }
+            try { initPDFExport(); } catch(e) { console.error('initPDFExport failed:', e); }
+            try { initThemeToggle(); } catch(e) { console.error('initThemeToggle failed:', e); }
+            try { initGrammarElement(); } catch(e) { console.error('initGrammarElement failed:', e); }
         });
 
         async function fetchLevelsCatalog() {
@@ -1288,16 +1288,26 @@
         }
 
         // Tab Navigation
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            const btn = document.querySelector('[data-tab="' + tabId + '"]');
+            if (btn) btn.classList.add('active');
+            const content = document.getElementById(tabId);
+            if (content) content.classList.add('active');
+        }
+
         function initTabs() {
             const buttons = document.querySelectorAll('.tab-btn');
+            if (!buttons || buttons.length === 0) {
+                console.error('Tab buttons not found!');
+                return;
+            }
             buttons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    buttons.forEach(b => b.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-                    
-                    btn.classList.add('active');
-                    const tabId = btn.getAttribute('data-tab');
-                    document.getElementById(tabId).classList.add('active');
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    if (!tabId) return;
+                    switchTab(tabId);
                 });
             });
         }
@@ -1352,9 +1362,11 @@
                     </div>
                 `;
                 card.addEventListener('click', () => {
-                    document.querySelector('[data-tab="tab-summarizer"]').click();
-                    document.getElementById('customTopicInput').value = t.title;
-                    document.getElementById('customLevelSelect').value = level;
+                    switchTab('tab-summarizer');
+                    const topicInput = document.getElementById('customTopicInput');
+                    const levelSelect = document.getElementById('customLevelSelect');
+                    if (topicInput) topicInput.value = t.title;
+                    if (levelSelect) levelSelect.value = level;
                     triggerTopicAnalysis(t.title, level);
                 });
                 container.appendChild(card);
@@ -2160,13 +2172,17 @@ ${(currentActiveAnalysisData.common_mistakes || []).map(m => '- ' + m).join('\n'
 
         // *** Edat / Zamir / Bağlaç / Sıfat Analiz Modülü ***
         function fillGrammarElement(element, category) {
-            document.getElementById('grammarElementInput').value = element;
+            const inp = document.getElementById('grammarElementInput');
+            if (inp) inp.value = element;
             const sel = document.getElementById('grammarCategorySelect');
-            for (let i = 0; i < sel.options.length; i++) {
-                if (sel.options[i].value === category) { sel.selectedIndex = i; break; }
+            if (sel) {
+                for (let i = 0; i < sel.options.length; i++) {
+                    if (sel.options[i].value === category) { sel.selectedIndex = i; break; }
+                }
             }
-            document.querySelector('[data-tab="tab-grammar-element"]').click();
-            document.getElementById('btnAnalyzeGrammarElement').click();
+            switchTab('tab-grammar-element');
+            const analyzeBtn = document.getElementById('btnAnalyzeGrammarElement');
+            if (analyzeBtn) setTimeout(() => analyzeBtn.click(), 100);
         }
 
         function initGrammarElement() {

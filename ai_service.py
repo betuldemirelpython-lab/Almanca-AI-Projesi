@@ -8,11 +8,27 @@ import os
 import json
 import re
 from typing import Dict, Any, Optional
+
+# Load environment variables from .env (useful for local dev)
 try:
     from dotenv import load_dotenv
     load_dotenv()
-except Exception as e:
-    print(f"dotenv yukleme uyarisi: {e}")
+except Exception:
+    pass
+
+# Log presence of API keys (useful for debugging in Vercel logs)
+if os.getenv("GROQ_API_KEY"):
+    print("[DEBUG] GROQ_API_KEY found")
+else:
+    print("[DEBUG] GROQ_API_KEY NOT found")
+
+if os.getenv("GEMINI_API_KEY"):
+    print("[DEBUG] GEMINI_API_KEY found")
+else:
+    print("[DEBUG] GEMINI_API_KEY NOT found")
+
+# Default keys (no placeholder, will be None if missing)
+DEFAULT_GROQ_KEY = None
 
 from prompts import (
     SYSTEM_INSTRUCTION,
@@ -23,8 +39,6 @@ from prompts import (
     DICTIONARY_TRANSLATION_PROMPT
 )
 
-
-DEFAULT_GROQ_KEY = "gsk" + "_" + "X10sdQHbQLJDf2JJNLICWGdyb3FYU8BMv0J6BsZlsYf35X3pYb4c"
 
 class AIService:
     def __init__(self):

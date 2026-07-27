@@ -182,6 +182,10 @@ class AIService:
         try:
             return await asyncio.wait_for(asyncio.to_thread(_sync_groq), timeout=12.0)
         except Exception as e:
+            msg = str(e).lower()
+            if "exceeded" in msg or "quota" in msg or "limit" in msg:
+                print("Groq token limit reached, falling back to mock.")
+                raise RuntimeError("TokenExhausted")
             print(f"Groq API hatası/zaman aşımı: {str(e)}")
             raise RuntimeError(f"Groq API Hatası: {str(e)}")
             print(f"Groq API hatası: {str(e)}")

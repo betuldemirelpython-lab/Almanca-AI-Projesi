@@ -55,7 +55,7 @@ def on_startup():
 
 
 @app.get("/api/health")
-def health_check():
+def health():
     return {
         "status": "online",
         "project": "Yapay Zeka Destekli Almanca Öğrenme Projesi",
@@ -64,6 +64,14 @@ def health_check():
         "modules": ["A1-C2 Curriculum", "AI Writing Evaluator & Coach", "Audio Interactive Stories", "Verb Conjugation Matrix", "Dictionary", "PDF Export"],
         "version": "2.2.0"
     }
+
+@app.get("/api/debug")
+def debug_env():
+    return {
+        "GROQ_API_KEY_set": bool(os.getenv("GROQ_API_KEY")),
+        "GEMINI_API_KEY_set": bool(os.getenv("GEMINI_API_KEY")),
+    }
+
 
 
 @app.get("/api/levels")

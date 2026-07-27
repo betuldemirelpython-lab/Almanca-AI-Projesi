@@ -20,7 +20,8 @@ from prompts import (
     WRITING_EVALUATION_PROMPT,
     STORY_GENERATION_PROMPT,
     VERB_CONJUGATION_PROMPT,
-    DICTIONARY_TRANSLATION_PROMPT
+    DICTIONARY_TRANSLATION_PROMPT,
+    GRAMMAR_ELEMENT_PROMPT
 )
 
 
@@ -109,6 +110,13 @@ class AIService:
         prompt = DICTIONARY_TRANSLATION_PROMPT.format(text=text, direction=direction)
         res = await self._execute_prompt(prompt, provider)
         return res if res else self._mock_translation(text, direction)
+
+    async def analyze_grammar_element(
+        self, element: str, category: str = "auto", provider: Optional[str] = None
+    ) -> Dict[str, Any]:
+        prompt = GRAMMAR_ELEMENT_PROMPT.format(element=element, category=category)
+        res = await self._execute_prompt(prompt, provider)
+        return res if res else self._mock_grammar_element(element, category)
 
     # --- API Çağrı Metotları ---
 
@@ -390,4 +398,33 @@ class AIService:
                 "grammar_tips": "İsimler Almancada büyük harfle yazılır."
             },
             "alternative_translations": [f"Alternatif: {text}"]
+        }
+
+    def _mock_grammar_element(self, element: str, category: str) -> Dict[str, Any]:
+        return {
+            "element": element,
+            "category": category if category != "auto" else "Bağlaç",
+            "german_type": "Demo Modu",
+            "turkish_meaning": f"'{element}' yapısının analizi (⚠️ API Key eksik)",
+            "level": "B1-B2",
+            "formula": "Je + Komparativ + ..., desto + Komparativ + Fiil + ...",
+            "explanation_tr": "⚠️ Gerçek analiz için lütfen API Key'inizi ekleyin. Bu demo verisidir.",
+            "rules": [
+                "1. API Key eklendiğinde gerçek kurallar burada görüntülenir.",
+                "2. Vercel ortam değişkenlerine GEMINI_API_KEY veya GROQ_API_KEY ekleyin."
+            ],
+            "tips": ["API Key'i Vercel dashboard üzerinden ortam değişkeni olarak ekleyin."],
+            "examples": [
+                {"german": "Je mehr du lernst, desto besser sprichst du.", "turkish": "Ne kadar çok çalışırsan o kadar iyi konuşursun."},
+                {"german": "Je früher wir kommen, desto mehr Zeit haben wir.", "turkish": "Ne kadar erken gelirsek o kadar çok zamanımız olur."}
+            ],
+            "common_mistakes": ["Demo modunda gerçek hatalar gösterilemiyor."],
+            "quiz": [
+                {
+                    "question": "Je ... du lernst, desto besser wirst du.",
+                    "options": ["A) mehr", "B) weniger", "C) gut"],
+                    "correct_answer": "A) mehr",
+                    "explanation": "Je...desto yapısında komparatif (karşılaştırma) sıfatı kullanılır."
+                }
+            ]
         }

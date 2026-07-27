@@ -185,3 +185,27 @@ class PDFExportRequest(BaseModel):
     subtitle: Optional[str] = "Betül Altınkaynak Demirel - Yapay Zeka Destekli Almanca Öğrenme Raporu"
     content_markdown: str
     author: Optional[str] = "Betül Altınkaynak Demirel"
+
+
+# --- Edat, Zamir, Bağlaç ve Sıfat Analiz Modelleri ---
+
+class GrammarElementRequest(BaseModel):
+    element: str = Field(..., description="Analiz edilecek edat, zamir, bağlaç veya sıfat yapısı (örn: je-desto, weil, mit)")
+    category: Optional[str] = Field("auto", description="Bağlaç, Edat, Zamir, Sıfat veya auto")
+    provider: AIProviderEnum = Field(AIProviderEnum.GEMINI)
+
+
+class GrammarElementResponse(BaseModel):
+    element: str
+    category: str
+    german_type: str
+    turkish_meaning: str
+    level: Optional[str] = "A1-C2"
+    formula: Optional[str] = None
+    explanation_tr: str
+    rules: List[str] = Field(default_factory=list)
+    tips: List[str] = Field(default_factory=list)
+    examples: List[SentenceExample] = Field(default_factory=list)
+    common_mistakes: List[str] = Field(default_factory=list)
+    quiz: List[Dict[str, Any]] = Field(default_factory=list)
+    author: Optional[str] = "Betül Altınkaynak Demirel"

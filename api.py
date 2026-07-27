@@ -18,8 +18,7 @@ from models import (
     StoryRequest, StoryResponse,
     VerbConjugationRequest, VerbConjugationResponse,
     TranslationRequest, TranslationResponse,
-    PDFExportRequest, GermanLevelEnum, AIProviderEnum, TranslationDirectionEnum,
-    GrammarElementRequest, GrammarElementResponse
+    PDFExportRequest, GermanLevelEnum, AIProviderEnum, TranslationDirectionEnum
 )
 from database import init_db, get_db, SavedAnalysis, SavedConjugation, FavoriteWord
 from prompts import GERMAN_LEVELS_CATALOG
@@ -231,23 +230,6 @@ def get_history(db: Session = Depends(get_db)):
             } for v in conjugations
         ]
     }
-
-
-@app.post("/api/grammar-element", response_model=GrammarElementResponse)
-async def analyze_grammar_element(request: GrammarElementRequest):
-    """
-    Verilen Almanca edat, zamir, bağlaç veya sıfat yapısını derinlemesine analiz eder.
-    Örnek: je-desto, weil, mit, sich, sowohl...als auch, obwohl
-    """
-    try:
-        result = await ai_service.analyze_grammar_element(
-            element=request.element,
-            category=request.category or "auto",
-            provider=request.provider.value if request.provider else None
-        )
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Gramer analiz hatası: {str(e)}")
 
 
 if os.path.exists("index.html"):

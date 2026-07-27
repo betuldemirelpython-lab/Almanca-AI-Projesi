@@ -198,12 +198,12 @@
         }
 
         .tab-content {
-            display: none !important;
+            display: none;
             animation: fadeIn 0.3s ease;
         }
 
         .tab-content.active {
-            display: block !important;
+            display: block;
         }
 
         @keyframes fadeIn {
@@ -629,103 +629,6 @@
             color: var(--text-muted);
             margin-top: 3rem;
         }
-
-        /* Grammar Element Chip Buttons */
-        .grammar-chip {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            font-family: 'Outfit', monospace;
-            background: rgba(139, 92, 246, 0.12);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            color: var(--accent-secondary);
-            border-radius: 999px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .grammar-chip:hover {
-            background: var(--accent-secondary);
-            color: #fff;
-            border-color: var(--accent-secondary);
-            transform: translateY(-2px);
-        }
-
-        /* Grammar Element Result Card Sections */
-        .ge-card {
-            background: var(--bg-secondary);
-            border-radius: 14px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border-color);
-        }
-        .ge-card h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .ge-formula {
-            background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));
-            border: 1px solid rgba(139,92,246,0.3);
-            border-radius: 10px;
-            padding: 1rem 1.5rem;
-            font-family: 'Outfit', monospace;
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--accent-secondary);
-            letter-spacing: 0.01em;
-            margin-bottom: 1rem;
-        }
-        .ge-badge {
-            display: inline-block;
-            padding: 0.2rem 0.7rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
-            color: #fff;
-            margin-right: 0.4rem;
-        }
-        .ge-rule-list li, .ge-tip-list li, .ge-mistake-list li {
-            padding: 0.5rem 0.75rem;
-            border-left: 3px solid var(--accent-primary);
-            margin-bottom: 0.5rem;
-            background: rgba(59,130,246,0.04);
-            border-radius: 0 8px 8px 0;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        .ge-tip-list li { border-left-color: var(--accent-emerald); background: rgba(16,185,129,0.04); }
-        .ge-mistake-list li { border-left-color: var(--accent-rose); background: rgba(244,63,94,0.04); }
-        .ge-example-table { width: 100%; border-collapse: collapse; }
-        .ge-example-table tr:not(:last-child) td { border-bottom: 1px solid var(--border-color); }
-        .ge-example-table td { padding: 0.65rem 0.5rem; font-size: 0.9rem; vertical-align: top; }
-        .ge-example-table td:first-child { font-weight: 600; color: var(--accent-primary); width: 52%; }
-        .ge-quiz-card {
-            background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(251,191,36,0.04));
-            border: 1px solid rgba(245,158,11,0.25);
-            border-radius: 10px;
-            padding: 1rem 1.25rem;
-            margin-bottom: 0.75rem;
-        }
-        .ge-quiz-option {
-            display: block;
-            padding: 0.4rem 0.75rem;
-            margin: 0.3rem 0;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-primary);
-            cursor: pointer;
-            font-size: 0.88rem;
-            transition: all 0.15s;
-        }
-        .ge-quiz-option:hover { border-color: var(--accent-amber); color: var(--accent-amber); }
-        .ge-quiz-option.correct { background: rgba(16,185,129,0.15); border-color: var(--accent-emerald); color: var(--accent-emerald); font-weight: 700; }
-        .ge-quiz-option.wrong { background: rgba(244,63,94,0.12); border-color: var(--accent-rose); color: var(--accent-rose); }
     </style>
 </head>
 <body>
@@ -755,29 +658,26 @@
     <!-- Navigation Tabs -->
     <div class="nav-tabs-wrapper">
         <nav class="nav-tabs">
-            <button class="tab-btn active" data-tab="tab-levels" onclick="switchTab('tab-levels')">
+            <button class="tab-btn active" data-tab="tab-levels">
                 <i class="fa-solid fa-layer-group"></i> Eksiksiz Seviye Kataloğu (A1-C2)
             </button>
-            <button class="tab-btn" data-tab="tab-writing" onclick="switchTab('tab-writing')">
+            <button class="tab-btn" data-tab="tab-writing">
                 <i class="fa-solid fa-pen-nib"></i> AI Yazım Koçu (Skor & Düzeltme)
             </button>
-            <button class="tab-btn" data-tab="tab-story" onclick="switchTab('tab-story')">
+            <button class="tab-btn" data-tab="tab-story">
                 <i class="fa-solid fa-circle-play"></i> Sesli Hikayeler (Sesli Dinleme & Hover)
             </button>
-            <button class="tab-btn" data-tab="tab-conjugator" onclick="switchTab('tab-conjugator')">
+            <button class="tab-btn" data-tab="tab-conjugator">
                 <i class="fa-solid fa-table-cells"></i> Fiil Çekim Matrisi
             </button>
-            <button class="tab-btn" data-tab="tab-translator" onclick="switchTab('tab-translator')">
+            <button class="tab-btn" data-tab="tab-translator">
                 <i class="fa-solid fa-language"></i> Sözlük & Çeviri
             </button>
-            <button class="tab-btn" data-tab="tab-summarizer" onclick="switchTab('tab-summarizer')">
+            <button class="tab-btn" data-tab="tab-summarizer">
                 <i class="fa-solid fa-brain"></i> AI Konu Analizi
             </button>
-            <button class="tab-btn" data-tab="tab-document" onclick="switchTab('tab-document')">
+            <button class="tab-btn" data-tab="tab-document">
                 <i class="fa-solid fa-file-pdf"></i> Belge & PDF Export
-            </button>
-            <button class="tab-btn" data-tab="tab-grammar-element" onclick="switchTab('tab-grammar-element')">
-                <i class="fa-solid fa-puzzle-piece"></i> Edat · Zamir · Bağlaç · Sıfat
             </button>
         </nav>
     </div>
@@ -1179,68 +1079,12 @@
             </div>
         </section>
 
-        <!-- *** YENİ: Edat / Zamir / Bağlaç / Sıfat Analiz Sekmesi *** -->
-        <section id="tab-grammar-element" class="tab-content">
-            <div class="glass-card">
-                <h2 style="margin-bottom: 0.4rem;">
-                    <i class="fa-solid fa-puzzle-piece" style="color: var(--accent-secondary);"></i>
-                    Edat · Zamir · Bağlaç · Sıfat Analizi
-                </h2>
-                <p style="color: var(--text-muted); margin-bottom: 1.75rem; font-size: 0.9rem;">
-                    Almanca bir dilbilgisi yapısını (örn: <strong>je...desto</strong>, <strong>weil</strong>, <strong>obwohl</strong>, <strong>mit</strong>, <strong>sich</strong>, <strong>obwohl</strong>) yazın;
-                    yapay zeka formülünü, kurallarını, örneklerini ve sık yapılan hataları derinlemesine açıklasın.
-                </p>
-
-                <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 0.75rem; align-items: end; margin-bottom: 1.5rem;">
-                    <div>
-                        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">Yapı / Kelime</label>
-                        <input type="text" id="grammarElementInput" class="form-input"
-                            placeholder="örn: je...desto   |   weil   |   obwohl   |   mit   |   sich   |   sowohl...als auch"
-                            style="width: 100%;">
-                    </div>
-                    <div>
-                        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">Kategori</label>
-                        <select id="grammarCategorySelect" class="form-input" style="min-width: 160px;">
-                            <option value="auto">🔍 Otomatik Algıla</option>
-                            <option value="Bağlaç">🔗 Bağlaç (Konnektor)</option>
-                            <option value="Edat">📍 Edat (Präposition)</option>
-                            <option value="Zamir">👤 Zamir (Pronomen)</option>
-                            <option value="Sıfat">🎨 Sıfat (Adjektiv)</option>
-                        </select>
-                    </div>
-                    <button id="btnAnalyzeGrammarElement" class="btn-submit" style="white-space: nowrap; padding: 0.75rem 1.5rem;">
-                        <i class="fa-solid fa-magnifying-glass"></i> Analiz Et
-                    </button>
-                </div>
-
-                <!-- Quick Suggestion Chips -->
-                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.75rem;">
-                    <span style="font-size: 0.8rem; color: var(--text-muted); align-self: center; margin-right: 0.25rem;">Hızlı Seçim:</span>
-                    <button class="grammar-chip" onclick="fillGrammarElement('je...desto','Bağlaç')">je...desto</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('weil','Bağlaç')">weil</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('obwohl','Bağlaç')">obwohl</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('damit','Bağlaç')">damit</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('sowohl...als auch','Bağlaç')">sowohl...als auch</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('weder...noch','Bağlaç')">weder...noch</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('mit','Edat')">mit</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('trotz','Edat')">trotz</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('wegen','Edat')">wegen</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('sich','Zamir')">sich</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('derselbe','Zamir')">derselbe</button>
-                    <button class="grammar-chip" onclick="fillGrammarElement('schnell','Sıfat')">schnell (çekim)</button>
-                </div>
-
-                <!-- Result Area -->
-                <div id="grammarElementResult" style="display: none;"></div>
-            </div>
-        </section>
-
     </main>
 
     <!-- Footer -->
     <footer>
         <p><b>Yapay Zeka Destekli Almanca Öğrenme Projesi</b> | Geliştirici: <b>Betül Altınkaynak Demirel</b></p>
-        <p style="font-size: 0.75rem; margin-top: 0.4rem; opacity: 0.7;">Google Gemini 2.5 Flash &amp; Groq LLaMA 3.3 API Mimarısı | Vercel &amp; FastAPI Compatible</p>
+        <p style="font-size: 0.75rem; margin-top: 0.4rem; opacity: 0.7;">Google Gemini 2.5 Flash & Groq LLaMA 3.3 API Mimarısı | Vercel & FastAPI Compatible</p>
     </footer>
 
     <!-- Client Script Logic -->
@@ -1252,18 +1096,17 @@
         let isAudioPlaying = false;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            try { initTabs(); } catch(e) { console.error('initTabs failed:', e); }
-            try { initLevelChips(); } catch(e) { console.error('initLevelChips failed:', e); }
-            try { await fetchLevelsCatalog(); } catch(e) { console.error('fetchLevelsCatalog failed:', e); }
-            try { initWritingCoach(); } catch(e) { console.error('initWritingCoach failed:', e); }
-            try { initStoryModule(); } catch(e) { console.error('initStoryModule failed:', e); }
-            try { initAudioPlayer(); } catch(e) { console.error('initAudioPlayer failed:', e); }
-            try { initConjugator(); } catch(e) { console.error('initConjugator failed:', e); }
-            try { initTranslator(); } catch(e) { console.error('initTranslator failed:', e); }
-            try { initSummarizer(); } catch(e) { console.error('initSummarizer failed:', e); }
-            try { initPDFExport(); } catch(e) { console.error('initPDFExport failed:', e); }
-            try { initThemeToggle(); } catch(e) { console.error('initThemeToggle failed:', e); }
-            try { initGrammarElement(); } catch(e) { console.error('initGrammarElement failed:', e); }
+            initTabs();
+            initLevelChips();
+            await fetchLevelsCatalog();
+            initWritingCoach();
+            initStoryModule();
+            initAudioPlayer();
+            initConjugator();
+            initTranslator();
+            initSummarizer();
+            initPDFExport();
+            initThemeToggle();
         });
 
         async function fetchLevelsCatalog() {
@@ -1287,46 +1130,17 @@
             });
         }
 
-        // Tab Navigation - style.display ile CSS override sorununu tamamen gecer
-        function switchTab(tabId) {
-            // Tum butonlardan active kaldir
-            document.querySelectorAll('.tab-btn').forEach(function(b) {
-                b.classList.remove('active');
-            });
-            // Tum icerik alanlarini gizle (inline style ile - !important'tan bile guclu)
-            document.querySelectorAll('.tab-content').forEach(function(tc) {
-                tc.style.display = 'none';
-                tc.classList.remove('active');
-            });
-            // Aktif butonu sec
-            var activeBtn = document.querySelector('[data-tab="' + tabId + '"]');
-            if (activeBtn) activeBtn.classList.add('active');
-            // Aktif icerik alanini goster
-            var activeContent = document.getElementById(tabId);
-            if (activeContent) {
-                activeContent.style.display = 'block';
-                activeContent.classList.add('active');
-            }
-        }
-
+        // Tab Navigation
         function initTabs() {
-            // Sayfa yuklendiginde tum tab-content'leri gizle, sadece ilkini goster
-            var allContents = document.querySelectorAll('.tab-content');
-            allContents.forEach(function(tc, i) {
-                if (i === 0) {
-                    tc.style.display = 'block';
-                    tc.classList.add('active');
-                } else {
-                    tc.style.display = 'none';
-                    tc.classList.remove('active');
-                }
-            });
-            // Event listener ekle (onclick zaten var, bu yedek)
-            var buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    var tabId = this.getAttribute('data-tab');
-                    if (tabId) switchTab(tabId);
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    const tabId = btn.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
                 });
             });
         }
@@ -1381,11 +1195,9 @@
                     </div>
                 `;
                 card.addEventListener('click', () => {
-                    switchTab('tab-summarizer');
-                    const topicInput = document.getElementById('customTopicInput');
-                    const levelSelect = document.getElementById('customLevelSelect');
-                    if (topicInput) topicInput.value = t.title;
-                    if (levelSelect) levelSelect.value = level;
+                    document.querySelector('[data-tab="tab-summarizer"]').click();
+                    document.getElementById('customTopicInput').value = t.title;
+                    document.getElementById('customLevelSelect').value = level;
                     triggerTopicAnalysis(t.title, level);
                 });
                 container.appendChild(card);
@@ -2187,193 +1999,6 @@ ${(currentActiveAnalysisData.common_mistakes || []).map(m => '- ' + m).join('\n'
 
         function hideLoader() {
             document.getElementById('appLoader').style.display = 'none';
-        }
-
-        // *** Edat / Zamir / Bağlaç / Sıfat Analiz Modülü ***
-        function fillGrammarElement(element, category) {
-            const inp = document.getElementById('grammarElementInput');
-            if (inp) inp.value = element;
-            const sel = document.getElementById('grammarCategorySelect');
-            if (sel) {
-                for (let i = 0; i < sel.options.length; i++) {
-                    if (sel.options[i].value === category) { sel.selectedIndex = i; break; }
-                }
-            }
-            switchTab('tab-grammar-element');
-            const analyzeBtn = document.getElementById('btnAnalyzeGrammarElement');
-            if (analyzeBtn) setTimeout(() => analyzeBtn.click(), 100);
-        }
-
-        function initGrammarElement() {
-            const btn = document.getElementById('btnAnalyzeGrammarElement');
-            btn.addEventListener('click', async () => {
-                const element = document.getElementById('grammarElementInput').value.trim();
-                const category = document.getElementById('grammarCategorySelect').value;
-                if (!element) {
-                    alert('Lütfen analiz edilecek yapıyı veya kelimeyi girin (örn: je...desto, weil, mit).');
-                    return;
-                }
-                showLoader(`"${element}" yapısı analiz ediliyor...`);
-                try {
-                    const res = await fetch('/api/grammar-element', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ element, category, provider: 'gemini' })
-                    });
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    const data = await res.json();
-                    renderGrammarElementResult(data);
-                } catch (err) {
-                    document.getElementById('grammarElementResult').style.display = 'block';
-                    document.getElementById('grammarElementResult').innerHTML = `
-                        <div class="ge-card" style="border-color: var(--accent-rose);">
-                            <h3 style="color: var(--accent-rose);"><i class="fa-solid fa-circle-exclamation"></i> Hata</h3>
-                            <p>${err.message}</p>
-                        </div>`;
-                } finally {
-                    hideLoader();
-                }
-            });
-        }
-
-        function renderGrammarElementResult(d) {
-            const categoryIcons = { 'Bağlaç': '🔗', 'Edat': '📍', 'Zamir': '👤', 'Sıfat': '🎨' };
-            const icon = categoryIcons[d.category] || '📚';
-
-            // Examples table rows
-            const exampleRows = (d.examples || []).map(ex => `
-                <tr>
-                    <td>${escapeHtml(ex.german)}</td>
-                    <td style="color: var(--text-muted);">${escapeHtml(ex.turkish)}</td>
-                </tr>`).join('');
-
-            // Rules list
-            const ruleItems = (d.rules || []).map(r => `<li>${escapeHtml(r)}</li>`).join('');
-
-            // Tips list
-            const tipItems = (d.tips || []).map(t => `<li>${escapeHtml(t)}</li>`).join('');
-
-            // Mistakes list
-            const mistakeItems = (d.common_mistakes || []).map(m => `<li>${escapeHtml(m)}</li>`).join('');
-
-            // Quiz cards
-            const quizCards = (d.quiz || []).map((q, qi) => {
-                const opts = (q.options || []).map((opt, oi) => `
-                    <button class="ge-quiz-option" onclick="checkGrammarQuiz(this, '${escapeAttr(opt)}', '${escapeAttr(q.correct_answer)}', 'ge-quiz-exp-${qi}')">
-                        ${escapeHtml(opt)}
-                    </button>`).join('');
-                return `
-                    <div class="ge-quiz-card">
-                        <p style="font-weight: 700; margin-bottom: 0.75rem; font-size: 0.95rem;">${qi+1}. ${escapeHtml(q.question)}</p>
-                        ${opts}
-                        <p id="ge-quiz-exp-${qi}" style="display:none; margin-top:0.75rem; font-size:0.85rem; color:var(--accent-emerald); font-weight:600;">
-                            ✅ ${escapeHtml(q.explanation || '')}
-                        </p>
-                    </div>`;
-            }).join('');
-
-            const html = `
-                <!-- Header -->
-                <div class="ge-card" style="background: linear-gradient(135deg, rgba(59,130,246,0.07), rgba(139,92,246,0.07)); border-color: rgba(139,92,246,0.3);">
-                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
-                        <div>
-                            <h2 style="font-size:1.6rem; font-weight:800; font-family:'Outfit',sans-serif; margin-bottom:0.3rem;">
-                                ${icon} <span style="color:var(--accent-secondary);">${escapeHtml(d.element)}</span>
-                            </h2>
-                            <div>
-                                <span class="ge-badge">${escapeHtml(d.category)}</span>
-                                <span class="ge-badge" style="background:linear-gradient(135deg,var(--accent-emerald),#059669);">${escapeHtml(d.level || '')}</span>
-                                <span style="font-size:0.85rem; color:var(--text-muted);">${escapeHtml(d.german_type || '')}</span>
-                            </div>
-                        </div>
-                        <div style="background:var(--bg-primary); border-radius:10px; padding:0.75rem 1.25rem; border:1px solid var(--border-color); max-width:320px;">
-                            <p style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-bottom:0.2rem;">TÜRKÇE KARŞILIĞI</p>
-                            <p style="font-size:1rem; font-weight:700; color:var(--accent-amber);">${escapeHtml(d.turkish_meaning || '')}</p>
-                        </div>
-                    </div>
-                </div>
-
-                ${d.formula ? `
-                <!-- Formula -->
-                <div class="ge-card">
-                    <h3><i class="fa-solid fa-code" style="color:var(--accent-secondary);"></i> Cümle Yapısı / Formülü</h3>
-                    <div class="ge-formula">${escapeHtml(d.formula)}</div>
-                </div>` : ''}
-
-                <!-- Explanation -->
-                <div class="ge-card">
-                    <h3><i class="fa-solid fa-book-open" style="color:var(--accent-primary);"></i> Açıklama</h3>
-                    <p style="line-height:1.8; font-size:0.95rem; color:var(--text-muted);">${escapeHtml(d.explanation_tr || '')}</p>
-                </div>
-
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                    <!-- Rules -->
-                    <div class="ge-card">
-                        <h3><i class="fa-solid fa-scale-balanced" style="color:var(--accent-primary);"></i> Dilbilgisi Kuralları</h3>
-                        <ul class="ge-rule-list" style="list-style:none; padding:0;">${ruleItems}</ul>
-                    </div>
-                    <!-- Tips -->
-                    <div class="ge-card">
-                        <h3><i class="fa-solid fa-lightbulb" style="color:var(--accent-emerald);"></i> Püf Noktaları</h3>
-                        <ul class="ge-tip-list" style="list-style:none; padding:0;">${tipItems || '<li>Genel kural olarak yapıyı cümle içinde uygulayın.</li>'}</ul>
-                    </div>
-                </div>
-
-                <!-- Examples -->
-                ${exampleRows ? `
-                <div class="ge-card">
-                    <h3><i class="fa-solid fa-list-check" style="color:var(--accent-amber);"></i> Örnek Cümleler</h3>
-                    <table class="ge-example-table">
-                        <thead>
-                            <tr style="font-size:0.78rem; color:var(--text-muted); font-weight:700;">
-                                <td style="padding-bottom:0.5rem;">🇩🇪 Almanca</td>
-                                <td style="padding-bottom:0.5rem;">🇹🇷 Türkçe</td>
-                            </tr>
-                        </thead>
-                        <tbody>${exampleRows}</tbody>
-                    </table>
-                </div>` : ''}
-
-                <!-- Common Mistakes -->
-                ${mistakeItems ? `
-                <div class="ge-card">
-                    <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-rose);"></i> Sık Yapılan Hatalar</h3>
-                    <ul class="ge-mistake-list" style="list-style:none; padding:0;">${mistakeItems}</ul>
-                </div>` : ''}
-
-                <!-- Quiz -->
-                ${quizCards ? `
-                <div class="ge-card">
-                    <h3><i class="fa-solid fa-circle-question" style="color:var(--accent-amber);"></i> Mini Test</h3>
-                    ${quizCards}
-                </div>` : ''}
-            `;
-
-            const resultDiv = document.getElementById('grammarElementResult');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = html;
-            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function checkGrammarQuiz(btn, selected, correct, expId) {
-            const container = btn.parentElement;
-            const allOpts = container.querySelectorAll('.ge-quiz-option');
-            allOpts.forEach(o => {
-                o.disabled = true;
-                if (o.innerText.trim() === correct.trim()) o.classList.add('correct');
-                else o.classList.add('wrong');
-            });
-            const exp = document.getElementById(expId);
-            if (exp) exp.style.display = 'block';
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-        }
-        function escapeAttr(str) {
-            if (!str) return '';
-            return String(str).replace(/'/g,"\\'");
         }
     </script>
 </body>

@@ -227,26 +227,26 @@ Lütfen tam olarak aşağıdaki JSON formatında yanıt dön:
         "wir": "wir werden machen",
         "ihr": "ihr werdet machen",
         "sie_Sie": "sie/Sie werden machen"
-      }
-    },
-    {
+      }}
+    }},
+    {{
       "tense_name": "Futur II",
       "turkish_tense_name": "Gelecekte Tamamlanmış Zaman",
       "auxiliary_verb": "werden",
-      "forms": {
+      "forms": {{
         "ich": "ich werde gemacht haben",
         "du": "du wirst gemacht haben",
         "er_sie_es": "er/sie/es wird gemacht haben",
         "wir": "wir werden gemacht haben",
         "ihr": "ihr werdet gemacht haben",
         "sie_Sie": "sie/Sie werden gemacht haben"
-      }
-    }
+      }}
+    }}
   ],
   "example_sentences": [
-    {"german": "Ich mache meine Hausaufgaben.", "turkish": "Ev ödevlerimi yapıyorum."}
+    {{"german": "Ich mache meine Hausaufgaben.", "turkish": "Ev ödevlerimi yapıyorum."}}
   ]
-}
+}}
 """
 
 DICTIONARY_TRANSLATION_PROMPT = """
@@ -275,59 +275,6 @@ Lütfen aşağıdaki JSON formatında yanıt ver:
     "grammar_tips": "İlgili gramer / kullanım ipucu"
   }},
   "alternative_translations": ["Alternatif çeviri 1"]
-}}
-"""
-
-GRAMMAR_ELEMENT_PROMPT = """
-Aşağıdaki Almanca dilbilgisi elemanını (Edat / Präposition, Zamir / Pronomen, Bağlaç / Konnektor veya Sıfat / Adjektiv) en ince detayına kadar derinlemesine analiz et.
-
-Yapı / Kelime: {element}
-Kategori Tercihi: {category}
-
-ÖNEMLİ TALİMATLAR:
-1. "element": Aranan yapı (örn: "je...desto", "weil", "mit", "sich", "sowohl...als auch").
-2. "category": Yapının kategorisi ("Bağlaç", "Edat", "Zamir", "Sıfat").
-3. "german_type": Almanca dilbilgisindeki tam adı (örn: "Zweiteilige Konnektoren", "Dativpräposition", "Reflexivpronomen", "Adjektivdeklination").
-4. "turkish_meaning": Türkçedeki tam karşılığı ve kullanım amacı.
-5. "formula": Cümlenin yapısı ve fiil pozisyonu formülü (örn: "Je + Komparativ + Özne + ... + Fiil (En sonda), desto + Komparativ + Fiil (2. pozisyon) + Özne + ...").
-6. "explanation_tr": Yapının mantığını, virgül kuralını ve cümledeki etkisini 2-3 detaylı paragrafta açıkla.
-7. "rules": Bu yapıyla ilgili en az 3-4 kesin dilbilgisi kuralı ekle.
-8. "tips": Öğreniciler için 2-3 püf noktası ve karıştırılan durumları ekle.
-9. "examples": Farklı durumları gösteren en az 4-5 zengin örnek Almanca cümle ve Türkçe çevirilerini sun.
-10. "common_mistakes": Sık yapılan en az 2-3 hatayı "Yanlış -> Doğru (Nedeni)" olarak ekle.
-11. "quiz": Konuyu pekiştiren 2 mini test sorusu üret.
-
-Lütfen KESİNLİKLE aşağıdaki JSON formatında yanıt ver:
-{{
-  "element": "{element}",
-  "category": "Bağlaç",
-  "german_type": "Zweiteilige Konnektoren",
-  "turkish_meaning": "Ne kadar ... o kadar ...",
-  "level": "B2 - İleri Seviye",
-  "formula": "Je + Komparativ + ... + Verb (am Ende), desto + Komparativ + Verb (Pos. 2) + ...",
-  "explanation_tr": "Je...desto yapısı iki parçalı bir karşılaştırma bağlacıdır...",
-  "rules": [
-    "1. Je ile başlayan yan cümlede fiil her zaman cümlenin EN SONUNA gider.",
-    "2. desto ile başlayan ana cümlede çekimli fiil sıfattan sonra 2. pozisyondadır."
-  ],
-  "tips": [
-    "Püf noktası 1: 'desto' yerine 'umso' da kullanılabilir (je mehr ..., umso besser ...)."
-  ],
-  "examples": [
-    {{"german": "Je mehr du lernst, desto besser sprichst du.", "turkish": "Ne kadar çok çalışırsan, o kadar iyi konuşursun."}},
-    {{"german": "Je früher wir kommen, desto mehr Zeit haben wir.", "turkish": "Ne kadar erken gelirsek, o kadar çok zamanımız olur."}}
-  ],
-  "common_mistakes": [
-    "Yanlış: Je mehr du lernst, desto du besser sprichst. -> Doğru: Je mehr du lernst, desto besser sprichst du. (desto kısmında fiil 2. pozisyondadır.)"
-  ],
-  "quiz": [
-    {{
-      "question": "Je daha çok spor yaparsan, ... sağlıklı olursun.",
-      "options": ["A) desto", "B) weil", "C) dass"],
-      "correct_answer": "A) desto",
-      "explanation": "Je ile başlayan cümleyi 'desto' veya 'umso' takip eder."
-    }}
-  ]
 }}
 """
 

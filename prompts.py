@@ -6,12 +6,64 @@ AI System Promptları, Yazım Değerlendirme Promptu ve A1-C2 Konu Kataloğu
 
 # German proficiency levels catalog
 GERMAN_LEVELS_CATALOG = {
-    "A1": "Beginner",
-    "A2": "Elementary",
-    "B1": "Intermediate",
-    "B2": "Upper Intermediate",
-    "C1": "Advanced",
-    "C2": "Proficiency"
+    "A1": {
+        "title": "A1 - Başlangıç Seviyesi",
+        "description": "Temel selamlaşma, artikel, şahıs zamirleri ve günlük iletişim.",
+        "topics": [
+            {"id": "a1-01", "title": "Begrüßung & Sich Vorstellen", "category": "Günlük Konuşma", "description": "Kendini tanıtma, isim, yaş ve temel sorular.", "estimated_minutes": 15},
+            {"id": "a1-02", "title": "Alphabet, Zahlen & Datum", "category": "Kelime Bilgisi", "description": "Alfabe, sayılar, tarihler ve temel ses bilgisi.", "estimated_minutes": 20},
+            {"id": "a1-03", "title": "Bestimmter & Unbestimmter Artikel", "category": "Gramer", "description": "der, die, das ve ein, eine kullanımı.", "estimated_minutes": 25},
+            {"id": "a1-04", "title": "Präsens & Personalpronomen", "category": "Gramer", "description": "Şahıs zamirleri ve temel fiil çekimi.", "estimated_minutes": 25}
+        ]
+    },
+    "A2": {
+        "title": "A2 - Temel İleri Seviye",
+        "description": "Geçmiş zaman, Dativ, edatlar ve temel yan cümleler.",
+        "topics": [
+            {"id": "a2-01", "title": "Perfekt mit haben & sein", "category": "Gramer", "description": "Geçmiş zamanın temel yapısı ve yardımcı fiiller.", "estimated_minutes": 30},
+            {"id": "a2-02", "title": "Dativ Kasus", "category": "Gramer", "description": "-e hali ve temel edat kullanımları.", "estimated_minutes": 30},
+            {"id": "a2-03", "title": "Wechselpräpositionen", "category": "Gramer", "description": "an, auf, in, neben gibi çift yönlü edatlar.", "estimated_minutes": 35},
+            {"id": "a2-04", "title": "Nebensätze mit weil & dass", "category": "Gramer", "description": "Yan cümle yapıları ve bağlaç kullanımı.", "estimated_minutes": 25}
+        ]
+    },
+    "B1": {
+        "title": "B1 - Orta Seviye",
+        "description": "Karmaşık yan cümleler, Konjunktiv II ve edilgen yapı.",
+        "topics": [
+            {"id": "b1-01", "title": "Konjunktiv II", "category": "Gramer", "description": "İstek, nezaket ve tavsiye ifadeleri.", "estimated_minutes": 35},
+            {"id": "b1-02", "title": "Passiv", "category": "Gramer", "description": "Edilgen yapıların oluşumu ve kullanımı.", "estimated_minutes": 35},
+            {"id": "b1-03", "title": "Relativsätze", "category": "Gramer", "description": "İlgi cümleleri ve metin bağlama.", "estimated_minutes": 30},
+            {"id": "b1-04", "title": "Infinitiv mit zu", "category": "Gramer", "description": "Mastar kullanımında zu yapısı.", "estimated_minutes": 25}
+        ]
+    },
+    "B2": {
+        "title": "B2 - İleri Orta Seviye",
+        "description": "Akademik ifade, yazım ve bağlaç temelli üst düzey yapı.",
+        "topics": [
+            {"id": "b2-01", "title": "Konnektoren & Satzverknüpfungen", "category": "Akademik Dil", "description": "Bağlaçlarla uzun cümle kurma.", "estimated_minutes": 35},
+            {"id": "b2-02", "title": "Partizipialattribute", "category": "Akademik Dil", "description": "Ortaç yapıları ve metaforik anlatım.", "estimated_minutes": 35},
+            {"id": "b2-03", "title": "Nominalisierung", "category": "Yazım", "description": "Fiillerden isim türetme ve akademik üslup.", "estimated_minutes": 30},
+            {"id": "b2-04", "title": "Argumentation & Diskussion", "category": "Konuşma", "description": "Tartışma ve ikna yapıları.", "estimated_minutes": 40}
+        ]
+    },
+    "C1": {
+        "title": "C1 - İleri Düzey",
+        "description": "Dolaylı anlatım, akademik metin ve ileri düzey stil.",
+        "topics": [
+            {"id": "c1-01", "title": "Konjunktiv I & Indirekte Rede", "category": "Akademik Gramer", "description": "Başkalarının sözlerini aktarma ve haber dili.", "estimated_minutes": 40},
+            {"id": "c1-02", "title": "Nominalstil", "category": "Üslup", "description": "Fiil ağırlıklı metni daha akademik hale getirme.", "estimated_minutes": 45},
+            {"id": "c1-03", "title": "Textkohärenz", "category": "Yazım", "description": "Metin bütünlüğü ve bağdaşıklık.", "estimated_minutes": 40}
+        ]
+    },
+    "C2": {
+        "title": "C2 - Anadil Düzeyi",
+        "description": "Edebi, resmi ve uzmanlık dili ile ileri retorik yapı.",
+        "topics": [
+            {"id": "c2-01", "title": "Fachsprache & Juristische Ausdrucksweise", "category": "Uzmanlık", "description": "Resmi ve hukuki dil kullanım örnekleri.", "estimated_minutes": 50},
+            {"id": "c2-02", "title": "Literarische Stil Analyse", "category": "Edebi & Kültürel", "description": "Edebi metinler üzerinden stil çözümlemesi.", "estimated_minutes": 50},
+            {"id": "c2-03", "title": "Rhetorische Stilmittel", "category": "Üslup", "description": "Mecaz, ironi ve etkili anlatım.", "estimated_minutes": 45}
+        ]
+    }
 }
 
 SYSTEM_INSTRUCTION = """

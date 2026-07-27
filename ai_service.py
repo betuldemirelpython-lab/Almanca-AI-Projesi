@@ -1,6 +1,6 @@
 """
-Yapay Zeka Destekli Almanca Öğrenme Projesi
-Developer: Betül Altınkaynak Demirel
+Yapay Zeka Destekli Almanca ├û─şrenme Projesi
+Developer: Bet├╝l Alt─▒nkaynak Demirel
 AI Integration Service - Gemini 2.5 Flash & Groq LLaMA 3.3
 """
 
@@ -33,7 +33,7 @@ class AIService:
         self.default_provider = os.getenv("DEFAULT_AI_PROVIDER", "groq").lower()
 
     def _extract_json(self, text: str) -> Dict[str, Any]:
-        """AI yanıtı içerisindeki JSON bloğunu ayrıştırır."""
+        """AI yan─▒t─▒ i├ğerisindeki JSON blo─şunu ayr─▒┼şt─▒r─▒r."""
         try:
             return json.loads(text)
         except json.JSONDecodeError:
@@ -44,7 +44,7 @@ class AIService:
             end = text.rfind("}")
             if start != -1 and end != -1:
                 return json.loads(text[start : end + 1])
-            raise ValueError(f"Geçerli bir JSON ayrıştırılamadı. Yanıt: {text[:200]}")
+            raise ValueError(f"Ge├ğerli bir JSON ayr─▒┼şt─▒r─▒lamad─▒. Yan─▒t: {text[:200]}")
 
     async def _execute_prompt(self, prompt: str, provider: Optional[str] = None) -> Optional[Dict[str, Any]]:
         prov = (provider or self.default_provider or "groq").lower()
@@ -53,25 +53,25 @@ class AIService:
             try:
                 return await self._call_groq(prompt)
             except Exception as e:
-                print(f"Groq isteği başarısız, diğer sağlayıcı deneniyor: {e}")
+                print(f"Groq iste─şi ba┼şar─▒s─▒z, di─şer sa─şlay─▒c─▒ deneniyor: {e}")
 
         if prov == "gemini" and self.gemini_api_key:
             try:
                 return await self._call_gemini(prompt)
             except Exception as e:
-                print(f"Gemini isteği başarısız, diğer sağlayıcı deneniyor: {e}")
+                print(f"Gemini iste─şi ba┼şar─▒s─▒z, di─şer sa─şlay─▒c─▒ deneniyor: {e}")
 
         if self.groq_api_key:
             try:
                 return await self._call_groq(prompt)
             except Exception as e:
-                print(f"Groq yedek isteği de başarısız: {e}")
+                print(f"Groq yedek iste─şi de ba┼şar─▒s─▒z: {e}")
 
         if self.gemini_api_key:
             try:
                 return await self._call_gemini(prompt)
             except Exception as e:
-                print(f"Gemini yedek isteği de başarısız: {e}")
+                print(f"Gemini yedek iste─şi de ba┼şar─▒s─▒z: {e}")
 
         return None
 
@@ -90,7 +90,7 @@ class AIService:
         return res if res else self._mock_writing_evaluation(text, target_level)
 
     async def generate_story(
-        self, level: str = "A1", theme: str = "Günlük Yaşam", provider: Optional[str] = None
+        self, level: str = "A1", theme: str = "G├╝nl├╝k Ya┼şam", provider: Optional[str] = None
     ) -> Dict[str, Any]:
         prompt = STORY_GENERATION_PROMPT.format(level=level, theme=theme)
         res = await self._execute_prompt(prompt, provider)
@@ -110,7 +110,7 @@ class AIService:
         res = await self._execute_prompt(prompt, provider)
         return res if res else self._mock_translation(text, direction)
 
-    # --- API Çağrı Metotları ---
+    # --- API ├ça─şr─▒ Metotlar─▒ ---
 
     async def _call_gemini(self, prompt: str) -> Dict[str, Any]:
         def _sync_gemini():
@@ -146,8 +146,8 @@ class AIService:
         try:
             return await asyncio.wait_for(asyncio.to_thread(_sync_gemini), timeout=12.0)
         except Exception as e:
-            print(f"Gemini API hatası/zaman aşımı: {str(e)}")
-            raise RuntimeError(f"Gemini API Hatası: {str(e)}")
+            print(f"Gemini API hatas─▒/zaman a┼ş─▒m─▒: {str(e)}")
+            raise RuntimeError(f"Gemini API Hatas─▒: {str(e)}")
 
     async def _call_groq(self, prompt: str) -> Dict[str, Any]:
         def _sync_groq():
@@ -168,12 +168,12 @@ class AIService:
         try:
             return await asyncio.wait_for(asyncio.to_thread(_sync_groq), timeout=12.0)
         except Exception as e:
-            print(f"Groq API hatası/zaman aşımı: {str(e)}")
-            raise RuntimeError(f"Groq API Hatası: {str(e)}")
-            print(f"Groq API hatası: {str(e)}")
-            raise RuntimeError(f"Groq API Hatası: {str(e)}")
+            print(f"Groq API hatas─▒/zaman a┼ş─▒m─▒: {str(e)}")
+            raise RuntimeError(f"Groq API Hatas─▒: {str(e)}")
+            print(f"Groq API hatas─▒: {str(e)}")
+            raise RuntimeError(f"Groq API Hatas─▒: {str(e)}")
 
-    # --- Offline Fallback Metotları ---
+    # --- Offline Fallback Metotlar─▒ ---
 
     def _mock_writing_evaluation(self, text: str, target_level: str) -> Dict[str, Any]:
         has_error = "gegangen" in text or "haben" in text or len(text) > 10
@@ -183,117 +183,63 @@ class AIService:
             "original_text": text,
             "target_level": target_level,
             "overall_score": score,
-            "assessed_level": f"{target_level} - Başarılı Seviye",
+            "assessed_level": f"{target_level} - Ba┼şar─▒l─▒ Seviye",
             "corrected_text": text.replace("haben gegangen", "bin gegangen").replace("der Buch", "das Buch"),
             "errors": [
                 {
                     "original": "haben gegangen" if "haben gegangen" in text else "Beispiel Hata",
-                    "correction": "bin gegangen" if "haben gegangen" in text else "Beispiel Düzeltme",
-                    "error_type": "Gramer (Yardımcı Fiil)",
-                    "explanation_tr": "Gehen fiili yer değiştirme bildirdiği için Perfekt geçmiş zamanda 'haben' yerine 'sein' (bin) kullanılır."
+                    "correction": "bin gegangen" if "haben gegangen" in text else "Beispiel D├╝zeltme",
+                    "error_type": "Gramer (Yard─▒mc─▒ Fiil)",
+                    "explanation_tr": "Gehen fiili yer de─şi┼ştirme bildirdi─şi i├ğin Perfekt ge├ğmi┼ş zamanda 'haben' yerine 'sein' (bin) kullan─▒l─▒r."
                 }
             ],
             "strengths": [
-                "Cümle dizilimi ve fiil pozisyonu genel olarak doğru.",
-                "Seviyeye uygun bağlaçlar tercih edilmiş."
+                "C├╝mle dizilimi ve fiil pozisyonu genel olarak do─şru.",
+                "Seviyeye uygun ba─şla├ğlar tercih edilmi┼ş."
             ],
             "improvements": [
-                "İsimlerin artikellerine (der/die/das) ve büyük harfle başlamasına dikkat edilmeli.",
-                "Perfekt geçmiş zaman yardımcı fiil tercihleri gözden geçirilmeli."
+                "─░simlerin artikellerine (der/die/das) ve b├╝y├╝k harfle ba┼şlamas─▒na dikkat edilmeli.",
+                "Perfekt ge├ğmi┼ş zaman yard─▒mc─▒ fiil tercihleri g├Âzden ge├ğirilmeli."
             ],
             "vocabulary_suggestions": [
-                {"simple": "gut", "advanced": "hervorragend", "meaning_tr": "mükemmel"},
-                {"simple": "machen", "advanced": "durchführen", "meaning_tr": "gerçekleştirmek"}
+                {"simple": "gut", "advanced": "hervorragend", "meaning_tr": "m├╝kemmel"},
+                {"simple": "machen", "advanced": "durchf├╝hren", "meaning_tr": "ger├ğekle┼ştirmek"}
             ]
         }
 
     def _mock_story(self, level: str, theme: str) -> Dict[str, Any]:
         return {
-            "title_de": f"Ein unvergesslicher Tag in Deutschland ({level})",
-            "title_tr": f"Almanya'da Unutulmaz Bir Gün ({level} Seviyesi - {theme})",
+            "title_de": f"Ein Tag in Deutschland ({level})",
+            "title_tr": f"Almanya'da Bir G├╝n ({level} Seviyesi - {theme})",
             "level": level,
             "paragraphs": [
                 {
-                    "german_text": "Heute steht Lukas früh am Morgen auf und öffnet das Fenster.",
+                    "german_text": "Heute geht Lukas in den Supermarkt.",
                     "words": [
-                        {"w": "Heute", "tr": "Bugün", "type": "Adverb"},
-                        {"w": "steht", "tr": "kalkıyor (aufstehen)", "type": "Verb"},
-                        {"w": "Lukas", "tr": "Lukas", "type": "Nomen"},
-                        {"w": "früh", "tr": "erken", "type": "Adjektiv"},
-                        {"w": "am", "tr": "sabahleyin (an dem)", "type": "Präposition"},
-                        {"w": "Morgen", "tr": "sabah", "type": "Nomen", "article": "der"},
-                        {"w": "auf", "tr": "kalkmak (ayrılan ek)", "type": "Verb-Präfix"},
-                        {"w": "und", "tr": "ve", "type": "Konnektor"},
-                        {"w": "öffnet", "tr": "açıyor (öffnen)", "type": "Verb"},
-                        {"w": "das", "tr": "belirli artikel (nötr)", "type": "Artikel"},
-                        {"w": "Fenster.", "tr": "pencere", "type": "Nomen", "article": "das", "plural": "die Fenster"}
-                    ]
-                },
-                {
-                    "german_text": "Die Sonne scheint hell und das Wetter ist wirklich wunderschön.",
-                    "words": [
-                        {"w": "Die", "tr": "belirli artikel (dişil)", "type": "Artikel"},
-                        {"w": "Sonne", "tr": "güneş", "type": "Nomen", "article": "die"},
-                        {"w": "scheint", "tr": "parlıyor (scheinen)", "type": "Verb"},
-                        {"w": "hell", "tr": "parlak", "type": "Adjektiv"},
-                        {"w": "und", "tr": "ve", "type": "Konnektor"},
-                        {"w": "das", "tr": "belirli artikel (nötr)", "type": "Artikel"},
-                        {"w": "Wetter", "tr": "hava", "type": "Nomen", "article": "das"},
-                        {"w": "ist", "tr": "-dir (sein)", "type": "Verb"},
-                        {"w": "wirklich", "tr": "gerçekten", "type": "Adverb"},
-                        {"w": "wunderschön.", "tr": "harika / çok güzel", "type": "Adjektiv"}
-                    ]
-                },
-                {
-                    "german_text": "Lukas geht zuerst in die Bäckerei und kauft frische Brötchen.",
-                    "words": [
-                        {"w": "Lukas", "tr": "Lukas", "type": "Nomen"},
+                        {"w": "Heute", "tr": "Bug├╝n", "type": "Adverb"},
                         {"w": "geht", "tr": "gidiyor (gehen)", "type": "Verb"},
-                        {"w": "zuerst", "tr": "öncelikle", "type": "Adverb"},
-                        {"w": "in", "tr": "-e, içine", "type": "Präposition"},
-                        {"w": "die", "tr": "belirli artikel (Akk. dişil)", "type": "Artikel"},
-                        {"w": "Bäckerei", "tr": "fırın", "type": "Nomen", "article": "die", "plural": "die Bäckereien"},
+                        {"w": "Lukas", "tr": "Lukas (─░sim)", "type": "Nomen"},
+                        {"w": "in", "tr": "-e, i├ğine", "type": "Pr├ñposition"},
+                        {"w": "den", "tr": "belirli artikel (Akk. eril)", "type": "Artikel"},
+                        {"w": "Supermarkt.", "tr": "s├╝permarket", "type": "Nomen", "article": "der", "plural": "die Superm├ñrkte"}
+                    ]
+                },
+                {
+                    "german_text": "Er kauft frisches Brot und frische Milch.",
+                    "words": [
+                        {"w": "Er", "tr": "O (eril)", "type": "Personalpronomen"},
+                        {"w": "kauft", "tr": "sat─▒n al─▒yor (kaufen)", "type": "Verb"},
+                        {"w": "frisches", "tr": "taze", "type": "Adjektiv"},
+                        {"w": "Brot", "tr": "ekmek", "type": "Nomen", "article": "das", "plural": "die Brote"},
                         {"w": "und", "tr": "ve", "type": "Konnektor"},
-                        {"w": "kauft", "tr": "satın alıyor (kaufen)", "type": "Verb"},
                         {"w": "frische", "tr": "taze", "type": "Adjektiv"},
-                        {"w": "Brötchen.", "tr": "ekmekçikler / poğaça", "type": "Nomen", "article": "das", "plural": "die Brötchen"}
-                    ]
-                },
-                {
-                    "german_text": "Danach trifft er seine Freundin Anna im Park zum Kaffee.",
-                    "words": [
-                        {"w": "Danach", "tr": "sonrasında", "type": "Adverb"},
-                        {"w": "trifft", "tr": "buluşuyor (treffen)", "type": "Verb"},
-                        {"w": "er", "tr": "o (eril)", "type": "Personalpronomen"},
-                        {"w": "seine", "tr": "onun (iyelik)", "type": "Possessivpronomen"},
-                        {"w": "Freundin", "tr": "kız arkadaş", "type": "Nomen", "article": "die"},
-                        {"w": "Anna", "tr": "Anna", "type": "Nomen"},
-                        {"w": "im", "tr": "parkta (in dem)", "type": "Präposition"},
-                        {"w": "Park", "tr": "park", "type": "Nomen", "article": "der"},
-                        {"w": "zum", "tr": "kahve için (zu dem)", "type": "Präposition"},
-                        {"w": "Kaffee.", "tr": "kahve", "type": "Nomen", "article": "der"}
-                    ]
-                },
-                {
-                    "german_text": "Sie sprechen über ihre Zukunft und lernen zusammen Deutsch.",
-                    "words": [
-                        {"w": "Sie", "tr": "onlar", "type": "Personalpronomen"},
-                        {"w": "sprechen", "tr": "konuşuyorlar (sprechen)", "type": "Verb"},
-                        {"w": "über", "tr": "hakkında", "type": "Präposition"},
-                        {"w": "ihre", "tr": "kendi (iyelik)", "type": "Possessivpronomen"},
-                        {"w": "Zukunft", "tr": "gelecek", "type": "Nomen", "article": "die"},
-                        {"w": "und", "tr": "ve", "type": "Konnektor"},
-                        {"w": "lernen", "tr": "öğreniyorlar (lernen)", "type": "Verb"},
-                        {"w": "zusammen", "tr": "birlikte", "type": "Adverb"},
-                        {"w": "Deutsch.", "tr": "Almanca", "type": "Nomen"}
+                        {"w": "Milch.", "tr": "s├╝t", "type": "Nomen", "article": "die", "plural": "Milch"}
                     ]
                 }
             ],
-            "full_translation_tr": "Bugün Lukas sabah erken kalkıyor ve pencereyi açıyor. Güneş parlakça açıyor ve hava gerçekten harika. Lukas öncelikle fırına gidiyor ve taze ekmekler satın alıyor. Sonrasında parkta kız arkadaşı Anna ile kahve içmek için buluşuyor. Gelecekleri hakkında konuşuyorlar ve birlikte Almanca öğreniyorlar.",
+            "full_translation_tr": "Bug├╝n Lukas s├╝permarkete gidiyor. Taze ekmek ve taze s├╝t sat─▒n al─▒yor.",
             "key_vocabulary": [
-                {"german": "die Bäckerei", "turkish": "fırın", "article": "die", "plural": "die Bäckereien"},
-                {"german": "das Wetter", "turkish": "hava", "article": "das", "plural": None},
-                {"german": "der Kaffee", "turkish": "kahve", "article": "der", "plural": "die Kaffees"}
+                {"german": "der Supermarkt", "turkish": "s├╝permarket", "article": "der", "plural": "die Superm├ñrkte"}
             ]
         }
 
@@ -301,47 +247,29 @@ class AIService:
         return {
             "topic": topic,
             "level": level,
-            "summary_tr": f"'{topic}' konusu ({level} seviyesi), Almancada iletişim ve dilbilgisi temelini oluşturan en kritik konulardan biridir.\n\nBu konuda temel amaç, cümle yapısında doğru öge dizilimini kavrama ve dilbilgisel kuralları eksiksiz uygulamaktır. Almanca cümle yapısında fiillerin konumu, ismin halleri (Kasus) ve artikeller doğrudan birbiriyle bağlantılıdır. Bu konuyu tam olarak kavradığınızda hem okuma/anlama hem de ifade yeteneğiniz belirgin derecede artacaktır.",
-            "formula_structure": "[Özne / Subjekt] + [Fiil / Verb (2. Pozisyon)] + [Nesne / Dativ/Akkusativ] + ... + [İkinci Fiil / Infinitiv / Partizip II]",
+            "summary_tr": f"'{topic}' konusu ({level} seviyesi), Almanca ├Â─şreniminde kilit rol oynar. Bu konuda c├╝mle yap─▒s─▒, fiil konumland─▒rmas─▒ ve ilgili edatlar─▒n kullan─▒m─▒ temel esast─▒r.",
             "key_grammar_rules": [
-                f"1. Pozisyon Kuralı: '{topic}' konusunda ana cümlelerde çekimlenmiş fiil KESİNLİKLE 2. pozisyondadır.",
-                "2. Artikel & Kasus Uyumu: Kullanılan isimlerin artikelleri (der/die/das) cümlenin haline (Nominativ, Akkusativ, Dativ) göre çekimlenir.",
-                "3. Çift Fiil Kullanımı: Cümlede yardımcı veya modal fiil varsa, esas fiil cümlenin EN SONUNA yalın (Infinitiv) veya Partizip II formunda gider.",
-                "4. Olumsuzluk (Negation): İsim olumsuzlamalarında 'kein/keine', fiil ve sıfat olumsuzlamalarında ise 'nicht' tercih edilir."
-            ],
-            "usage_notes": [
-                "💡 Püf Noktası: Türkçede fiil cümlenin sonunda yer alırken, Almanca ana cümlelerde fiil mutlaka 2. sırada olmalıdır.",
-                "📌 Dikkat: İsimlerin baş harfleri Almancada her zaman BÜYÜK harfle yazılır (örn: das Buch, die Sprache).",
-                "🎯 Öneri: Yeni bir kelime öğrenirken mutlaka artikeli (der/die/das) ve çoğul biçimiyle (Plural) birlikte ezberleyin."
+                f"1. '{topic}' kullan─▒m─▒nda ana c├╝mlede fiil her zaman 2. pozisyondad─▒r.",
+                "2. ─░smin hallerine (Kasus) dikkat edilmeli, artikel uygun ┼şekilde ├ğekimlenmelidir.",
+                "3. ├ço─şul ve tekil isim kullan─▒m─▒nda fiil uyumu sa─şlanmal─▒d─▒r."
             ],
             "vocabulary": [
-                {"german": "das Lernen", "turkish": "öğrenme", "article": "das", "plural": None},
-                {"german": "die Regel", "turkish": "kural", "article": "die", "plural": "die Regeln"},
-                {"german": "der Satz", "turkish": "cümle", "article": "der", "plural": "die Sätze"},
-                {"german": "das Beispiel", "turkish": "örnek", "article": "das", "plural": "die Beispiele"}
+                {"german": "das Lernen", "turkish": "├Â─şrenme", "article": "das", "plural": None},
+                {"german": "die Regel", "turkish": "kural", "article": "die", "plural": "die Regeln"}
             ],
             "examples": [
-                {"german": "Ich lerne jeden Tag Deutsch.", "turkish": "Her gün Almanca öğreniyorum."},
-                {"german": "Er hat gestern ein Buch gekauft.", "turkish": "Dün bir kitap satın aldı."},
-                {"german": "Kannst du mir bitte helfen?", "turkish": "Bana yardım edebilir misin?"},
-                {"german": "Wir gehen ins Kino, weil wir Zeit haben.", "turkish": "Zamanımız olduğu için sinemaya gidiyoruz."}
+                {"german": "ÔÜá´©Å API Key Eksik", "turkish": "L├╝tfen Vercel panelinden API Key girin."}
             ],
             "common_mistakes": [
-                "Yanlış: Ich nach Hause gehe. -> Doğru: Ich gehe nach Hause. (Ana cümlede fiil sonda değil, 2. sırada olmalıdır.)",
-                "Yanlış: Er kann sprechen Deutsch gut. -> Doğru: Er kann gut Deutsch sprechen. (Modal fiilli cümlelerde esas fiil cümlenin en sonuna mastar olarak gider.)"
+                "ÔÜá´©Å HATA: Sistem demo modunda ├ğal─▒┼ş─▒yor.",
+                "API Key girilmedi─şi i├ğin ger├ğek hatalar listelenemez."
             ],
             "mini_quiz": [
                 {
-                    "question": f"'{topic}' konusunda Almanca ana cümlede çekimli fiil kaçıncı sırada yer almalıdır?",
-                    "options": ["A) 1. sırada", "B) 2. sırada", "C) Cümlenin en sonunda", "D) Özneden hemen önce"],
-                    "correct_answer": "B) 2. sırada",
-                    "explanation": "Almancada düz ve kurallı ana cümlelerde çekimli fiil her zaman 2. pozisyondadır."
-                },
-                {
-                    "question": "Cümlede modal bir fiil (können, müssen vb.) kullanıldığında esas fiil cümlenin neresinde yer alır?",
-                    "options": ["A) Modal fiilden hemen sonra", "B) Özneden önce", "C) Cümlenin en sonunda mastar (Infinitiv) halde", "D) Hiç kullanılmaz"],
-                    "correct_answer": "C) Cümlenin en sonunda mastar (Infinitiv) halde",
-                    "explanation": "Modal fiil 2. sıraya geçer ve esas fiili cümlenin en sonuna yalın mastar haliyle iter."
+                    "question": f"'{topic}' konusunda fiil ana c├╝mlede ka├ğ─▒nc─▒ s─▒rada yer al─▒r?",
+                    "options": ["A) 1. s─▒rada", "B) 2. s─▒rada", "C) En sonda"],
+                    "correct_answer": "B) 2. s─▒rada",
+                    "explanation": "Almanca kurall─▒ ana c├╝mlelerde fiil her zaman 2. pozisyondad─▒r."
                 }
             ]
         }
@@ -350,13 +278,13 @@ class AIService:
         v = verb.strip().lower()
         return {
             "verb": v,
-            "turkish_meaning": f"'{v}' fiili (⚠️ API KEY EKSİK)",
+            "turkish_meaning": f"'{v}' fiili (ÔÜá´©Å API KEY EKS─░K)",
             "is_regular": True,
             "auxiliary_verb": "haben/sein",
-            "stammformen": "Lütfen Vercel'den API Key girin.",
+            "stammformen": "L├╝tfen Vercel'den API Key girin.",
             "tenses": [
                 {
-                    "tense_name": "⚠️ HATA",
+                    "tense_name": "ÔÜá´©Å HATA",
                     "turkish_tense_name": "Sistem Demo Modunda",
                     "auxiliary_verb": "Yok",
                     "forms": {
@@ -375,19 +303,19 @@ class AIService:
         return {
             "source_text": text,
             "direction": direction,
-            "main_translation": f"Çeviri ({text})",
+            "main_translation": f"├çeviri ({text})",
             "dictionary_entry": {
                 "german": text if direction == "de-tr" else f"das Wort ({text})",
-                "turkish": f"Karşılık ({text})" if direction == "de-tr" else text,
+                "turkish": f"Kar┼ş─▒l─▒k ({text})" if direction == "de-tr" else text,
                 "article": "das",
-                "plural": "die Wörter",
+                "plural": "die W├Ârter",
                 "word_type": "Nomen",
-                "phonetic": "[vɔrt]",
+                "phonetic": "[v╔ört]",
                 "examples": [
                     {"german": f"Das ist: {text}.", "turkish": f"Bu: {text}."}
                 ],
                 "synonyms": ["Synonym 1"],
-                "grammar_tips": "İsimler Almancada büyük harfle yazılır."
+                "grammar_tips": "─░simler Almancada b├╝y├╝k harfle yaz─▒l─▒r."
             },
             "alternative_translations": [f"Alternatif: {text}"]
         }

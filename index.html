@@ -1,2013 +1,1780 @@
-<!DOCTYPE html>
-<html lang="tr" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yapay Zeka Destekli Almanca Öğrenme Projesi | Betül Altınkaynak Demirel</title>
-    <meta name="description" content="Google Gemini 2.5 Flash ve Groq LLaMA 3.3 destekli eksiksiz Almanca A1-C2 müfredatı, AI metin skorlama ve hata düzeltici, sesli hikayeler, fiil çekim matrisi ve PDF export.">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <style>
-        :root {
-            --bg-primary: #0F172A;
-            --bg-secondary: #1E293B;
-            --bg-glass: rgba(30, 41, 59, 0.7);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --text-main: #F8FAFC;
-            --text-muted: #94A3B8;
-            --accent-primary: #3B82F6;
-            --accent-secondary: #8B5CF6;
-            --accent-emerald: #10B981;
-            --accent-amber: #F59E0B;
-            --accent-rose: #F43F5E;
-            --der-color: #3B82F6;
-            --die-color: #EC4899;
-            --das-color: #10B981;
-            --shadow-glow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
-            --body-gradient: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 400px), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 400px);
-            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .light-theme {
-            --bg-primary: #F4F7FB;
-            --bg-secondary: #FFFFFF;
-            --bg-glass: rgba(255, 255, 255, 0.95);
-            --border-color: #CBD5E1;
-            --text-main: #0F172A;
-            --text-muted: #475569;
-            --shadow-glow: 0 10px 30px -10px rgba(59, 130, 246, 0.25);
-            --body-gradient: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
-            --card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            background-image: var(--body-gradient);
-            background-attachment: fixed;
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        /* Glassmorphism Header */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--bg-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
-        }
-
-        .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo-group {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .logo-badge {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            font-weight: 800;
-            box-shadow: var(--shadow-glow);
-        }
-
-        .logo-title h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #60A5FA, #A78BFA);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .logo-title p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .select-input, .btn-icon {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 0.55rem 0.9rem;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            outline: none;
-            cursor: pointer;
-        }
-
-        /* Navigation Tabs */
-        .nav-tabs-wrapper {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0.5rem 2rem;
-        }
-
-        .nav-tabs {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .tab-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 0.75rem 1.25rem;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            white-space: normal;
-            text-align: center;
-            flex: 1 1 calc(33.333% - 1rem);
-            min-width: 240px;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-main);
-            border-color: var(--accent-primary);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--accent-primary), #2563EB);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
-            transform: translateY(-2px);
-        }
-
-        /* Main App Body */
-        main {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-            width: 100%;
-            flex: 1;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Card System */
-        .glass-card {
-            background: var(--bg-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.75rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--card-shadow);
-        }
-
-        /* Score Badge */
-        .score-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            color: white;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-            background: linear-gradient(135deg, var(--accent-emerald), #047857);
-        }
-
-        .score-circle.medium-score {
-            background: linear-gradient(135deg, var(--accent-amber), #D97706);
-            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
-        }
-
-        .score-circle.low-score {
-            background: linear-gradient(135deg, var(--accent-rose), #BE123C);
-            box-shadow: 0 10px 25px rgba(244, 63, 94, 0.3);
-        }
-
-        /* Audio Player Control Bar */
-        .audio-player-bar {
-            background: var(--bg-secondary);
-            border: 1px solid var(--accent-primary);
-            border-radius: 14px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .audio-controls-group {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .btn-audio-control {
-            background: var(--accent-primary);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-audio-stop {
-            background: rgba(244, 63, 94, 0.2);
-            color: var(--accent-rose);
-            border: 1px solid var(--accent-rose);
-        }
-
-        /* German Levels Grid */
-        .levels-header {
-            margin-bottom: 1.5rem;
-        }
-
-        .levels-nav {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .level-chip {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 0.6rem 1.4rem;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-        }
-
-        .level-chip.active {
-            background: linear-gradient(135deg, var(--accent-secondary), #6D28D9);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 4px 15px rgba(109, 40, 217, 0.4);
-        }
-
-        .topics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.25rem;
-        }
-
-        .topic-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 1.25rem;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .topic-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--accent-primary);
-        }
-
-        .topic-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-primary);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .topic-category {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--accent-primary);
-            margin-bottom: 0.4rem;
-        }
-
-        .topic-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .topic-desc {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            line-height: 1.4;
-        }
-
-        .topic-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .btn-analyze-sm {
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--accent-primary);
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-
-        /* --- INTERACTIVE STORY HOVER & AUDIO ACTIVE STYLES --- */
-        .story-paragraph {
-            font-size: 1.2rem;
-            line-height: 2.2;
-            margin-bottom: 1.5rem;
-            background: var(--bg-secondary);
-            padding: 1.5rem;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-
-        .story-paragraph.audio-reading-active {
-            border-color: var(--accent-emerald);
-            background: rgba(16, 185, 129, 0.08);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
-        }
-
-        .hover-word {
-            position: relative;
-            display: inline-block;
-            padding: 0.15rem 0.35rem;
-            margin: 0 0.1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #60A5FA;
-            background: rgba(59, 130, 246, 0.08);
-            border-bottom: 2px dashed rgba(59, 130, 246, 0.4);
-            transition: all 0.2s ease;
-        }
-
-        .hover-word:hover {
-            background: var(--accent-primary);
-            color: white;
-            border-bottom-color: transparent;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .hover-word::after {
-            content: attr(data-tr) "\A" attr(data-sub);
-            white-space: pre-wrap;
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%) translateY(4px);
-            background: #0F172A;
-            color: #F8FAFC;
-            padding: 0.6rem 0.9rem;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            line-height: 1.3;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--accent-primary);
-            pointer-events: none;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            z-index: 50;
-            min-width: 140px;
-            text-align: center;
-        }
-
-        .hover-word:hover::after {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Form & Buttons */
-        .conjugator-form {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-input {
-            flex: 1;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 0.85rem 1.2rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .form-input:focus {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-submit {
-            background: linear-gradient(135deg, var(--accent-primary), #1D4ED8);
-            color: white;
-            border: none;
-            padding: 0.85rem 1.8rem;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .verb-matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 1.25rem;
-        }
-
-        .tense-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 1.25rem;
-        }
-
-        .tense-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .tense-title {
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--accent-primary);
-        }
-
-        .tense-sub {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .pronoun-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .pronoun-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.4rem 0.6rem;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .pronoun-tag {
-            font-weight: 700;
-            color: var(--text-muted);
-            width: 80px;
-            font-size: 0.85rem;
-        }
-
-        .conjugated-form {
-            font-weight: 600;
-            color: var(--text-main);
-            flex: 1;
-            font-size: 0.95rem;
-        }
-
-        .audio-btn {
-            background: transparent;
-            border: none;
-            color: var(--accent-primary);
-            cursor: pointer;
-            padding: 0.2rem 0.5rem;
-        }
-
-        /* Dictionary & Translator */
-        .trans-box {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .trans-box { grid-template-columns: 1fr; }
-        }
-
-        .dict-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 1.5rem;
-        }
-
-        .article-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 0.85rem;
-            color: white;
-            margin-right: 0.5rem;
-        }
-
-        .article-der { background-color: var(--der-color); }
-        .article-die { background-color: var(--die-color); }
-        .article-das { background-color: var(--das-color); }
-
-        /* Loader */
-        .loader-spinner {
-            display: none;
-            margin: 2rem auto;
-            text-align: center;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255,255,255,0.1);
-            border-left-color: var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* Footer */
-        footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 3rem;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Header -->
-    <header>
-        <div class="header-container">
-            <div class="logo-group">
-                <div class="logo-badge">DE</div>
-                <div class="logo-title">
-                    <h1>Almanca AI Öğrenme Platformu</h1>
-                    <p>Geliştirici: <b>Betül Altınkaynak Demirel</b></p>
-                </div>
-            </div>
-            <div class="header-controls">
-                <select id="aiProviderSelect" class="select-input">
-                    <option value="gemini">⚡ Google Gemini 2.5 Flash</option>
-                    <option value="groq">🚀 Groq LLaMA 3.3 (70B)</option>
-                </select>
-                <button id="themeToggleBtn" class="btn-icon" title="Tema Değiştir">
-                    <i class="fa-solid fa-moon"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation Tabs -->
-    <div class="nav-tabs-wrapper">
-        <nav class="nav-tabs">
-            <button class="tab-btn active" data-tab="tab-levels">
-                <i class="fa-solid fa-layer-group"></i> Eksiksiz Seviye Kataloğu (A1-C2)
-            </button>
-            <button class="tab-btn" data-tab="tab-writing">
-                <i class="fa-solid fa-pen-nib"></i> AI Yazım Koçu (Skor & Düzeltme)
-            </button>
-            <button class="tab-btn" data-tab="tab-story">
-                <i class="fa-solid fa-circle-play"></i> Sesli Hikayeler (Sesli Dinleme & Hover)
-            </button>
-            <button class="tab-btn" data-tab="tab-conjugator">
-                <i class="fa-solid fa-table-cells"></i> Fiil Çekim Matrisi
-            </button>
-            <button class="tab-btn" data-tab="tab-translator">
-                <i class="fa-solid fa-language"></i> Sözlük & Çeviri
-            </button>
-            <button class="tab-btn" data-tab="tab-summarizer">
-                <i class="fa-solid fa-brain"></i> AI Konu Analizi
-            </button>
-            <button class="tab-btn" data-tab="tab-document">
-                <i class="fa-solid fa-file-pdf"></i> Belge & PDF Export
-            </button>
-        </nav>
-    </div>
-
-    <!-- Main Content -->
-    <main>
-
-        <!-- Loader Spinner -->
-        <div id="appLoader" class="loader-spinner">
-            <div class="spinner"></div>
-            <p id="loaderText">Yapay Zeka Analiz Yapıyor...</p>
-        </div>
-
-        <!-- TAB 1: EKSİKSİZ SEVİYE KATALOĞU (A1 - C2) -->
-        <section id="tab-levels" class="tab-content active">
-            <div class="glass-card">
-                <div class="levels-header">
-                    <h2>Eksiksiz Almanca A1-C2 Müfredat Kataloğu</h2>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">
-                        Goethe ve Telc müfredatına uygun A1 başlangıçtan C2 anadil düzeyine kadar tüm gramer, konuşma ve sınav konuları. Analiz etmek istediğiniz konuya tıklayın.
-                    </p>
-                </div>
-                <div class="levels-nav" id="levelsNavChips">
-                    <button class="level-chip active" data-level="A1">A1 Seviyesi (15 Konu)</button>
-                    <button class="level-chip" data-level="A2">A2 Seviyesi (15 Konu)</button>
-                    <button class="level-chip" data-level="B1">B1 Seviyesi (15 Konu)</button>
-                    <button class="level-chip" data-level="B2">B2 Seviyesi (14 Konu)</button>
-                    <button class="level-chip" data-level="C1">C1 Seviyesi (12 Konu)</button>
-                    <button class="level-chip" data-level="C2">C2 Seviyesi (8 Konu)</button>
-                </div>
-                <div id="topicsGridContainer" class="topics-grid">
-                    <!-- Dynamic Topic Cards Rendered Here -->
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 2: AI YAZIM KOÇU (METİN SKORLAMA & HATA DÜZELTME) -->
-        <section id="tab-writing" class="tab-content">
-            <div class="glass-card">
-                <h2>✍️ AI Metin Analizi & Yazım Koçu (Skorlama & Hata Düzeltme)</h2>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
-                    Yazdığınız Almanca paragrafı veya mektubu buraya yapıştırın. Yapay zeka metninizi <b>100 üzerinden skorlasın</b>, hatalarınızı Türkçe açıklamalarıyla düzeltsin ve daha ileri kelime önerileri sunsun.
-                </p>
-
-                <div style="margin-bottom: 1.5rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                        <label style="font-weight: 700; font-size: 0.95rem;">Almanca Metniniz:</label>
-                        <select id="writingTargetLevelSelect" class="select-input" style="padding: 0.3rem 0.6rem;">
-                            <option value="A1">Hedef Seviye: A1</option>
-                            <option value="A2">Hedef Seviye: A2</option>
-                            <option value="B1" selected>Hedef Seviye: B1</option>
-                            <option value="B2">Hedef Seviye: B2</option>
-                            <option value="C1">Hedef Seviye: C1</option>
-                            <option value="C2">Hedef Seviye: C2</option>
-                        </select>
-                    </div>
-                    <textarea id="writingTextInput" class="form-input" rows="6" placeholder="Almanca metninizi buraya yazın (örn: Ich habe gestern nach Hause gegangen und ein Buch gelesen...)..."></textarea>
-                    <button id="btnEvaluateWriting" class="btn-submit" style="width: 100%; margin-top: 1rem; justify-content: center; font-size: 1rem;">
-                        <i class="fa-solid fa-award"></i> Metni Analiz Et & 100 Üzerinden Skorla
-                    </button>
-                </div>
-
-                <!-- Writing Evaluation Results -->
-                <div id="writingAnalysisResult" style="display: none;">
-                    
-                    <!-- SCORE BANNER CARD -->
-                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 14px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                        <div style="display: flex; align-items: center; gap: 1.5rem;">
-                            <div id="scoreCircleElem" class="score-circle">
-                                <span id="scoreNumberText" style="font-size: 2rem;">88</span>
-                                <span style="font-size: 0.7rem; font-weight: 600; opacity: 0.8;">SKOR / 100</span>
-                            </div>
-                            <div>
-                                <h3 id="writingAssessedLevelText" style="font-size: 1.3rem; margin-bottom: 0.3rem;">B1 - Başarılı Seviye</h3>
-                                <p style="color: var(--text-muted); font-size: 0.85rem;">Yapay zeka tarafından değerlendirilen dil yetkinliği düzeyi.</p>
-                            </div>
-                        </div>
-                        <button id="btnExportWritingPDF" class="btn-submit" style="background: linear-gradient(135deg, var(--accent-rose), #E11D48); font-size: 0.85rem; padding: 0.5rem 1rem;">
-                            <i class="fa-solid fa-file-pdf"></i> Skor Raporunu İndir
-                        </button>
-                    </div>
-
-                    <!-- CORRECTED TEXT BOX -->
-                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 14px; border: 1px solid var(--accent-emerald); margin-bottom: 1.5rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                            <h4 style="color: var(--accent-emerald); font-size: 1.05rem;"><i class="fa-solid fa-circle-check"></i> Hataları Düzeltilmiş Mükemmel Metin</h4>
-                            <button onclick="speakText(document.getElementById('writingCorrectedText').innerText)" class="audio-btn" style="color: var(--accent-emerald);" title="Düzeltilmiş Metni Dinle">
-                                <i class="fa-solid fa-volume-high"></i> Dinle
-                            </button>
-                        </div>
-                        <p id="writingCorrectedText" style="line-height: 1.7; font-size: 1.05rem; font-weight: 600; color: var(--text-main);"></p>
-                    </div>
-
-                    <!-- ERROR BREAKDOWN LIST -->
-                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 14px; margin-bottom: 1.5rem;">
-                        <h4 style="color: var(--accent-rose); font-size: 1.05rem; margin-bottom: 1rem;"><i class="fa-solid fa-bug"></i> Tespit Edilen Hatalar ve Açıklamaları</h4>
-                        <div id="writingErrorsList" style="display: flex; flex-direction: column; gap: 0.85rem;"></div>
-                    </div>
-
-                    <!-- STRENGTHS & IMPROVEMENTS GRID -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                        <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
-                            <h4 style="color: var(--accent-emerald); margin-bottom: 0.75rem;"><i class="fa-solid fa-thumbs-up"></i> Metnin Güçlü Yönleri</h4>
-                            <ul id="writingStrengthsList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;"></ul>
-                        </div>
-                        <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
-                            <h4 style="color: var(--accent-amber); margin-bottom: 0.75rem;"><i class="fa-solid fa-lightbulb"></i> Geliştirilmesi Gereken Noktalar</h4>
-                            <ul id="writingImprovementsList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;"></ul>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 3: SESLİ HİKAYE DİNLEME & HOVER SÖZLÜK MODÜLÜ -->
-        <section id="tab-story" class="tab-content">
-            <div class="glass-card">
-                <h2>🎧 Sesli Almanca Hikaye Dinleme Modülü (A1 - C2)</h2>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
-                    Hikayeleri <b>anadili Almanca olan ses motoruyla baştan sona dinleyin</b>. Dinlerken okunan bölüm eş zamanlı olarak vurgulanır. Kelimelerin üzerine gelerek Türkçe anlamlarını görün.
-                </p>
-
-                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                    <select id="storyLevelSelect" class="select-input" style="flex: 1; min-width: 140px;">
-                        <option value="A1">Seviye: A1 Başlangıç</option>
-                        <option value="A2">Seviye: A2 Temel İleri</option>
-                        <option value="B1">Seviye: B1 Orta Seviye</option>
-                        <option value="B2">Seviye: B2 İleri Orta</option>
-                        <option value="C1">Seviye: C1 İleri Düzey</option>
-                        <option value="C2">Seviye: C2 Anadil Düzeyi</option>
-                    </select>
-                    <input type="text" id="storyThemeInput" class="form-input" style="flex: 2; min-width: 260px;" placeholder="Hikaye Konusu (örn: München seyahati, İş toplantısı, Müze gezisi)...">
-                    <button id="btnGenerateStory" class="btn-submit">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Hikaye Üret & Hazırla
-                    </button>
-                </div>
-
-                <div id="storyContainer" style="display: none;">
-                    
-                    <!-- AUDIO PLAYER CONTROLS BAR -->
-                    <div class="audio-player-bar">
-                        <div class="audio-controls-group">
-                            <button id="btnPlayFullStory" class="btn-audio-control" style="background: linear-gradient(135deg, var(--accent-emerald), #059669);">
-                                <i class="fa-solid fa-play"></i> Hikayeyi Baştan Sona Dinle
-                            </button>
-                            <button id="btnStopStoryAudio" class="btn-audio-control btn-audio-stop">
-                                <i class="fa-solid fa-stop"></i> Durdur
-                            </button>
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 0.75rem;">
-                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Okuma Hızı:</label>
-                            <select id="audioSpeedSelect" class="select-input" style="padding: 0.35rem 0.6rem;">
-                                <option value="0.75">0.75x (Yavaş - A1/A2)</option>
-                                <option value="0.9" selected>0.90x (Normal - Anlaşılır)</option>
-                                <option value="1.0">1.00x (Doğal Hız)</option>
-                                <option value="1.15">1.15x (Hızlı - C1/C2)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
-                        <div>
-                            <span id="storyLevelBadge" class="article-badge article-das" style="background: var(--accent-secondary);">A1</span>
-                            <h3 id="storyTitleDE" style="display: inline-block; font-size: 1.4rem;">Ein Tag in Berlin</h3>
-                            <p id="storyTitleTR" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Berlin'de Bir Gün</p>
-                        </div>
-                        <button id="btnExportStoryPDF" class="btn-submit" style="background: linear-gradient(135deg, var(--accent-rose), #E11D48); font-size: 0.85rem; padding: 0.5rem 1rem;">
-                            <i class="fa-solid fa-file-pdf"></i> Hikayeyi PDF İndir
-                        </button>
-                    </div>
-
-                    <!-- Interactive Paragraphs with Audio Tracking -->
-                    <div id="storyParagraphsArea"></div>
-
-                    <!-- Accordion Full Translation -->
-                    <details style="background: var(--bg-secondary); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color); margin-top: 1.5rem; cursor: pointer;">
-                        <summary style="font-weight: 700; color: var(--accent-emerald);"><i class="fa-solid fa-language"></i> Hikayenin Tam Türkçe Çevirisini Göster</summary>
-                        <p id="storyFullTransText" style="margin-top: 1rem; line-height: 1.6; color: var(--text-main); font-size: 0.95rem;"></p>
-                    </details>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 4: FİİL ÇEKİM MATRİSİ -->
-        <section id="tab-conjugator" class="tab-content">
-            <div class="glass-card">
-                <h2>Almanca Fiil Çekim Matrisi (Tüm Zamanlar & Şahıslar)</h2>
-                <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
-                    Herhangi bir Almanca fiili girin. 6 Almanca zaman diliminde (Präsens, Präteritum, Perfekt, Plusquamperfekt, Futur I, Futur II) ve 6 şahısta çekim matrisini görün.
-                </p>
-
-                <form id="conjugationForm" class="conjugator-form">
-                    <input type="text" id="verbInput" class="form-input" placeholder="Almanca bir fiil girin (örn: gehen, machen, sprechen, sein, haben)..." required>
-                    <button type="submit" class="btn-submit">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Çekimle
-                    </button>
-                </form>
-
-                <div id="verbMetaBanner" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color);">
-                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                        <h3 id="metaVerbTitle" style="font-size: 1.25rem;">gehen</h3>
-                        <span id="metaMeaning" style="color: var(--text-muted);">Türkçe: gitmek</span>
-                        <span id="metaAux" class="article-badge article-der">Yardımcı: sein</span>
-                        <span id="metaRegular" class="article-badge article-die">Düzensiz Fiil</span>
-                        <span id="metaStamm" style="font-style: italic; color: var(--accent-amber);">gehen - ging - ist gegangen</span>
-                    </div>
-                </div>
-
-                <div id="verbMatrixGrid" class="verb-matrix-grid">
-                    <!-- Dynamic Tense Cards -->
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 5: SÖZLÜK & ÇEVİRİ -->
-        <section id="tab-translator" class="tab-content">
-            <div class="glass-card">
-                <h2>Almanca - Türkçe Akıllı Sözlük & Çevirici</h2>
-                <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
-                    Almanca veya Türkçe sözcük / cümle yazın. Artikeller (der/die/das), çoğul halleri, okunuşları ve sesli telaffuz ile birlikte öğrenin.
-                </p>
-
-                <div class="trans-box">
-                    <div style="display: flex; flex-direction: column;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                            <label style="font-weight: 700; font-size: 0.9rem;">Girdi Metni</label>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <button onclick="speakInputText()" class="audio-btn" style="font-size: 0.85rem;" title="Girdi Metnini Dinle">
-                                    <i class="fa-solid fa-volume-high"></i> Dinle
-                                </button>
-                                <select id="transDirection" class="select-input" style="padding: 0.25rem 0.5rem;">
-                                    <option value="de-tr">Almanca ➔ Türkçe</option>
-                                    <option value="tr-de">Türkçe ➔ Almanca</option>
-                                </select>
-                            </div>
-                        </div>
-                        <textarea id="transInput" class="form-input" rows="6" placeholder="Çevirmek istediğiniz Almanca veya Türkçe metni yazın..."></textarea>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column;">
-                        <div style="margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; height: 34px;">
-                            <label style="font-weight: 700; font-size: 0.9rem;">Çıktı Metni (Tam Çeviri)</label>
-                            <button onclick="speakOutputText()" class="audio-btn" style="color: var(--accent-emerald);" title="Çeviriyi Sesli Dinle">
-                                <i class="fa-solid fa-volume-high"></i> Dinle
-                            </button>
-                        </div>
-                        <div class="form-input" style="flex: 1; background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.3); overflow-y: auto;">
-                            <p id="mainTranslationText" style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin: 0; line-height: 1.5;">Çeviri sonucu burada görünecek...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <button id="btnTranslate" class="btn-submit" style="width: 100%; margin-top: 1.25rem; margin-bottom: 1.5rem; justify-content: center;">
-                    <i class="fa-solid fa-language"></i> Metni Çevir & İncele
-                </button>
-
-                <div id="dictCardResult" class="dict-card">
-                    <h3 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">SÖZLÜK KARTI & DİL BİLGİSİ</h3>
-                    <div id="dictContentEmpty" style="color: var(--text-muted); text-align: center; padding: 2rem 0;">
-                        <i class="fa-solid fa-book-open" style="font-size: 2.5rem; opacity: 0.4; margin-bottom: 0.5rem;"></i>
-                        <p>Çeviri sonucunu görmek için sol taraftan arama yapın.</p>
-                    </div>
-                    <div id="dictContentActive" style="display: none;">
-                        <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                            <span id="dictArticleBadge" class="article-badge article-das">das</span>
-                            <span id="dictGermanWord" style="font-size: 1.4rem; font-weight: 800;">Wort</span>
-                            <button id="btnSpeakDictWord" onclick="speakText(document.getElementById('dictGermanWord').innerText)" class="audio-btn" style="font-size: 1.1rem; color: var(--accent-primary);" title="Kelimeyi Dinle">
-                                <i class="fa-solid fa-volume-high"></i>
-                            </button>
-                            <span id="dictPhonetic" style="color: var(--text-muted); font-style: italic;">[vɔrt]</span>
-                        </div>
-                        <p style="font-size: 1.1rem; color: var(--accent-emerald); font-weight: 700; margin-bottom: 0.75rem;" id="dictTurkishWord">Türkçe: Kelime</p>
-                        <p id="dictPlural" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;"><b>Çoğul:</b> die Wörter</p>
-                        
-                        <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--accent-primary); margin-bottom: 0.5rem;">Örnek Cümleler & Sesli Dinleme</h4>
-                        <div id="dictExamplesList" style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 6: AI KONU ÖZETLEYİCİ & DERİN ANALİZ -->
-        <section id="tab-summarizer" class="tab-content">
-            <div class="glass-card">
-                <h2>Almanca Konu Anlatımı & Derin AI Analizi</h2>
-                <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
-                    Merak ettiğiniz herhangi bir Almanca konusunu yazın (örn: *Passiv, Konjunktiv II, Wechselpräpositionen, Nominalstil*). Yapay zeka konuyu tüm detayları, cümle formülleri, kuralları, püf noktaları ve test sorularıyla sunsun.
-                </p>
-
-                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                    <input type="text" id="customTopicInput" class="form-input" style="flex: 2; min-width: 280px;" placeholder="Konu başlığı girin...">
-                    <select id="customLevelSelect" class="select-input" style="flex: 1; min-width: 120px;">
-                        <option value="A1">Seviye: A1</option>
-                        <option value="A2">Seviye: A2</option>
-                        <option value="B1">Seviye: B1</option>
-                        <option value="B2">Seviye: B2</option>
-                        <option value="C1">Seviye: C1</option>
-                        <option value="C2">Seviye: C2</option>
-                    </select>
-                    <button id="btnAnalyzeTopic" class="btn-submit">
-                        <i class="fa-solid fa-microchip"></i> AI Analiz Et
-                    </button>
-                </div>
-
-                <div id="topicAnalysisResult" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h3 id="analysisTitle" style="font-size: 1.4rem;">Passiv im Präsens</h3>
-                        <button id="btnExportPDFCurrent" class="btn-submit" style="background: linear-gradient(135deg, var(--accent-rose), #E11D48); font-size: 0.85rem; padding: 0.5rem 1rem;">
-                            <i class="fa-solid fa-file-pdf"></i> PDF Raporunu İndir
-                        </button>
-                    </div>
-
-                    <!-- FORMULA STRUCTURE BANNER -->
-                    <div id="analysisFormulaBox" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1)); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--accent-primary); margin-bottom: 1.5rem;">
-                        <h4 style="color: var(--accent-primary); margin-bottom: 0.5rem;"><i class="fa-solid fa-diagram-project"></i> Cümle Yapısı Şeması & Formül</h4>
-                        <div id="analysisFormulaText" style="font-family: monospace; font-size: 1.05rem; font-weight: 700; color: #60A5FA; background: var(--bg-secondary); padding: 0.75rem 1rem; border-radius: 8px; word-break: break-word;"></div>
-                    </div>
-
-                    <!-- DETAILED SUMMARY -->
-                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                        <h4 style="color: var(--accent-primary); margin-bottom: 0.75rem;"><i class="fa-solid fa-book-open"></i> Detaylı Konu Anlatımı & Mantığı</h4>
-                        <div id="analysisSummaryText" style="line-height: 1.7; color: var(--text-main); font-size: 0.95rem;"></div>
-                    </div>
-
-                    <!-- RULES & USAGE NOTES GRID -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                        <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
-                            <h4 style="color: var(--accent-emerald); margin-bottom: 0.75rem;"><i class="fa-solid fa-check-double"></i> Ana Dilbilgisi Kuralları</h4>
-                            <ul id="analysisRulesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; display: flex; flex-direction: column; gap: 0.5rem;"></ul>
-                        </div>
-                        <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
-                            <h4 style="color: #A78BFA; margin-bottom: 0.75rem;"><i class="fa-solid fa-lightbulb"></i> Kullanım İpuçları & Püf Noktaları</h4>
-                            <ul id="analysisNotesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; display: flex; flex-direction: column; gap: 0.5rem;"></ul>
-                        </div>
-                    </div>
-
-                    <!-- VOCABULARY CARDS -->
-                    <div id="analysisVocabSection" style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                        <h4 style="color: var(--accent-secondary); margin-bottom: 0.75rem;"><i class="fa-solid fa-spell-check"></i> Konu Kelimeleri & Artikeller</h4>
-                        <div id="analysisVocabGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem;"></div>
-                    </div>
-
-                    <!-- EXAMPLES LIST WITH AUDIO -->
-                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                        <h4 style="color: #3B82F6; margin-bottom: 0.75rem;"><i class="fa-solid fa-volume-high"></i> Sesli Örnek Cümleler</h4>
-                        <div id="analysisExamplesList" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
-                    </div>
-
-                    <!-- COMMON MISTAKES -->
-                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                        <h4 style="color: var(--accent-amber); margin-bottom: 0.75rem;"><i class="fa-solid fa-triangle-exclamation"></i> Sık Yapılan Hatalar & Doğruları</h4>
-                        <ul id="analysisMistakesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; color: var(--accent-rose); display: flex; flex-direction: column; gap: 0.5rem;"></ul>
-                    </div>
-
-                    <!-- MINI QUIZ SECTION -->
-                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--border-color);">
-                        <h4 style="color: var(--accent-emerald); margin-bottom: 1rem;"><i class="fa-solid fa-circle-question"></i> Mini Quiz & Kendini Test Et</h4>
-                        <div id="analysisQuizArea" style="display: flex; flex-direction: column; gap: 1.25rem;"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 7: BELGE & PDF EXPORT -->
-        <section id="tab-document" class="tab-content">
-            <div class="glass-card">
-                <h2>Belge Analizi & Çalışma Notu PDF Çıktısı</h2>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
-                    PDF veya DOCX formatındaki Almanca çalışma metinlerinizi yükleyin veya yapay zekanın oluşturduğu analiz notlarını tek tıkla PDF rapor olarak bilgisayarınıza indirin.
-                </p>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                    <div style="background: var(--bg-secondary); padding: 2rem; border-radius: 14px; border: 2px dashed var(--border-color); text-align: center;">
-                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--accent-primary); margin-bottom: 1rem;"></i>
-                        <h3>PDF / DOCX Dosyası Yükle</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1.5rem;">
-                            Sürükleyip bırakın veya bilgisayarınızdan seçin.
-                        </p>
-                        <input type="file" id="fileUploadInput" accept=".pdf,.docx,.txt" style="display: none;">
-                        <button onclick="document.getElementById('fileUploadInput').click()" class="btn-submit" style="margin: 0 auto;">
-                            <i class="fa-solid fa-folder-open"></i> Dosya Seç
-                        </button>
-                    </div>
-
-                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 14px;">
-                        <h3>PDF Rapor Oluşturucu (Custom Report)</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-                            Rapor başlığı ve notlarınızı girerek PDF indirin.
-                        </p>
-                        <input type="text" id="pdfReportTitle" class="form-input" placeholder="Rapor Başlığı (örn: B1 Konjunktiv II Çalışma Notları)" style="margin-bottom: 0.75rem;">
-                        <textarea id="pdfReportContent" class="form-input" rows="6" placeholder="PDF içerisine eklenecek notlar, kurallar ve kelimeler..." style="margin-bottom: 1rem;"></textarea>
-                        <button id="btnGeneratePDFCustom" class="btn-submit" style="background: linear-gradient(135deg, var(--accent-rose), #BE123C); width: 100%; justify-content: center;">
-                            <i class="fa-solid fa-file-pdf"></i> PDF İndir (Export)
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <p><b>Yapay Zeka Destekli Almanca Öğrenme Projesi</b> | Geliştirici: <b>Betül Altınkaynak Demirel</b></p>
-        <p style="font-size: 0.75rem; margin-top: 0.4rem; opacity: 0.7;">Google Gemini 2.5 Flash & Groq LLaMA 3.3 API Mimarısı | Vercel & FastAPI Compatible</p>
-    </footer>
-
-    <!-- Client Script Logic -->
-    <script>
-        let fullCatalogData = null;
-        let currentActiveAnalysisData = null;
-        let currentWritingAnalysisData = null;
-        let currentStoryData = null;
-        let isAudioPlaying = false;
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            initTabs();
-            initLevelChips();
-            await fetchLevelsCatalog();
-            initWritingCoach();
-            initStoryModule();
-            initAudioPlayer();
-            initConjugator();
-            initTranslator();
-            initSummarizer();
-            initPDFExport();
-            initThemeToggle();
-        });
-
-        async function fetchLevelsCatalog() {
-            try {
-                const res = await fetch('/api/levels');
-                const data = await res.json();
-                fullCatalogData = data.catalog;
-                renderLevelTopics('A1');
-            } catch (e) {
-                renderLevelTopics('A1');
-            }
-        }
-
-        // Theme Toggle
-        function initThemeToggle() {
-            const btn = document.getElementById('themeToggleBtn');
-            btn.addEventListener('click', () => {
-                document.documentElement.classList.toggle('light-theme');
-                const isLight = document.documentElement.classList.contains('light-theme');
-                btn.innerHTML = isLight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
-            });
-        }
-
-        // Tab Navigation
-        function initTabs() {
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    buttons.forEach(b => b.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-                    
-                    btn.classList.add('active');
-                    const tabId = btn.getAttribute('data-tab');
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
-        }
-
-        // Level Chips (A1-C2)
-        function initLevelChips() {
-            const chips = document.querySelectorAll('#levelsNavChips .level-chip');
-            chips.forEach(chip => {
-                chip.addEventListener('click', () => {
-                    chips.forEach(c => c.classList.remove('active'));
-                    chip.classList.add('active');
-                    const level = chip.getAttribute('data-level');
-                    renderLevelTopics(level);
-                });
-            });
-        }
-
-        function renderLevelTopics(level) {
-            const container = document.getElementById('topicsGridContainer');
-            container.innerHTML = '';
-            
-            let topics = [];
-            if (fullCatalogData && fullCatalogData[level]) {
-                topics = fullCatalogData[level].topics || [];
-            }
-
-            if (topics.length === 0) {
-                container.innerHTML = `
-                    <div class="topic-card" style="border-color: var(--accent-rose);">
-                        <div>
-                            <div class="topic-category" style="color: var(--accent-rose);">⚠️ BAĞLANTI HATASI</div>
-                            <div class="topic-title">Konular Yüklenemedi</div>
-                            <div class="topic-desc">Eğer bu dosyayı doğrudan tarayıcıda açtıysanız (file://), güvenlik nedeniyle arka plana bağlanamazsınız. Lütfen projeyi Vercel üzerinden veya yerel sunucudan (localhost:8000) çalıştırın.</div>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            topics.forEach(t => {
-                const card = document.createElement('div');
-                card.className = 'topic-card';
-                card.innerHTML = `
-                    <div>
-                        <div class="topic-category">${t.category}</div>
-                        <div class="topic-title">${t.title}</div>
-                        <div class="topic-desc">${t.description}</div>
-                    </div>
-                    <div class="topic-footer">
-                        <span><i class="fa-regular fa-clock"></i> ${t.estimated_minutes || 20} dk</span>
-                        <button class="btn-analyze-sm">Analiz Et <i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                `;
-                card.addEventListener('click', () => {
-                    document.querySelector('[data-tab="tab-summarizer"]').click();
-                    document.getElementById('customTopicInput').value = t.title;
-                    document.getElementById('customLevelSelect').value = level;
-                    triggerTopicAnalysis(t.title, level);
-                });
-                container.appendChild(card);
-            });
-        }
-
-        // --- AI METİN ANALİZİ & YAZIM KOÇU (SKORLAMA & DÜZELTME) ---
-        function initWritingCoach() {
-            document.getElementById('btnEvaluateWriting').addEventListener('click', async () => {
-                const text = document.getElementById('writingTextInput').value.trim();
-                const targetLevel = document.getElementById('writingTargetLevelSelect').value;
-                if (!text) return;
-
-                showLoader("Metniniz dilbilgisi ve seviye yönünden değerlendiriliyor...");
-                try {
-                    const provider = document.getElementById('aiProviderSelect').value;
-                    const res = await fetch('/api/evaluate-writing', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ text: text, target_level: targetLevel, provider: provider })
-                    });
-                    const data = await res.json();
-                    renderWritingEvaluation(data);
-                } catch (err) {
-                    renderMockWritingEvaluation(text, targetLevel);
-                } finally {
-                    hideLoader();
-                }
-            });
-
-            document.getElementById('btnExportWritingPDF').addEventListener('click', () => {
-                if (!currentWritingAnalysisData) return;
-                const md = `
-# Almanca Metin Analiz & Skor Raporu (${currentWritingAnalysisData.target_level})
-**Genel Puan:** ${currentWritingAnalysisData.overall_score} / 100
-**Değerlendirilen Seviye:** ${currentWritingAnalysisData.assessed_level}
-
-## Orjinal Metniniz
-${currentWritingAnalysisData.original_text}
-
-## Düzeltilmiş Mükemmel Metin
-${currentWritingAnalysisData.corrected_text}
-
-## Tespit Edilen Hatalar ve Açıklamaları
-${(currentWritingAnalysisData.errors || []).map(e => `- **Hata:** ${e.original} ➔ **Doğru:** ${e.correction} (${e.error_type})\n  *Açıklama:* ${e.explanation_tr}`).join('\n\n')}
-                `;
-                downloadPDF(`Metin_Skor_${currentWritingAnalysisData.overall_score}`, md);
-            });
-        }
-
-        function renderWritingEvaluation(data) {
-            currentWritingAnalysisData = data;
-            document.getElementById('writingAnalysisResult').style.display = 'block';
-            
-            // Score circle rendering
-            const scoreNum = data.overall_score || 85;
-            const scoreElem = document.getElementById('scoreCircleElem');
-            document.getElementById('scoreNumberText').innerText = scoreNum;
-            
-            if (scoreNum >= 80) {
-                scoreElem.className = "score-circle";
-            } else if (scoreNum >= 60) {
-                scoreElem.className = "score-circle medium-score";
-            } else {
-                scoreElem.className = "score-circle low-score";
-            }
-
-            document.getElementById('writingAssessedLevelText').innerText = data.assessed_level;
-            document.getElementById('writingCorrectedText').innerText = data.corrected_text;
-
-            // Error list
-            const errArea = document.getElementById('writingErrorsList');
-            errArea.innerHTML = '';
-            (data.errors || []).forEach(e => {
-                errArea.innerHTML += `
-                    <div style="background: rgba(244, 63, 94, 0.08); padding: 1rem; border-radius: 10px; border-left: 4px solid var(--accent-rose);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-                            <span style="font-weight: 700; color: var(--accent-rose); font-size: 0.9rem;">❌ ${e.original}</span>
-                            <span style="font-weight: 700; color: var(--accent-emerald); font-size: 0.9rem;">✅ ${e.correction}</span>
-                        </div>
-                        <p style="font-size: 0.8rem; color: var(--text-muted);"><b style="color: var(--accent-amber);">${e.error_type}:</b> ${e.explanation_tr}</p>
-                    </div>
-                `;
-            });
-
-            // Strengths & Improvements
-            const sUl = document.getElementById('writingStrengthsList');
-            sUl.innerHTML = '';
-            (data.strengths || []).forEach(s => sUl.innerHTML += `<li>${s}</li>`);
-
-            const iUl = document.getElementById('writingImprovementsList');
-            iUl.innerHTML = '';
-            (data.improvements || []).forEach(imp => iUl.innerHTML += `<li>${imp}</li>`);
-        }
-
-        function renderMockWritingEvaluation(text, level) {
-            renderWritingEvaluation({
-                original_text: text,
-                target_level: level,
-                overall_score: 88,
-                assessed_level: `${level} - Başarılı Seviye`,
-                corrected_text: text.replace("haben gegangen", "bin gegangen").replace("der Buch", "das Buch"),
-                errors: [
-                    {
-                        original: "haben gegangen",
-                        correction: "bin gegangen",
-                        error_type: "Gramer (Yardımcı Fiil)",
-                        explanation_tr: "Gehen fiili hareket/yer değiştirme bildirdiği için Perfekt geçmiş zamanda 'haben' yerine 'sein' (bin) kullanılır."
-                    }
-                ],
-                strengths: [
-                    "Cümle kurulumu ve kelime sırası doğru.",
-                    "Seviyeye uygun bağlaçlar kullanılmış."
-                ],
-                improvements: [
-                    "Artikel kullanımına (der/die/das) dikkat edilmeli.",
-                    "Geçmiş zaman yardımcı fiil tercihleri gözden geçirilmeli."
-                ]
-            });
-        }
-
-        // --- İNTERAKTİF HİKAYE VE SES DİNLEME MODÜLÜ ---
-        function initStoryModule() {
-            document.getElementById('btnGenerateStory').addEventListener('click', async () => {
-                const level = document.getElementById('storyLevelSelect').value;
-                const theme = document.getElementById('storyThemeInput').value.trim() || "Günlük Yaşam";
-                triggerStoryGeneration(level, theme);
-            });
-
-            document.getElementById('btnExportStoryPDF').addEventListener('click', () => {
-                if (!currentStoryData) return;
-                const md = `
-# ${currentStoryData.title_de} (${currentStoryData.level})
-*${currentStoryData.title_tr}*
-
-## Hikaye Metni
-${(currentStoryData.paragraphs || []).map(p => p.german_text).join('\n\n')}
-
-## Türkçe Çeviri
-${currentStoryData.full_translation_tr}
-                `;
-                downloadPDF(currentStoryData.title_de, md);
-            });
-        }
-
-        function initAudioPlayer() {
-            document.getElementById('btnPlayFullStory').addEventListener('click', () => {
-                if (!currentStoryData) return;
-                playFullStoryAudio();
-            });
-
-            document.getElementById('btnStopStoryAudio').addEventListener('click', () => {
-                stopStoryAudio();
-            });
-        }
-
-        function playFullStoryAudio() {
-            if (!('speechSynthesis' in window)) {
-                alert("Tarayıcınız sesli okuma özelliğini desteklemiyor.");
-                return;
-            }
-
-            stopStoryAudio();
-
-            const paragraphs = currentStoryData.paragraphs || [];
-            if (paragraphs.length === 0) return;
-
-            isAudioPlaying = true;
-            let currentIdx = 0;
-
-            const rate = parseFloat(document.getElementById('audioSpeedSelect').value) || 0.9;
-            const pElements = document.querySelectorAll('#storyParagraphsArea .story-paragraph');
-
-            function playNextParagraph() {
-                if (!isAudioPlaying || currentIdx >= paragraphs.length) {
-                    stopStoryAudio();
-                    return;
-                }
-
-                pElements.forEach(p => p.classList.remove('audio-reading-active'));
-                if (pElements[currentIdx]) {
-                    pElements[currentIdx].classList.add('audio-reading-active');
-                    pElements[currentIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-
-                const textToRead = paragraphs[currentIdx].german_text;
-                const utterance = new SpeechSynthesisUtterance(textToRead);
-                utterance.lang = 'de-DE';
-                utterance.rate = rate;
-
-                utterance.onend = () => {
-                    currentIdx++;
-                    playNextParagraph();
-                };
-
-                utterance.onerror = () => {
-                    stopStoryAudio();
-                };
-
-                window.speechSynthesis.speak(utterance);
-            }
-
-            playNextParagraph();
-        }
-
-        function stopStoryAudio() {
-            isAudioPlaying = false;
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-            }
-            document.querySelectorAll('#storyParagraphsArea .story-paragraph').forEach(p => p.classList.remove('audio-reading-active'));
-        }
-
-        async function triggerStoryGeneration(level, theme) {
-            stopStoryAudio();
-            showLoader(`'${level}' seviyesinde '${theme}' konulu sesli hikaye üretiliyor...`);
-            try {
-                const provider = document.getElementById('aiProviderSelect').value;
-                const res = await fetch('/api/generate-story', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ level: level, topic_theme: theme, provider: provider })
-                });
-                const data = await res.json();
-                renderInteractiveStory(data);
-            } catch (err) {
-                renderMockInteractiveStory(level, theme);
-            } finally {
-                hideLoader();
-            }
-        }
-
-        function renderInteractiveStory(data) {
-            currentStoryData = data;
-            document.getElementById('storyContainer').style.display = 'block';
-            document.getElementById('storyLevelBadge').innerText = data.level;
-            document.getElementById('storyTitleDE').innerText = data.title_de;
-            document.getElementById('storyTitleTR').innerText = data.title_tr;
-            document.getElementById('storyFullTransText').innerText = data.full_translation_tr;
-
-            const area = document.getElementById('storyParagraphsArea');
-            area.innerHTML = '';
-
-            (data.paragraphs || []).forEach((para, idx) => {
-                const pElem = document.createElement('div');
-                pElem.className = 'story-paragraph';
-                pElem.setAttribute('data-para-index', idx);
-
-                (para.words || []).forEach(wordObj => {
-                    const span = document.createElement('span');
-                    span.className = 'hover-word';
-                    span.innerText = wordObj.w + " ";
-                    span.setAttribute('data-tr', wordObj.tr || 'Türkçe anlamı');
-                    const subInfo = (wordObj.article ? `Artikel: ${wordObj.article} | ` : '') + (wordObj.type || '');
-                    span.setAttribute('data-sub', subInfo);
-                    
-                    span.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        speakText(wordObj.w);
-                    });
-
-                    pElem.appendChild(span);
-                });
-
-                area.appendChild(pElem);
-            });
-        }
-
-        function renderMockInteractiveStory(level, theme) {
-            renderInteractiveStory({
-                title_de: `Ein unvergesslicher Tag in Deutschland (${level})`,
-                title_tr: `Almanya'da Unutulmaz Bir Gün (${level} Seviyesi - ${theme})`,
-                level: level,
-                paragraphs: [
-                    {
-                        german_text: "Heute steht Lukas früh am Morgen auf und öffnet das Fenster.",
-                        words: [
-                            { w: "Heute", tr: "Bugün", type: "Adverb" },
-                            { w: "steht", tr: "kalkıyor (aufstehen)", type: "Verb" },
-                            { w: "Lukas", tr: "Lukas", type: "Nomen" },
-                            { w: "früh", tr: "erken", type: "Adjektiv" },
-                            { w: "am", tr: "sabahleyin", type: "Präposition" },
-                            { w: "Morgen", tr: "sabah", type: "Nomen", article: "der" },
-                            { w: "auf", tr: "kalkmak (ayrılan ek)", type: "Verb-Präfix" },
-                            { w: "und", tr: "ve", type: "Konnektor" },
-                            { w: "öffnet", tr: "açıyor (öffnen)", type: "Verb" },
-                            { w: "das", tr: "belirli artikel", type: "Artikel" },
-                            { w: "Fenster.", tr: "pencere", type: "Nomen", article: "das" }
-                        ]
-                    },
-                    {
-                        german_text: "Die Sonne scheint hell und das Wetter ist wirklich wunderschön.",
-                        words: [
-                            { w: "Die", tr: "belirli artikel", type: "Artikel" },
-                            { w: "Sonne", tr: "güneş", type: "Nomen", article: "die" },
-                            { w: "scheint", tr: "parlıyor", type: "Verb" },
-                            { w: "hell", tr: "parlak", type: "Adjektiv" },
-                            { w: "und", tr: "ve", type: "Konnektor" },
-                            { w: "das", tr: "belirli artikel", type: "Artikel" },
-                            { w: "Wetter", tr: "hava", type: "Nomen", article: "das" },
-                            { w: "ist", tr: "-dir", type: "Verb" },
-                            { w: "wirklich", tr: "gerçekten", type: "Adverb" },
-                            { w: "wunderschön.", tr: "harika", type: "Adjektiv" }
-                        ]
-                    },
-                    {
-                        german_text: "Lukas geht zuerst in die Bäckerei und kauft frische Brötchen.",
-                        words: [
-                            { w: "Lukas", tr: "Lukas", type: "Nomen" },
-                            { w: "geht", tr: "gidiyor", type: "Verb" },
-                            { w: "zuerst", tr: "öncelikle", type: "Adverb" },
-                            { w: "in", tr: "-e, içine", type: "Präposition" },
-                            { w: "die", tr: "belirli artikel", type: "Artikel" },
-                            { w: "Bäckerei", tr: "fırın", type: "Nomen", article: "die" },
-                            { w: "und", tr: "ve", type: "Konnektor" },
-                            { w: "kauft", tr: "satın alıyor", type: "Verb" },
-                            { w: "frische", tr: "taze", type: "Adjektiv" },
-                            { w: "Brötchen.", tr: "küçük ekmek", type: "Nomen", article: "das" }
-                        ]
-                    }
-                ],
-                full_translation_tr: "Bugün Lukas erken kalkar ve pencereyi açar. Güneş parlak parlıyor ve hava gerçekten harika. Lukas önce fırına gider ve taze ekmek alır."
-            });
-        }
-
-        // Web Speech API Pronunciation
-        function speakText(text, lang = 'de-DE') {
-            if (!text || !text.trim()) return;
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = lang;
-                utterance.rate = 0.9;
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-
-        function speakInputText() {
-            const txt = document.getElementById('transInput').value.trim();
-            if (!txt) return;
-            const dir = document.getElementById('transDirection').value;
-            const lang = dir === 'de-tr' ? 'de-DE' : 'tr-TR';
-            speakText(txt, lang);
-        }
-
-        function speakOutputText() {
-            const txt = document.getElementById('mainTranslationText').innerText.trim();
-            if (!txt || txt === 'Çeviri sonucu burada görünecek...') return;
-            const dir = document.getElementById('transDirection').value;
-            const lang = dir === 'de-tr' ? 'tr-TR' : 'de-DE';
-            speakText(txt, lang);
-        }
-
-        // --- FİİL ÇEKİM MATRİSİ ---
-        function initConjugator() {
-            document.getElementById('conjugationForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const verb = document.getElementById('verbInput').value.trim();
-                if (!verb) return;
-
-                showLoader(`'${verb}' fiili tüm zamanlara çekimleniyor...`);
-                try {
-                    const provider = document.getElementById('aiProviderSelect').value;
-                    const res = await fetch('/api/conjugate', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ verb: verb, provider: provider })
-                    });
-                    const data = await res.json();
-                    renderConjugation(data);
-                } catch (err) {
-                    renderMockConjugation(verb);
-                } finally {
-                    hideLoader();
-                }
-            });
-        }
-
-        function renderConjugation(data) {
-            document.getElementById('verbMetaBanner').style.display = 'block';
-            document.getElementById('metaVerbTitle').innerText = data.verb;
-            document.getElementById('metaMeaning').innerText = `Türkçe: ${data.turkish_meaning}`;
-            
-            const auxSpan = document.getElementById('metaAux');
-            auxSpan.innerText = `Yardımcı: ${data.auxiliary_verb}`;
-            auxSpan.className = data.auxiliary_verb === 'sein' ? 'article-badge article-das' : 'article-badge article-der';
-
-            const regSpan = document.getElementById('metaRegular');
-            regSpan.innerText = data.is_regular ? "Düzenli Fiil" : "Düzensiz Fiil";
-            regSpan.className = data.is_regular ? 'article-badge article-das' : 'article-badge article-die';
-
-            document.getElementById('metaStamm').innerText = data.stammformen || '';
-
-            const grid = document.getElementById('verbMatrixGrid');
-            grid.innerHTML = '';
-
-            (data.tenses || []).forEach(t => {
-                const card = document.createElement('div');
-                card.className = 'tense-card';
-                card.innerHTML = `
-                    <div class="tense-header">
-                        <span class="tense-title">${t.tense_name}</span>
-                        <span class="tense-sub">${t.turkish_tense_name}</span>
-                    </div>
-                    <div class="pronoun-list">
-                        ${Object.entries(t.forms || {}).map(([p, f]) => `
-                            <div class="pronoun-row">
-                                <span class="pronoun-tag">${p.replace('_sie_es', '/sie/es').replace('_Sie', '/Sie')}</span>
-                                <span class="conjugated-form">${f}</span>
-                                <button onclick="speakText('${f}')" class="audio-btn"><i class="fa-solid fa-volume-high"></i></button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function renderMockConjugation(verb) {
-            // Gehen örneğini özel olarak düzelt, diğerleri için uyarı ver
-            if (verb.toLowerCase() === "gehen") {
-                renderConjugation({
-                    verb: "gehen",
-                    turkish_meaning: "gitmek (Demo API Key Uyarısı)",
-                    is_regular: false,
-                    auxiliary_verb: "sein",
-                    stammformen: "gehen - ging - ist gegangen",
-                    tenses: [
-                        {
-                            tense_name: "Präsens",
-                            turkish_tense_name: "Şimdiki / Geniş Zaman",
-                            forms: { "ich": "ich gehe", "du": "du gehst", "er_sie_es": "er/sie/es geht", "wir": "wir gehen", "ihr": "ihr geht", "sie_Sie": "sie/Sie gehen" }
-                        }
-                    ]
-                });
-            } else {
-                renderConjugation({
-                    verb: verb,
-                    turkish_meaning: `(API Key Gerekli) ${verb} fiili`,
-                    is_regular: true,
-                    auxiliary_verb: "haben/sein",
-                    stammformen: `Lütfen .env veya Vercel'e API Key girin.`,
-                    tenses: [
-                        {
-                            tense_name: "⚠️ HATA",
-                            turkish_tense_name: "Demo Modu",
-                            forms: { "ich": `API Key Eksik`, "du": `API Key Eksik`, "er_sie_es": `API Key Eksik`, "wir": `API Key Eksik`, "ihr": `API Key Eksik`, "sie_Sie": `API Key Eksik` }
-                        }
-                    ]
-                });
-            }
-        }
-
-        // Translator
-        function initTranslator() {
-            document.getElementById('btnTranslate').addEventListener('click', async () => {
-                const text = document.getElementById('transInput').value.trim();
-                if (!text) return;
-                showLoader("Kelime & Dilbilgisi Çevirisi Yapılıyor...");
-                try {
-                    const provider = document.getElementById('aiProviderSelect').value;
-                    const dir = document.getElementById('transDirection').value;
-                    const res = await fetch('/api/translate', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ text: text, direction: dir, provider: provider })
-                    });
-                    const data = await res.json();
-                    renderDictCard(data);
-                } catch (err) {
-                    renderDictCard({
-                        source_text: text,
-                        main_translation: `⚠️ API Key Eksik (Demo Çeviri): ${text}`,
-                        dictionary_entry: {
-                            german: text,
-                            turkish: `Lütfen gerçek çeviri için .env veya Vercel'den API Key girin.`,
-                            article: "das",
-                            plural: "die Wörter",
-                            phonetic: "[vɔrt]",
-                            examples: [{ german: `API Key bulunamadı.`, turkish: `Sistem demo modunda çalışıyor.` }]
-                        }
-                    });
-                } finally {
-                    hideLoader();
-                }
-            });
-        }
-
-        function renderDictCard(data) {
-            document.getElementById('dictContentEmpty').style.display = 'none';
-            document.getElementById('dictContentActive').style.display = 'block';
-
-            const mainTransText = document.getElementById('mainTranslationText');
-            if (data.main_translation) {
-                mainTransText.innerText = data.main_translation;
-            } else {
-                mainTransText.innerText = 'Çeviri bulunamadı.';
-            }
-
-            const entry = data.dictionary_entry || {};
-            const artBadge = document.getElementById('dictArticleBadge');
-            if (entry.article) {
-                artBadge.style.display = 'inline-block';
-                artBadge.innerText = entry.article;
-                artBadge.className = `article-badge article-${entry.article}`;
-            } else {
-                artBadge.style.display = 'none';
-            }
-
-            document.getElementById('dictGermanWord').innerText = entry.german || data.source_text;
-            document.getElementById('dictPhonetic').innerText = entry.phonetic || '';
-            document.getElementById('dictTurkishWord').innerText = `Türkçe: ${entry.turkish || 'Belirtilmedi'}`;
-            document.getElementById('dictPlural').innerHTML = `<b>Çoğul:</b> ${entry.plural || 'Belirtilmedi'}`;
-
-            const exList = document.getElementById('dictExamplesList');
-            exList.innerHTML = '';
-            (entry.examples || []).forEach(ex => {
-                const safeDe = (ex.german || '').replace(/'/g, "\\'");
-                exList.innerHTML += `
-                    <div style="background: rgba(255,255,255,0.03); padding: 0.6rem 0.85rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
-                        <div>
-                            <p style="font-weight: 600; margin: 0; font-size: 0.95rem;">${ex.german}</p>
-                            <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0.2rem 0 0;">${ex.turkish}</p>
-                        </div>
-                        <button onclick="speakText('${safeDe}')" class="audio-btn" style="flex-shrink: 0;" title="Cümleyi Dinle">
-                            <i class="fa-solid fa-volume-high"></i>
-                        </button>
-                    </div>
-                `;
-            });
-        }
-
-        // Summarizer & Analysis
-        function initSummarizer() {
-            document.getElementById('btnAnalyzeTopic').addEventListener('click', () => {
-                const topic = document.getElementById('customTopicInput').value.trim();
-                const level = document.getElementById('customLevelSelect').value;
-                if (topic) triggerTopicAnalysis(topic, level);
-            });
-        }
-
-        async function triggerTopicAnalysis(topic, level) {
-            showLoader(`'${topic}' konusu detaylı analiz ediliyor...`);
-            try {
-                const provider = document.getElementById('aiProviderSelect').value;
-                const res = await fetch('/api/analyze-topic', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ topic: topic, level: level, provider: provider })
-                });
-                const data = await res.json();
-                renderTopicAnalysis(data);
-            } catch (err) {
-                renderMockTopicAnalysis(topic, level);
-            } finally {
-                hideLoader();
-            }
-        }
-
-        function renderTopicAnalysis(data) {
-            currentActiveAnalysisData = data;
-            document.getElementById('topicAnalysisResult').style.display = 'block';
-            document.getElementById('analysisTitle').innerText = `${data.level} - ${data.topic}`;
-
-            // Formula Structure
-            const formulaBox = document.getElementById('analysisFormulaBox');
-            const formulaText = document.getElementById('analysisFormulaText');
-            if (data.formula_structure) {
-                formulaBox.style.display = 'block';
-                formulaText.innerText = data.formula_structure;
-            } else {
-                formulaBox.style.display = 'none';
-            }
-
-            // Multi-paragraph Summary
-            const summaryDiv = document.getElementById('analysisSummaryText');
-            summaryDiv.innerHTML = (data.summary_tr || '')
-                .split('\n\n')
-                .map(p => `<p style="margin-bottom: 0.8rem;">${p.replace(/\n/g, '<br>')}</p>`)
-                .join('');
-
-            // Key Grammar Rules
-            const rulesUl = document.getElementById('analysisRulesList');
-            rulesUl.innerHTML = '';
-            (data.key_grammar_rules || []).forEach(r => {
-                rulesUl.innerHTML += `<li style="margin-bottom: 0.4rem;">${r}</li>`;
-            });
-
-            // Usage Notes
-            const notesUl = document.getElementById('analysisNotesList');
-            notesUl.innerHTML = '';
-            (data.usage_notes || []).forEach(n => {
-                notesUl.innerHTML += `<li style="margin-bottom: 0.4rem;">${n}</li>`;
-            });
-
-            // Vocabulary Grid
-            const vocabSec = document.getElementById('analysisVocabSection');
-            const vocabGrid = document.getElementById('analysisVocabGrid');
-            if (data.vocabulary && data.vocabulary.length > 0) {
-                vocabSec.style.display = 'block';
-                vocabGrid.innerHTML = '';
-                data.vocabulary.forEach(v => {
-                    const artClass = v.article ? `article-${v.article.toLowerCase()}` : '';
-                    const safeGerm = (v.german || '').replace(/'/g, "\\'");
-                    vocabGrid.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 10px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                ${v.article ? `<span class="article-badge ${artClass}">${v.article}</span>` : ''}
-                                <span style="font-weight: 700; font-size: 0.95rem;">${v.german}</span>
-                                <span onclick="speakText('${safeGerm}')" class="audio-btn" style="cursor: pointer; margin-left: 0.3rem;" title="Dinle"><i class="fa-solid fa-volume-high"></i></span>
-                                <div style="font-size: 0.8rem; color: var(--accent-emerald); margin-top: 0.2rem;">${v.turkish}</div>
-                                ${v.plural ? `<div style="font-size: 0.75rem; color: var(--text-muted);">Çoğul: ${v.plural}</div>` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                vocabSec.style.display = 'none';
-            }
-
-            // Sentence Examples with Audio
-            const examplesList = document.getElementById('analysisExamplesList');
-            if (examplesList) {
-                examplesList.innerHTML = '';
-                (data.examples || []).forEach(ex => {
-                    const safeDe = (ex.german || '').replace(/'/g, "\\'");
-                    examplesList.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); padding: 0.85rem 1rem; border-radius: 10px; border-left: 4px solid var(--accent-primary); display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-                            <div>
-                                <div style="font-weight: 700; font-size: 1.05rem; color: var(--text-main);">${ex.german}</div>
-                                <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">${ex.turkish}</div>
-                            </div>
-                            <button onclick="speakText('${safeDe}')" class="btn-audio-control" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" title="Dinle">
-                                <i class="fa-solid fa-volume-high"></i> Dinle
-                            </button>
-                        </div>
-                    `;
-                });
-            }
-
-            // Common Mistakes
-            const mistakesUl = document.getElementById('analysisMistakesList');
-            mistakesUl.innerHTML = '';
-            (data.common_mistakes || []).forEach(m => {
-                mistakesUl.innerHTML += `<li style="margin-bottom: 0.5rem; background: rgba(244,63,94,0.05); padding: 0.6rem; border-radius: 8px;">${m}</li>`;
-            });
-
-            // Mini Quiz Area
-            const quizArea = document.getElementById('analysisQuizArea');
-            quizArea.innerHTML = '';
-            if (data.mini_quiz && data.mini_quiz.length > 0) {
-                data.mini_quiz.forEach((q, qIdx) => {
-                    const qBox = document.createElement('div');
-                    qBox.style.cssText = 'background: rgba(255,255,255,0.02); padding: 1.25rem; border-radius: 10px; border: 1px solid var(--border-color);';
-                    
-                    let optionsHTML = '';
-                    (q.options || []).forEach((opt) => {
-                        const safeOpt = opt.replace(/"/g, '&quot;');
-                        optionsHTML += `
-                            <button class="quiz-option-btn" data-qindex="${qIdx}" data-opt="${safeOpt}" style="text-align: left; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-main); padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s ease;">
-                                ${opt}
-                            </button>
-                        `;
-                    });
-
-                    qBox.innerHTML = `
-                        <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem; color: var(--text-main);">
-                            <span style="color: var(--accent-emerald);">Soru ${qIdx + 1}:</span> ${q.question}
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.8rem;">
-                            ${optionsHTML}
-                        </div>
-                        <div id="quizExp_${qIdx}" style="display: none; padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; line-height: 1.5;"></div>
-                    `;
-                    quizArea.appendChild(qBox);
-                });
-
-                // Attach Quiz Option Event Listeners
-                quizArea.querySelectorAll('.quiz-option-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const qIdx = parseInt(btn.getAttribute('data-qindex'));
-                        const selectedOpt = btn.getAttribute('data-opt');
-                        const quizData = data.mini_quiz[qIdx];
-                        const expDiv = document.getElementById(`quizExp_${qIdx}`);
-                        
-                        const isCorrect = selectedOpt.trim().startsWith(quizData.correct_answer.trim().substring(0, 2)) || 
-                                          selectedOpt.trim() === quizData.correct_answer.trim();
-
-                        if (isCorrect) {
-                            btn.style.background = 'rgba(16, 185, 129, 0.2)';
-                            btn.style.borderColor = 'var(--accent-emerald)';
-                            btn.style.color = 'var(--accent-emerald)';
-                            expDiv.style.display = 'block';
-                            expDiv.style.background = 'rgba(16, 185, 129, 0.1)';
-                            expDiv.style.border = '1px solid var(--accent-emerald)';
-                            expDiv.style.color = 'var(--accent-emerald)';
-                            expDiv.innerHTML = `<b>✅ Doğru Cevap!</b> ${quizData.explanation || ''}`;
-                        } else {
-                            btn.style.background = 'rgba(244, 63, 94, 0.2)';
-                            btn.style.borderColor = 'var(--accent-rose)';
-                            btn.style.color = 'var(--accent-rose)';
-                            expDiv.style.display = 'block';
-                            expDiv.style.background = 'rgba(244, 63, 94, 0.1)';
-                            expDiv.style.border = '1px solid var(--accent-rose)';
-                            expDiv.style.color = 'var(--accent-rose)';
-                            expDiv.innerHTML = `<b>❌ Yanlış Cevap.</b> Doğru Şık: <b>${quizData.correct_answer}</b><br>${quizData.explanation || ''}`;
-                        }
-                    });
-                });
-            } else {
-                quizArea.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">Bu konu için henüz quiz sorusu üretilmedi.</p>`;
-            }
-        }
-
-        function renderMockTopicAnalysis(topic, level) {
-            renderTopicAnalysis({
-                topic: topic,
-                level: level,
-                summary_tr: `'${topic}' konusu (${level} seviyesi), Almancanın temel yapı taşlarından biridir. Bu konuda isim çekimleri, fiil pozisyonları ve artikel kuralları büyük önem taşır.\n\nSistem şu an demo modunda çalışmaktadır. Yapay zeka ile tam analiz için lütfen Vercel veya .env dosyasından API anahtarınızı girin.`,
-                formula_structure: "[Özne] + [Fiil (2. Sıra)] + [Nesne] + ... + [İkinci Fiil (Sonda)]",
-                key_grammar_rules: [
-                    "Ana cümlelerde fiil 2. pozisyondadır.",
-                    "Artikeller ismin haline (Nominativ, Akkusativ, Dativ) göre değişir.",
-                    "Modal fiil cümlenin 2. sırasındayken esas fiil mastar (Infinitiv) halde en sona gider."
-                ],
-                usage_notes: [
-                    "İpucu: Almanca öğrenirken isimleri mutlaka artikelleriyle ezberleyin.",
-                    "Türkçeden farklı olarak fiil ana cümlede en sonda değil, 2. sıradadır."
-                ],
-                vocabulary: [
-                    { german: "das Buch", turkish: "kitap", article: "das", plural: "die Bücher" },
-                    { german: "die Sprache", turkish: "dil", article: "die", plural: "die Sprachen" }
-                ],
-                examples: [
-                    { german: "Ich lerne jeden Tag Deutsch.", turkish: "Her gün Almanca öğreniyorum." },
-                    { german: "Wir trinken heute Kaffee.", turkish: "Bugün kahve içiyoruz." }
-                ],
-                common_mistakes: [
-                    "Yanlış: Ich nach Hause gehe. -> Doğru: Ich gehe nach Hause."
-                ],
-                mini_quiz: [
-                    {
-                        question: "Almanca düz ana cümlede fiil kaçıncı sırada yer almalıdır?",
-                        options: ["A) 1. sırada", "B) 2. sırada", "C) En sonda"],
-                        correct_answer: "B) 2. sırada",
-                        explanation: "Almanca ana cümlelerde fiil her zaman 2. pozisyondadır."
-                    }
-                ]
-            });
-        }
-
-        // PDF Export
-        function initPDFExport() {
-            document.getElementById('btnExportPDFCurrent').addEventListener('click', () => {
-                if (!currentActiveAnalysisData) return;
-                const md = `
-# ${currentActiveAnalysisData.level} - ${currentActiveAnalysisData.topic}
-
-## Konu Özeti
-${currentActiveAnalysisData.summary_tr}
-
-## Temel Gramer Kuralları
-${(currentActiveAnalysisData.key_grammar_rules || []).map(r => '- ' + r).join('\n')}
-
-## Sık Yapılan Hatalar
-${(currentActiveAnalysisData.common_mistakes || []).map(m => '- ' + m).join('\n')}
-                `;
-                downloadPDF(currentActiveAnalysisData.topic, md);
-            });
-
-            document.getElementById('btnGeneratePDFCustom').addEventListener('click', () => {
-                const title = document.getElementById('pdfReportTitle').value.trim() || "Almanca Çalışma Raporu";
-                const content = document.getElementById('pdfReportContent').value.trim();
-                if (content) downloadPDF(title, content);
-            });
-        }
-
-        async function downloadPDF(title, markdownContent) {
-            try {
-                const res = await fetch('/api/export-pdf', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        title: title,
-                        content_markdown: markdownContent,
-                        author: "Betül Altınkaynak Demirel"
-                    })
-                });
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `Almanca_Rapor_${title.replace(/\s+/g, '_')}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-            } catch (err) {
-                alert("PDF indirilemedi.");
-            }
-        }
-
-        // Helpers
-        function showLoader(txt) {
-            document.getElementById('loaderText').innerText = txt || 'Yapay Zeka Analiz Yapıyor...';
-            document.getElementById('appLoader').style.display = 'block';
-        }
-
-        function hideLoader() {
-            document.getElementById('appLoader').style.display = 'none';
-        }
-    </script>
-</body>
-</html>
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yapay Zeka Destekli Almanca ├û─şrenme Projesi | Bet├╝l Alt─▒nkaynak Demirel</title>
+    <meta name="description" content="Google Gemini 2.5 Flash ve Groq LLaMA 3.3 destekli eksiksiz Almanca A1-C2 m├╝fredat─▒, AI metin skorlama ve hata d├╝zeltici, sesli hikayeler, fiil ├ğekim matrisi ve PDF export.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-glass: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --accent-primary: #3B82F6;
+            --accent-secondary: #8B5CF6;
+            --accent-emerald: #10B981;
+            --accent-amber: #F59E0B;
+            --accent-rose: #F43F5E;
+            --der-color: #3B82F6;
+            --die-color: #EC4899;
+            --das-color: #10B981;
+            --shadow-glow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
+            --body-gradient: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 400px), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08), transparent 400px);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .light-theme {
+            --bg-primary: #F4F7FB;
+            --bg-secondary: #FFFFFF;
+            --bg-glass: rgba(255, 255, 255, 0.95);
+            --border-color: #CBD5E1;
+            --text-main: #0F172A;
+            --text-muted: #475569;
+            --shadow-glow: 0 10px 30px -10px rgba(59, 130, 246, 0.25);
+            --body-gradient: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+            --card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            background-image: var(--body-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 800;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .logo-title h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #60A5FA, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-title p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .select-input, .btn-icon {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.55rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs-wrapper {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.5rem 2rem;
+        }
+
+        .nav-tabs {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            white-space: normal;
+            text-align: center;
+            flex: 1 1 calc(33.333% - 1rem);
+            min-width: 240px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            border-color: var(--accent-primary);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-primary), #2563EB);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* Main App Body */
+        main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card System */
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* Score Badge */
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, var(--accent-emerald), #047857);
+        }
+
+        .score-circle.medium-score {
+            background: linear-gradient(135deg, var(--accent-amber), #D97706);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .score-circle.low-score {
+            background: linear-gradient(135deg, var(--accent-rose), #BE123C);
+            box-shadow: 0 10px 25px rgba(244, 63, 94, 0.3);
+        }
+
+        /* Audio Player Control Bar */
+        .audio-player-bar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-primary);
+            border-radius: 14px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .audio-controls-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-audio-control {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-audio-stop {
+            background: rgba(244, 63, 94, 0.2);
+            color: var(--accent-rose);
+            border: 1px solid var(--accent-rose);
+        }
+
+        /* German Levels Grid */
+        .levels-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .levels-nav {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .level-chip {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.6rem 1.4rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .level-chip.active {
+            background: linear-gradient(135deg, var(--accent-secondary), #6D28D9);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(109, 40, 217, 0.4);
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .topic-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--accent-primary);
+        }
+
+        .topic-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .topic-category {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 0.4rem;
+        }
+
+        .topic-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .topic-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .btn-analyze-sm {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--accent-primary);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* --- INTERACTIVE STORY HOVER & AUDIO ACTIVE STYLES --- */
+        .story-paragraph {
+            font-size: 1.2rem;
+            line-height: 2.2;
+            margin-bottom: 1.5rem;
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .story-paragraph.audio-reading-active {
+            border-color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.08);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .hover-word {
+            position: relative;
+            display: inline-block;
+            padding: 0.15rem 0.35rem;
+            margin: 0 0.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #60A5FA;
+            background: rgba(59, 130, 246, 0.08);
+            border-bottom: 2px dashed rgba(59, 130, 246, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .hover-word:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-bottom-color: transparent;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .hover-word::after {
+            content: attr(data-tr) "\A" attr(data-sub);
+            white-space: pre-wrap;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background: #0F172A;
+            color: #F8FAFC;
+            padding: 0.6rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.3;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent-primary);
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 50;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .hover-word:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Form & Buttons */
+        .conjugator-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.85rem 1.2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent-primary), #1D4ED8);
+            color: white;
+            border: none;
+            padding: 0.85rem 1.8rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .verb-matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .tense-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.25rem;
+        }
+
+        .tense-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .tense-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .tense-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .pronoun-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .pronoun-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.4rem 0.6rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .pronoun-tag {
+            font-weight: 700;
+            color: var(--text-muted);
+            width: 80px;
+            font-size: 0.85rem;
+        }
+
+        .conjugated-form {
+            font-weight: 600;
+            color: var(--text-main);
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .audio-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent-primary);
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+        }
+
+        /* Dictionary & Translator */
+        .trans-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .trans-box { grid-template-columns: 1fr; }
+        }
+
+        .dict-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.5rem;
+        }
+
+        .article-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        .article-der { background-color: var(--der-color); }
+        .article-die { background-color: var(--die-color); }
+        .article-das { background-color: var(--das-color); }
+
+        /* Loader */
+        .loader-spinner {
+            display: none;
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-left-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-group">
+                <div class="logo-badge">DE</div>
+                <div class="logo-title">
+                    <h1>Almanca AI ├û─şrenme Platformu</h1>
+                    <p>Geli┼ştirici: <b>Bet├╝l Alt─▒nkaynak Demirel</b></p>
+                </div>
+            </div>
+            <div class="header-controls">
+                <select id="aiProviderSelect" class="select-input">
+                    <option value="gemini">ÔÜí Google Gemini 2.5 Flash</option>
+                    <option value="groq">­şÜÇ Groq LLaMA 3.3 (70B)</option>
+                </select>
+                <button id="themeToggleBtn" class="btn-icon" title="Tema De─şi┼ştir">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs-wrapper">
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="tab-levels">
+                <i class="fa-solid fa-layer-group"></i> Eksiksiz Seviye Katalo─şu (A1-C2)
+            </button>
+            <button class="tab-btn" data-tab="tab-writing">
+                <i class="fa-solid fa-pen-nib"></i> AI Yaz─▒m Ko├ğu (Skor & D├╝zeltme)
+            </button>
+            <button class="tab-btn" data-tab="tab-story">
+                <i class="fa-solid fa-circle-play"></i> Sesli Hikayeler (Sesli Dinleme & Hover)
+            </button>
+            <button class="tab-btn" data-tab="tab-conjugator">
+                <i class="fa-solid fa-table-cells"></i> Fiil ├çekim Matrisi
+            </button>
+            <button class="tab-btn" data-tab="tab-translator">
+                <i class="fa-solid fa-language"></i> S├Âzl├╝k & ├çeviri
+            </button>
+            <button class="tab-btn" data-tab="tab-summarizer">
+                <i class="fa-solid fa-brain"></i> AI Konu Analizi
+            </button>
+            <button class="tab-btn" data-tab="tab-document">
+                <i class="fa-solid fa-file-pdf"></i> Belge & PDF Export
+            </button>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+
+        <!-- Loader Spinner -->
+        <div id="appLoader" class="loader-spinner">
+            <div class="spinner"></div>
+            <p id="loaderText">Yapay Zeka Analiz Yap─▒yor...</p>
+        </div>
+
+        <!-- TAB 1: EKS─░KS─░Z SEV─░YE KATALO─ŞU (A1 - C2) -->
+        <section id="tab-levels" class="tab-content active">
+            <div class="glass-card">
+                <div class="levels-header">
+                    <h2>Eksiksiz Almanca A1-C2 M├╝fredat Katalo─şu</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        Goethe ve Telc m├╝fredat─▒na uygun A1 ba┼şlang─▒├ğtan C2 anadil d├╝zeyine kadar t├╝m gramer, konu┼şma ve s─▒nav konular─▒. Analiz etmek istedi─şiniz konuya t─▒klay─▒n.
+                    </p>
+                </div>
+                <div class="levels-nav" id="levelsNavChips">
+                    <button class="level-chip active" data-level="A1">A1 Seviyesi (15 Konu)</button>
+                    <button class="level-chip" data-level="A2">A2 Seviyesi (15 Konu)</button>
+                    <button class="level-chip" data-level="B1">B1 Seviyesi (15 Konu)</button>
+                    <button class="level-chip" data-level="B2">B2 Seviyesi (14 Konu)</button>
+                    <button class="level-chip" data-level="C1">C1 Seviyesi (12 Konu)</button>
+                    <button class="level-chip" data-level="C2">C2 Seviyesi (8 Konu)</button>
+                </div>
+                <div id="topicsGridContainer" class="topics-grid">
+                    <!-- Dynamic Topic Cards Rendered Here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: AI YAZIM KO├çU (MET─░N SKORLAMA & HATA D├£ZELTME) -->
+        <section id="tab-writing" class="tab-content">
+            <div class="glass-card">
+                <h2>Ô£ı´©Å AI Metin Analizi & Yaz─▒m Ko├ğu (Skorlama & Hata D├╝zeltme)</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    Yazd─▒─ş─▒n─▒z Almanca paragraf─▒ veya mektubu buraya yap─▒┼şt─▒r─▒n. Yapay zeka metninizi <b>100 ├╝zerinden skorlas─▒n</b>, hatalar─▒n─▒z─▒ T├╝rk├ğe a├ğ─▒klamalar─▒yla d├╝zeltsin ve daha ileri kelime ├Ânerileri sunsun.
+                </p>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label style="font-weight: 700; font-size: 0.95rem;">Almanca Metniniz:</label>
+                        <select id="writingTargetLevelSelect" class="select-input" style="padding: 0.3rem 0.6rem;">
+                            <option value="A1">Hedef Seviye: A1</option>
+                            <option value="A2">Hedef Seviye: A2</option>
+                            <option value="B1" selected>Hedef Seviye: B1</option>
+                            <option value="B2">Hedef Seviye: B2</option>
+                            <option value="C1">Hedef Seviye: C1</option>
+                            <option value="C2">Hedef Seviye: C2</option>
+                        </select>
+                    </div>
+                    <textarea id="writingTextInput" class="form-input" rows="6" placeholder="Almanca metninizi buraya yaz─▒n (├Ârn: Ich habe gestern nach Hause gegangen und ein Buch gelesen...)..."></textarea>
+                    <button id="btnEvaluateWriting" class="btn-submit" style="width: 100%; margin-top: 1rem; justify-content: center; font-size: 1rem;">
+                        <i class="fa-solid fa-award"></i> Metni Analiz Et & 100 ├£zerinden Skorla
+                    </button>
+                </div>
+
+                <!-- Writing Evaluation Results -->
+                <div id="writingAnalysisResult" style="display: none;">
+                    
+                    <!-- SCORE BANNER CARD -->
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 14px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 1.5rem;">
+                            <div id="scoreCircleElem" class="score-circle">
+                                <span id="scoreNumberText" style="font-size: 2rem;">88</span>
+                                <span style="font-size: 0.7rem; font-weight: 600; opacity: 0.8;">SKOR / 100</span>
+                            </div>
+                            <div>
+                                <h3 id="writingAssessedLevelText" style="font-size: 1.3rem; margin-bottom: 0.3rem;">B1 - Ba┼şar─▒l─▒ Seviye</h3>
+                                <p style="color: var(--text-muted); font-size: 0.85rem;">Yapay zeka taraf─▒ndan de─şerlendirilen dil yetkinli─şi d├╝zeyi.</p>
+                            </div>
+                        </div>
+                        <button id="btnExportWritingPDF" class="btn-submit" style="background: linear-gradient(135deg, var(--accent-rose), #E11D48); font-size: 0.85rem; padding: 0.5rem 1rem;">
+                            <i class="fa-solid fa-file-pdf"></i> Skor Raporunu ─░ndir
+                        </button>
+                    </div>
+
+                    <!-- CORRECTED TEXT BOX -->
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 14px; border: 1px solid var(--accent-emerald); margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                            <h4 style="color: var(--accent-emerald); font-size: 1.05rem;"><i class="fa-solid fa-circle-check"></i> Hatalar─▒ D├╝zeltilmi┼ş M├╝kemmel Metin</h4>
+                            <button onclick="speakText(document.getElementById('writingCorrectedText').innerText)" class="audio-btn" style="color: var(--accent-emerald);" title="D├╝zeltilmi┼ş Metni Dinle">
+                                <i class="fa-solid fa-volume-high"></i> Dinle
+                            </button>
+                        </div>
+                        <p id="writingCorrectedText" style="line-height: 1.7; font-size: 1.05rem; font-weight: 600; color: var(--text-main);"></p>
+                    </div>
+
+                    <!-- ERROR BREAKDOWN LIST -->
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 14px; margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--accent-rose); font-size: 1.05rem; margin-bottom: 1rem;"><i class="fa-solid fa-bug"></i> Tespit Edilen Hatalar ve A├ğ─▒klamalar─▒</h4>
+                        <div id="writingErrorsList" style="display: flex; flex-direction: column; gap: 0.85rem;"></div>
+                    </div>
+
+                    <!-- STRENGTHS & IMPROVEMENTS GRID -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
+                            <h4 style="color: var(--accent-emerald); margin-bottom: 0.75rem;"><i class="fa-solid fa-thumbs-up"></i> Metnin G├╝├ğl├╝ Y├Ânleri</h4>
+                            <ul id="writingStrengthsList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;"></ul>
+                        </div>
+                        <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
+                            <h4 style="color: var(--accent-amber); margin-bottom: 0.75rem;"><i class="fa-solid fa-lightbulb"></i> Geli┼ştirilmesi Gereken Noktalar</h4>
+                            <ul id="writingImprovementsList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;"></ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: SESL─░ H─░KAYE D─░NLEME & HOVER S├ûZL├£K MOD├£L├£ -->
+        <section id="tab-story" class="tab-content">
+            <div class="glass-card">
+                <h2>­şÄğ Sesli Almanca Hikaye Dinleme Mod├╝l├╝ (A1 - C2)</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    Hikayeleri <b>anadili Almanca olan ses motoruyla ba┼ştan sona dinleyin</b>. Dinlerken okunan b├Âl├╝m e┼ş zamanl─▒ olarak vurgulan─▒r. Kelimelerin ├╝zerine gelerek T├╝rk├ğe anlamlar─▒n─▒ g├Âr├╝n.
+                </p>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <select id="storyLevelSelect" class="select-input" style="flex: 1; min-width: 140px;">
+                        <option value="A1">Seviye: A1 Ba┼şlang─▒├ğ</option>
+                        <option value="A2">Seviye: A2 Temel ─░leri</option>
+                        <option value="B1">Seviye: B1 Orta Seviye</option>
+                        <option value="B2">Seviye: B2 ─░leri Orta</option>
+                        <option value="C1">Seviye: C1 ─░leri D├╝zey</option>
+                        <option value="C2">Seviye: C2 Anadil D├╝zeyi</option>
+                    </select>
+                    <input type="text" id="storyThemeInput" class="form-input" style="flex: 2; min-width: 260px;" placeholder="Hikaye Konusu (├Ârn: M├╝nchen seyahati, ─░┼ş toplant─▒s─▒, M├╝ze gezisi)...">
+                    <button id="btnGenerateStory" class="btn-submit">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Hikaye ├£ret & Haz─▒rla
+                    </button>
+                </div>
+
+                <div id="storyContainer" style="display: none;">
+                    
+                    <!-- AUDIO PLAYER CONTROLS BAR -->
+                    <div class="audio-player-bar">
+                        <div class="audio-controls-group">
+                            <button id="btnPlayFullStory" class="btn-audio-control" style="background: linear-gradient(135deg, var(--accent-emerald), #059669);">
+                                <i class="fa-solid fa-play"></i> Hikayeyi Ba┼ştan Sona Dinle
+                            </button>
+                            <button id="btnStopStoryAudio" class="btn-audio-control btn-audio-stop">
+                                <i class="fa-solid fa-stop"></i> Durdur
+                            </button>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Okuma H─▒z─▒:</label>
+                            <select id="audioSpeedSelect" class="select-input" style="padding: 0.35rem 0.6rem;">
+                                <option value="0.75">0.75x (Yava┼ş - A1/A2)</option>
+                                <option value="0.9" selected>0.90x (Normal - Anla┼ş─▒l─▒r)</option>
+                                <option value="1.0">1.00x (Do─şal H─▒z)</option>
+                                <option value="1.15">1.15x (H─▒zl─▒ - C1/C2)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                        <div>
+                            <span id="storyLevelBadge" class="article-badge article-das" style="background: var(--accent-secondary);">A1</span>
+                            <h3 id="storyTitleDE" style="display: inline-block; font-size: 1.4rem;">Ein Tag in Berlin</h3>
+                            <p id="storyTitleTR" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Berlin'de Bir G├╝n</p>
+                        </div>
+                        <button id="btnExportStoryPDF" class="btn-submit" style="background: linear-gradient(135deg, var(--accent-rose), #E11D48); font-size: 0.85rem; padding: 0.5rem 1rem;">
+                            <i class="fa-solid fa-file-pdf"></i> Hikayeyi PDF ─░ndir
+                        </button>
+                    </div>
+
+                    <!-- Interactive Paragraphs with Audio Tracking -->
+                    <div id="storyParagraphsArea"></div>
+
+                    <!-- Accordion Full Translation -->
+                    <details style="background: var(--bg-secondary); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color); margin-top: 1.5rem; cursor: pointer;">
+                        <summary style="font-weight: 700; color: var(--accent-emerald);"><i class="fa-solid fa-language"></i> Hikayenin Tam T├╝rk├ğe ├çevirisini G├Âster</summary>
+                        <p id="storyFullTransText" style="margin-top: 1rem; line-height: 1.6; color: var(--text-main); font-size: 0.95rem;"></p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: F─░─░L ├çEK─░M MATR─░S─░ -->
+        <section id="tab-conjugator" class="tab-content">
+            <div class="glass-card">
+                <h2>Almanca Fiil ├çekim Matrisi (T├╝m Zamanlar & ┼Şah─▒slar)</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
+                    Herhangi bir Almanca fiili girin. 6 Almanca zaman diliminde (Pr├ñsens, Pr├ñteritum, Perfekt, Plusquamperfekt, Futur I, Futur II) ve 6 ┼şah─▒sta ├ğekim matrisini g├Âr├╝n.
+                </p>
+
+                <form id="conjugationForm" class="conjugator-form">
+                    <input type="text" id="verbInput" class="form-input" placeholder="Almanca bir fiil girin (├Ârn: gehen, machen, sprechen, sein, haben)..." required>
+                    <button type="submit" class="btn-submit">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> ├çekimle
+                    </button>
+                </form>
+
+                <div id="verbMetaBanner" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-secondary); border-radius: 12px; border: 1px solid var(--border-color);">
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <h3 id="metaVerbTitle" style="font-size: 1.25rem;">gehen</h3>
+                        <span id="metaMeaning" style="color: var(--text-muted);">T├╝rk├ğe: gitmek</span>
+                        <span id="metaAux" class="article-badge article-der">Yard─▒mc─▒: sein</span>
+                        <span id="metaRegular" class="article-badge article-die">D├╝zensiz Fiil</span>
+                        <span id="metaStamm" style="font-style: italic; color: var(--accent-amber);">gehen - ging - ist gegangen</span>
+                    </div>
+                </div>
+
+                <div id="verbMatrixGrid" class="verb-matrix-grid">
+                    <!-- Dynamic Tense Cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: S├ûZL├£K & ├çEV─░R─░ -->
+        <section id="tab-translator" class="tab-content">
+            <div class="glass-card">
+                <h2>Almanca - T├╝rk├ğe Ak─▒ll─▒ S├Âzl├╝k & ├çevirici</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
+                    Almanca veya T├╝rk├ğe s├Âzc├╝k / c├╝mle yaz─▒n. Artikeller (der/die/das), ├ğo─şul halleri, okunu┼şlar─▒ ve ├Ârnek c├╝mleler ile birlikte ├Â─şrenin.
+                </p>
+
+                <div class="trans-box">
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <label style="font-weight: 700; font-size: 0.9rem;">Girdi Metni</label>
+                            <select id="transDirection" class="select-input" style="padding: 0.25rem 0.5rem;">
+                                <option value="de-tr">Almanca ÔŞö T├╝rk├ğe</option>
+                                <option value="tr-de">T├╝rk├ğe ÔŞö Almanca</option>
+                            </select>
+                        </div>
+                        <textarea id="transInput" class="form-input" rows="6" placeholder="├çevirmek istedi─şiniz Almanca veya T├╝rk├ğe metni yaz─▒n..."></textarea>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="margin-bottom: 0.5rem; display: flex; align-items: center; height: 34px;">
+                            <label style="font-weight: 700; font-size: 0.9rem;">├ç─▒kt─▒ Metni (Tam ├çeviri)</label>
+                        </div>
+                        <div class="form-input" style="flex: 1; background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.3); overflow-y: auto;">
+                            <p id="mainTranslationText" style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin: 0; line-height: 1.5;">├çeviri sonucu burada g├Âr├╝necek...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="btnTranslate" class="btn-submit" style="width: 100%; margin-top: 1.25rem; margin-bottom: 1.5rem; justify-content: center;">
+                    <i class="fa-solid fa-language"></i> Metni ├çevir & ─░ncele
+                </button>
+
+                        <div id="dictCardResult" class="dict-card">
+                            <h3 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">S├ûZL├£K KARTI & D─░L B─░LG─░S─░</h3>
+                            <div id="dictContentEmpty" style="color: var(--text-muted); text-align: center; padding: 2rem 0;">
+                                <i class="fa-solid fa-book-open" style="font-size: 2.5rem; opacity: 0.4; margin-bottom: 0.5rem;"></i>
+                                <p>├çeviri sonucunu g├Ârmek i├ğin sol taraftan arama yap─▒n.</p>
+                            </div>
+                            <div id="dictContentActive" style="display: none;">
+                                <div style="margin-bottom: 1rem;">
+                                    <span id="dictArticleBadge" class="article-badge article-das">das</span>
+                                    <span id="dictGermanWord" style="font-size: 1.4rem; font-weight: 800;">Wort</span>
+                                    <span id="dictPhonetic" style="color: var(--text-muted); margin-left: 0.5rem; font-style: italic;">[v╔ört]</span>
+                                </div>
+                                <p style="font-size: 1.1rem; color: var(--accent-emerald); font-weight: 700; margin-bottom: 0.75rem;" id="dictTurkishWord">T├╝rk├ğe: Kelime</p>
+                                <p id="dictPlural" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;"><b>├ço─şul:</b> die W├Ârter</p>
+                                
+                                <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--accent-primary); margin-bottom: 0.5rem;">├ûrnek C├╝mleler</h4>
+                                <div id="dictExamplesList" style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                            </div>
+                        </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: AI KONU ├ûZETLEY─░C─░ & DER─░N ANAL─░Z -->
+        <section id="tab-summarizer" class="tab-content">
+            <div class="glass-card">
+                <h2>Almanca Konu Anlat─▒m─▒ & Derin AI Analizi</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
+                    Merak etti─şiniz herhangi bir Almanca konusunu yaz─▒n (├Ârn: *Passiv, Konjunktiv II, Wechselpr├ñpositionen, Nominalstil*). Yapay zeka konuyu ├Âzetlesin, kurallar─▒ ve ├Ârnekleri sunsun.
+                </p>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <input type="text" id="customTopicInput" class="form-input" style="flex: 2; min-width: 280px;" placeholder="Konu ba┼şl─▒─ş─▒ girin...">
+                    <select id="customLevelSelect" class="select-input" style="flex: 1; min-width: 120px;">
+                        <option value="A1">Seviye: A1</option>
+                        <option value="A2">Seviye: A2</option>
+                        <option value="B1">Seviye: B1</option>
+                        <option value="B2">Seviye: B2</option>
+                        <option value="C1">Seviye: C1</option>
+                        <option value="C2">Seviye: C2</option>
+                    </select>
+                    <button id="btnAnalyzeTopic" class="btn-submit">
+                        <i class="fa-solid fa-microchip"></i> AI Analiz Et
+                    </button>
+                </div>
+
+                <div id="topicAnalysisResult" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 id="analysisTitle" style="font-size: 1.4rem;">Passiv im Pr├ñsens</h3>
+                        <button id="btnExportPDFCurrent" class="btn-submit" style="background: linear-gradient(135deg, var(--accent-rose), #E11D48); font-size: 0.85rem; padding: 0.5rem 1rem;">
+                            <i class="fa-solid fa-file-pdf"></i> PDF Raporunu ─░ndir
+                        </button>
+                    </div>
+
+                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--accent-primary); margin-bottom: 0.5rem;"><i class="fa-solid fa-book"></i> Konu ├ûzeti</h4>
+                        <p id="analysisSummaryText" style="line-height: 1.6; color: var(--text-main); font-size: 0.95rem;"></p>
+                    </div>
+
+                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h4 style="color: #3B82F6; margin-bottom: 0.75rem;"><i class="fa-solid fa-list-ul"></i> ├ûrnek C├╝mleler</h4>
+                        <div id="analysisExamplesList" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
+                            <h4 style="color: var(--accent-emerald); margin-bottom: 0.75rem;"><i class="fa-solid fa-check-double"></i> Ana Dilbilgisi Kurallar─▒</h4>
+                            <ul id="analysisRulesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;"></ul>
+                        </div>
+                        <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
+                            <h4 style="color: var(--accent-amber); margin-bottom: 0.75rem;"><i class="fa-solid fa-triangle-exclamation"></i> S─▒k Yap─▒lan Hatalar</h4>
+                            <ul id="analysisMistakesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; color: var(--accent-rose);"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: BELGE & PDF EXPORT -->
+        <section id="tab-document" class="tab-content">
+            <div class="glass-card">
+                <h2>Belge Analizi & ├çal─▒┼şma Notu PDF ├ç─▒kt─▒s─▒</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    PDF veya DOCX format─▒ndaki Almanca ├ğal─▒┼şma metinlerinizi y├╝kleyin veya yapay zekan─▒n olu┼şturdu─şu analiz notlar─▒n─▒ tek t─▒kla PDF rapor olarak bilgisayar─▒n─▒za indirin.
+                </p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div style="background: var(--bg-secondary); padding: 2rem; border-radius: 14px; border: 2px dashed var(--border-color); text-align: center;">
+                        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--accent-primary); margin-bottom: 1rem;"></i>
+                        <h3>PDF / DOCX Dosyas─▒ Y├╝kle</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1.5rem;">
+                            S├╝r├╝kleyip b─▒rak─▒n veya bilgisayar─▒n─▒zdan se├ğin.
+                        </p>
+                        <input type="file" id="fileUploadInput" accept=".pdf,.docx,.txt" style="display: none;">
+                        <button onclick="document.getElementById('fileUploadInput').click()" class="btn-submit" style="margin: 0 auto;">
+                            <i class="fa-solid fa-folder-open"></i> Dosya Se├ğ
+                        </button>
+                    </div>
+
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 14px;">
+                        <h3>PDF Rapor Olu┼şturucu (Custom Report)</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            Rapor ba┼şl─▒─ş─▒ ve notlar─▒n─▒z─▒ girerek PDF indirin.
+                        </p>
+                        <input type="text" id="pdfReportTitle" class="form-input" placeholder="Rapor Ba┼şl─▒─ş─▒ (├Ârn: B1 Konjunktiv II ├çal─▒┼şma Notlar─▒)" style="margin-bottom: 0.75rem;">
+                        <textarea id="pdfReportContent" class="form-input" rows="6" placeholder="PDF i├ğerisine eklenecek notlar, kurallar ve kelimeler..." style="margin-bottom: 1rem;"></textarea>
+                        <button id="btnGeneratePDFCustom" class="btn-submit" style="background: linear-gradient(135deg, var(--accent-rose), #BE123C); width: 100%; justify-content: center;">
+                            <i class="fa-solid fa-file-pdf"></i> PDF ─░ndir (Export)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p><b>Yapay Zeka Destekli Almanca ├û─şrenme Projesi</b> | Geli┼ştirici: <b>Bet├╝l Alt─▒nkaynak Demirel</b></p>
+        <p style="font-size: 0.75rem; margin-top: 0.4rem; opacity: 0.7;">Google Gemini 2.5 Flash & Groq LLaMA 3.3 API Mimar─▒s─▒ | Vercel & FastAPI Compatible</p>
+    </footer>
+
+    <!-- Client Script Logic -->
+    <script>
+        let fullCatalogData = null;
+        let currentActiveAnalysisData = null;
+        let currentWritingAnalysisData = null;
+        let currentStoryData = null;
+        let isAudioPlaying = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            initTabs();
+            initLevelChips();
+            await fetchLevelsCatalog();
+            initWritingCoach();
+            initStoryModule();
+            initAudioPlayer();
+            initConjugator();
+            initTranslator();
+            initSummarizer();
+            initPDFExport();
+            initThemeToggle();
+        });
+
+        async function fetchLevelsCatalog() {
+            try {
+                const res = await fetch('/api/levels');
+                const data = await res.json();
+                fullCatalogData = data.catalog;
+                renderLevelTopics('A1');
+            } catch (e) {
+                renderLevelTopics('A1');
+            }
+        }
+
+        // Theme Toggle
+        function initThemeToggle() {
+            const btn = document.getElementById('themeToggleBtn');
+            btn.addEventListener('click', () => {
+                document.documentElement.classList.toggle('light-theme');
+                const isLight = document.documentElement.classList.contains('light-theme');
+                btn.innerHTML = isLight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+            });
+        }
+
+        // Tab Navigation
+        function initTabs() {
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    const tabId = btn.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        // Level Chips (A1-C2)
+        function initLevelChips() {
+            const chips = document.querySelectorAll('#levelsNavChips .level-chip');
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    chips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    const level = chip.getAttribute('data-level');
+                    renderLevelTopics(level);
+                });
+            });
+        }
+
+        function renderLevelTopics(level) {
+            const container = document.getElementById('topicsGridContainer');
+            container.innerHTML = '';
+            
+            let topics = [];
+            if (fullCatalogData && fullCatalogData[level]) {
+                topics = fullCatalogData[level].topics || [];
+            }
+
+            if (topics.length === 0) {
+                container.innerHTML = `
+                    <div class="topic-card" style="border-color: var(--accent-rose);">
+                        <div>
+                            <div class="topic-category" style="color: var(--accent-rose);">ÔÜá´©Å BA─ŞLANTI HATASI</div>
+                            <div class="topic-title">Konular Y├╝klenemedi</div>
+                            <div class="topic-desc">E─şer bu dosyay─▒ do─şrudan taray─▒c─▒da a├ğt─▒ysan─▒z (file://), g├╝venlik nedeniyle arka plana ba─şlanamazs─▒n─▒z. L├╝tfen projeyi Vercel ├╝zerinden veya yerel sunucudan (localhost:8000) ├ğal─▒┼şt─▒r─▒n.</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            topics.forEach(t => {
+                const card = document.createElement('div');
+                card.className = 'topic-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="topic-category">${t.category}</div>
+                        <div class="topic-title">${t.title}</div>
+                        <div class="topic-desc">${t.description}</div>
+                    </div>
+                    <div class="topic-footer">
+                        <span><i class="fa-regular fa-clock"></i> ${t.estimated_minutes || 20} dk</span>
+                        <button class="btn-analyze-sm">Analiz Et <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    document.querySelector('[data-tab="tab-summarizer"]').click();
+                    document.getElementById('customTopicInput').value = t.title;
+                    document.getElementById('customLevelSelect').value = level;
+                    triggerTopicAnalysis(t.title, level);
+                });
+                container.appendChild(card);
+            });
+        }
+
+        // --- AI MET─░N ANAL─░Z─░ & YAZIM KO├çU (SKORLAMA & D├£ZELTME) ---
+        function initWritingCoach() {
+            document.getElementById('btnEvaluateWriting').addEventListener('click', async () => {
+                const text = document.getElementById('writingTextInput').value.trim();
+                const targetLevel = document.getElementById('writingTargetLevelSelect').value;
+                if (!text) return;
+
+                showLoader("Metniniz dilbilgisi ve seviye y├Ân├╝nden de─şerlendiriliyor...");
+                try {
+                    const provider = document.getElementById('aiProviderSelect').value;
+                    const res = await fetch('/api/evaluate-writing', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ text: text, target_level: targetLevel, provider: provider })
+                    });
+                    const data = await res.json();
+                    renderWritingEvaluation(data);
+                } catch (err) {
+                    renderMockWritingEvaluation(text, targetLevel);
+                } finally {
+                    hideLoader();
+                }
+            });
+
+            document.getElementById('btnExportWritingPDF').addEventListener('click', () => {
+                if (!currentWritingAnalysisData) return;
+                const md = `
+# Almanca Metin Analiz & Skor Raporu (${currentWritingAnalysisData.target_level})
+**Genel Puan:** ${currentWritingAnalysisData.overall_score} / 100
+**De─şerlendirilen Seviye:** ${currentWritingAnalysisData.assessed_level}
+
+## Orjinal Metniniz
+${currentWritingAnalysisData.original_text}
+
+## D├╝zeltilmi┼ş M├╝kemmel Metin
+${currentWritingAnalysisData.corrected_text}
+
+## Tespit Edilen Hatalar ve A├ğ─▒klamalar─▒
+${(currentWritingAnalysisData.errors || []).map(e => `- **Hata:** ${e.original} ÔŞö **Do─şru:** ${e.correction} (${e.error_type})\n  *A├ğ─▒klama:* ${e.explanation_tr}`).join('\n\n')}
+                `;
+                downloadPDF(`Metin_Skor_${currentWritingAnalysisData.overall_score}`, md);
+            });
+        }
+
+        function renderWritingEvaluation(data) {
+            currentWritingAnalysisData = data;
+            document.getElementById('writingAnalysisResult').style.display = 'block';
+            
+            // Score circle rendering
+            const scoreNum = data.overall_score || 85;
+            const scoreElem = document.getElementById('scoreCircleElem');
+            document.getElementById('scoreNumberText').innerText = scoreNum;
+            
+            if (scoreNum >= 80) {
+                scoreElem.className = "score-circle";
+            } else if (scoreNum >= 60) {
+                scoreElem.className = "score-circle medium-score";
+            } else {
+                scoreElem.className = "score-circle low-score";
+            }
+
+            document.getElementById('writingAssessedLevelText').innerText = data.assessed_level;
+            document.getElementById('writingCorrectedText').innerText = data.corrected_text;
+
+            // Error list
+            const errArea = document.getElementById('writingErrorsList');
+            errArea.innerHTML = '';
+            (data.errors || []).forEach(e => {
+                errArea.innerHTML += `
+                    <div style="background: rgba(244, 63, 94, 0.08); padding: 1rem; border-radius: 10px; border-left: 4px solid var(--accent-rose);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                            <span style="font-weight: 700; color: var(--accent-rose); font-size: 0.9rem;">ÔØî ${e.original}</span>
+                            <span style="font-weight: 700; color: var(--accent-emerald); font-size: 0.9rem;">Ô£à ${e.correction}</span>
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);"><b style="color: var(--accent-amber);">${e.error_type}:</b> ${e.explanation_tr}</p>
+                    </div>
+                `;
+            });
+
+            // Strengths & Improvements
+            const sUl = document.getElementById('writingStrengthsList');
+            sUl.innerHTML = '';
+            (data.strengths || []).forEach(s => sUl.innerHTML += `<li>${s}</li>`);
+
+            const iUl = document.getElementById('writingImprovementsList');
+            iUl.innerHTML = '';
+            (data.improvements || []).forEach(imp => iUl.innerHTML += `<li>${imp}</li>`);
+        }
+
+        function renderMockWritingEvaluation(text, level) {
+            renderWritingEvaluation({
+                original_text: text,
+                target_level: level,
+                overall_score: 88,
+                assessed_level: `${level} - Ba┼şar─▒l─▒ Seviye`,
+                corrected_text: text.replace("haben gegangen", "bin gegangen").replace("der Buch", "das Buch"),
+                errors: [
+                    {
+                        original: "haben gegangen",
+                        correction: "bin gegangen",
+                        error_type: "Gramer (Yard─▒mc─▒ Fiil)",
+                        explanation_tr: "Gehen fiili hareket/yer de─şi┼ştirme bildirdi─şi i├ğin Perfekt ge├ğmi┼ş zamanda 'haben' yerine 'sein' (bin) kullan─▒l─▒r."
+                    }
+                ],
+                strengths: [
+                    "C├╝mle kurulumu ve kelime s─▒ras─▒ do─şru.",
+                    "Seviyeye uygun ba─şla├ğlar kullan─▒lm─▒┼ş."
+                ],
+                improvements: [
+                    "Artikel kullan─▒m─▒na (der/die/das) dikkat edilmeli.",
+                    "Ge├ğmi┼ş zaman yard─▒mc─▒ fiil tercihleri g├Âzden ge├ğirilmeli."
+                ]
+            });
+        }
+
+        // --- ─░NTERAKT─░F H─░KAYE VE SES D─░NLEME MOD├£L├£ ---
+        function initStoryModule() {
+            document.getElementById('btnGenerateStory').addEventListener('click', async () => {
+                const level = document.getElementById('storyLevelSelect').value;
+                const theme = document.getElementById('storyThemeInput').value.trim() || "G├╝nl├╝k Ya┼şam";
+                triggerStoryGeneration(level, theme);
+            });
+
+            document.getElementById('btnExportStoryPDF').addEventListener('click', () => {
+                if (!currentStoryData) return;
+                const md = `
+# ${currentStoryData.title_de} (${currentStoryData.level})
+*${currentStoryData.title_tr}*
+
+## Hikaye Metni
+${(currentStoryData.paragraphs || []).map(p => p.german_text).join('\n\n')}
+
+## T├╝rk├ğe ├çeviri
+${currentStoryData.full_translation_tr}
+                `;
+                downloadPDF(currentStoryData.title_de, md);
+            });
+        }
+
+        function initAudioPlayer() {
+            document.getElementById('btnPlayFullStory').addEventListener('click', () => {
+                if (!currentStoryData) return;
+                playFullStoryAudio();
+            });
+
+            document.getElementById('btnStopStoryAudio').addEventListener('click', () => {
+                stopStoryAudio();
+            });
+        }
+
+        function playFullStoryAudio() {
+            if (!('speechSynthesis' in window)) {
+                alert("Taray─▒c─▒n─▒z sesli okuma ├Âzelli─şini desteklemiyor.");
+                return;
+            }
+
+            stopStoryAudio();
+
+            const paragraphs = currentStoryData.paragraphs || [];
+            if (paragraphs.length === 0) return;
+
+            isAudioPlaying = true;
+            let currentIdx = 0;
+
+            const rate = parseFloat(document.getElementById('audioSpeedSelect').value) || 0.9;
+            const pElements = document.querySelectorAll('#storyParagraphsArea .story-paragraph');
+
+            function playNextParagraph() {
+                if (!isAudioPlaying || currentIdx >= paragraphs.length) {
+                    stopStoryAudio();
+                    return;
+                }
+
+                pElements.forEach(p => p.classList.remove('audio-reading-active'));
+                if (pElements[currentIdx]) {
+                    pElements[currentIdx].classList.add('audio-reading-active');
+                    pElements[currentIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+
+                const textToRead = paragraphs[currentIdx].german_text;
+                const utterance = new SpeechSynthesisUtterance(textToRead);
+                utterance.lang = 'de-DE';
+                utterance.rate = rate;
+
+                utterance.onend = () => {
+                    currentIdx++;
+                    playNextParagraph();
+                };
+
+                utterance.onerror = () => {
+                    stopStoryAudio();
+                };
+
+                window.speechSynthesis.speak(utterance);
+            }
+
+            playNextParagraph();
+        }
+
+        function stopStoryAudio() {
+            isAudioPlaying = false;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            document.querySelectorAll('#storyParagraphsArea .story-paragraph').forEach(p => p.classList.remove('audio-reading-active'));
+        }
+
+        async function triggerStoryGeneration(level, theme) {
+            stopStoryAudio();
+            showLoader(`'${level}' seviyesinde '${theme}' konulu sesli hikaye ├╝retiliyor...`);
+            try {
+                const provider = document.getElementById('aiProviderSelect').value;
+                const res = await fetch('/api/generate-story', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ level: level, topic_theme: theme, provider: provider })
+                });
+                const data = await res.json();
+                renderInteractiveStory(data);
+            } catch (err) {
+                renderMockInteractiveStory(level, theme);
+            } finally {
+                hideLoader();
+            }
+        }
+
+        function renderInteractiveStory(data) {
+            currentStoryData = data;
+            document.getElementById('storyContainer').style.display = 'block';
+            document.getElementById('storyLevelBadge').innerText = data.level;
+            document.getElementById('storyTitleDE').innerText = data.title_de;
+            document.getElementById('storyTitleTR').innerText = data.title_tr;
+            document.getElementById('storyFullTransText').innerText = data.full_translation_tr;
+
+            const area = document.getElementById('storyParagraphsArea');
+            area.innerHTML = '';
+
+            (data.paragraphs || []).forEach((para, idx) => {
+                const pElem = document.createElement('div');
+                pElem.className = 'story-paragraph';
+                pElem.setAttribute('data-para-index', idx);
+
+                (para.words || []).forEach(wordObj => {
+                    const span = document.createElement('span');
+                    span.className = 'hover-word';
+                    span.innerText = wordObj.w + " ";
+                    span.setAttribute('data-tr', wordObj.tr || 'T├╝rk├ğe anlam─▒');
+                    const subInfo = (wordObj.article ? `Artikel: ${wordObj.article} | ` : '') + (wordObj.type || '');
+                    span.setAttribute('data-sub', subInfo);
+                    
+                    span.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        speakText(wordObj.w);
+                    });
+
+                    pElem.appendChild(span);
+                });
+
+                area.appendChild(pElem);
+            });
+        }
+
+        function renderMockInteractiveStory(level, theme) {
+            renderInteractiveStory({
+                title_de: `Ein Tag in Deutschland (${level})`,
+                title_tr: `Almanya'da Bir G├╝n (${level} Seviyesi - ${theme})`,
+                level: level,
+                paragraphs: [
+                    {
+                        german_text: "Heute geht Lukas in den Supermarkt.",
+                        words: [
+                            { w: "Heute", tr: "Bug├╝n", type: "Adverb" },
+                            { w: "geht", tr: "gidiyor (gehen)", type: "Verb" },
+                            { w: "Lukas", tr: "Lukas (├ûzel isim)", type: "Nomen" },
+                            { w: "in", tr: "-e, i├ğine", type: "Pr├ñposition" },
+                            { w: "den", tr: "belirli artikel (Akk. eril)", type: "Artikel" },
+                            { w: "Supermarkt.", tr: "s├╝permarket", type: "Nomen", article: "der" }
+                        ]
+                    },
+                    {
+                        german_text: "Er kauft frisches Brot und frische Milch.",
+                        words: [
+                            { w: "Er", tr: "O (eril)", type: "Zamir" },
+                            { w: "kauft", tr: "sat─▒n al─▒yor (kaufen)", type: "Verb" },
+                            { w: "frisches", tr: "taze", type: "S─▒fat" },
+                            { w: "Brot", tr: "ekmek", type: "Nomen", article: "das" },
+                            { w: "und", tr: "ve", type: "Ba─şla├ğ" },
+                            { w: "frische", tr: "taze", type: "S─▒fat" },
+                            { w: "Milch.", tr: "s├╝t", type: "Nomen", article: "die" }
+                        ]
+                    }
+                ],
+                full_translation_tr: "Bug├╝n Lukas s├╝permarkete gidiyor. Taze ekmek ve taze s├╝t sat─▒n al─▒yor."
+            });
+        }
+
+        // Web Speech API Pronunciation
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'de-DE';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // --- F─░─░L ├çEK─░M MATR─░S─░ ---
+        function initConjugator() {
+            document.getElementById('conjugationForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const verb = document.getElementById('verbInput').value.trim();
+                if (!verb) return;
+
+                showLoader(`'${verb}' fiili t├╝m zamanlara ├ğekimleniyor...`);
+                try {
+                    const provider = document.getElementById('aiProviderSelect').value;
+                    const res = await fetch('/api/conjugate', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ verb: verb, provider: provider })
+                    });
+                    const data = await res.json();
+                    renderConjugation(data);
+                } catch (err) {
+                    renderMockConjugation(verb);
+                } finally {
+                    hideLoader();
+                }
+            });
+        }
+
+        function renderConjugation(data) {
+            document.getElementById('verbMetaBanner').style.display = 'block';
+            document.getElementById('metaVerbTitle').innerText = data.verb;
+            document.getElementById('metaMeaning').innerText = `T├╝rk├ğe: ${data.turkish_meaning}`;
+            
+            const auxSpan = document.getElementById('metaAux');
+            auxSpan.innerText = `Yard─▒mc─▒: ${data.auxiliary_verb}`;
+            auxSpan.className = data.auxiliary_verb === 'sein' ? 'article-badge article-das' : 'article-badge article-der';
+
+            const regSpan = document.getElementById('metaRegular');
+            regSpan.innerText = data.is_regular ? "D├╝zenli Fiil" : "D├╝zensiz Fiil";
+            regSpan.className = data.is_regular ? 'article-badge article-das' : 'article-badge article-die';
+
+            document.getElementById('metaStamm').innerText = data.stammformen || '';
+
+            const grid = document.getElementById('verbMatrixGrid');
+            grid.innerHTML = '';
+
+            (data.tenses || []).forEach(t => {
+                const card = document.createElement('div');
+                card.className = 'tense-card';
+                card.innerHTML = `
+                    <div class="tense-header">
+                        <span class="tense-title">${t.tense_name}</span>
+                        <span class="tense-sub">${t.turkish_tense_name}</span>
+                    </div>
+                    <div class="pronoun-list">
+                        ${Object.entries(t.forms || {}).map(([p, f]) => `
+                            <div class="pronoun-row">
+                                <span class="pronoun-tag">${p.replace('_sie_es', '/sie/es').replace('_Sie', '/Sie')}</span>
+                                <span class="conjugated-form">${f}</span>
+                                <button onclick="speakText('${f}')" class="audio-btn"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderMockConjugation(verb) {
+            // Gehen ├Ârne─şini ├Âzel olarak d├╝zelt, di─şerleri i├ğin uyar─▒ ver
+            if (verb.toLowerCase() === "gehen") {
+                renderConjugation({
+                    verb: "gehen",
+                    turkish_meaning: "gitmek (Demo API Key Uyar─▒s─▒)",
+                    is_regular: false,
+                    auxiliary_verb: "sein",
+                    stammformen: "gehen - ging - ist gegangen",
+                    tenses: [
+                        {
+                            tense_name: "Pr├ñsens",
+                            turkish_tense_name: "┼Şimdiki / Geni┼ş Zaman",
+                            forms: { "ich": "ich gehe", "du": "du gehst", "er_sie_es": "er/sie/es geht", "wir": "wir gehen", "ihr": "ihr geht", "sie_Sie": "sie/Sie gehen" }
+                        }
+                    ]
+                });
+            } else {
+                renderConjugation({
+                    verb: verb,
+                    turkish_meaning: `(API Key Gerekli) ${verb} fiili`,
+                    is_regular: true,
+                    auxiliary_verb: "haben/sein",
+                    stammformen: `L├╝tfen .env veya Vercel'e API Key girin.`,
+                    tenses: [
+                        {
+                            tense_name: "ÔÜá´©Å HATA",
+                            turkish_tense_name: "Demo Modu",
+                            forms: { "ich": `API Key Eksik`, "du": `API Key Eksik`, "er_sie_es": `API Key Eksik`, "wir": `API Key Eksik`, "ihr": `API Key Eksik`, "sie_Sie": `API Key Eksik` }
+                        }
+                    ]
+                });
+            }
+        }
+
+        // Translator
+        function initTranslator() {
+            document.getElementById('btnTranslate').addEventListener('click', async () => {
+                const text = document.getElementById('transInput').value.trim();
+                if (!text) return;
+                showLoader("Kelime & Dilbilgisi ├çevirisi Yap─▒l─▒yor...");
+                try {
+                    const provider = document.getElementById('aiProviderSelect').value;
+                    const dir = document.getElementById('transDirection').value;
+                    const res = await fetch('/api/translate', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ text: text, direction: dir, provider: provider })
+                    });
+                    const data = await res.json();
+                    renderDictCard(data);
+                } catch (err) {
+                    renderDictCard({
+                        source_text: text,
+                        main_translation: `ÔÜá´©Å API Key Eksik (Demo ├çeviri): ${text}`,
+                        dictionary_entry: {
+                            german: text,
+                            turkish: `L├╝tfen ger├ğek ├ğeviri i├ğin .env veya Vercel'den API Key girin.`,
+                            article: "das",
+                            plural: "die W├Ârter",
+                            phonetic: "[v╔ört]",
+                            examples: [{ german: `API Key bulunamad─▒.`, turkish: `Sistem demo modunda ├ğal─▒┼ş─▒yor.` }]
+                        }
+                    });
+                } finally {
+                    hideLoader();
+                }
+            });
+        }
+
+        function renderDictCard(data) {
+            document.getElementById('dictContentEmpty').style.display = 'none';
+            document.getElementById('dictContentActive').style.display = 'block';
+
+            const mainTransText = document.getElementById('mainTranslationText');
+            if (data.main_translation) {
+                mainTransText.innerText = data.main_translation;
+            } else {
+                mainTransText.innerText = '├çeviri bulunamad─▒.';
+            }
+
+            const entry = data.dictionary_entry || {};
+            const artBadge = document.getElementById('dictArticleBadge');
+            if (entry.article) {
+                artBadge.style.display = 'inline-block';
+                artBadge.innerText = entry.article;
+                artBadge.className = `article-badge article-${entry.article}`;
+            } else {
+                artBadge.style.display = 'none';
+            }
+
+            document.getElementById('dictGermanWord').innerText = entry.german || data.source_text;
+            document.getElementById('dictPhonetic').innerText = entry.phonetic || '';
+            document.getElementById('dictTurkishWord').innerText = `T├╝rk├ğe: ${entry.turkish || 'Belirtilmedi'}`;
+            document.getElementById('dictPlural').innerHTML = `<b>├ço─şul:</b> ${entry.plural || 'Belirtilmedi'}`;
+
+            const exList = document.getElementById('dictExamplesList');
+            exList.innerHTML = '';
+            (entry.examples || []).forEach(ex => {
+                exList.innerHTML += `
+                    <div style="background: rgba(255,255,255,0.03); padding: 0.5rem; border-radius: 8px;">
+                        <p style="font-weight: 600;">${ex.german}</p>
+                        <p style="color: var(--text-muted); font-size: 0.8rem;">${ex.turkish}</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Summarizer & Analysis
+        function initSummarizer() {
+            document.getElementById('btnAnalyzeTopic').addEventListener('click', () => {
+                const topic = document.getElementById('customTopicInput').value.trim();
+                const level = document.getElementById('customLevelSelect').value;
+                if (topic) triggerTopicAnalysis(topic, level);
+            });
+        }
+
+        async function triggerTopicAnalysis(topic, level) {
+            showLoader(`'${topic}' konusu detayl─▒ analiz ediliyor...`);
+            try {
+                const provider = document.getElementById('aiProviderSelect').value;
+                const res = await fetch('/api/analyze-topic', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ topic: topic, level: level, provider: provider })
+                });
+                const data = await res.json();
+                renderTopicAnalysis(data);
+            } catch (err) {
+                renderMockTopicAnalysis(topic, level);
+            } finally {
+                hideLoader();
+            }
+        }
+
+        function renderTopicAnalysis(data) {
+            currentActiveAnalysisData = data;
+            document.getElementById('topicAnalysisResult').style.display = 'block';
+            document.getElementById('analysisTitle').innerText = `${data.level} - ${data.topic}`;
+            document.getElementById('analysisSummaryText').innerText = data.summary_tr;
+
+            const rulesUl = document.getElementById('analysisRulesList');
+            rulesUl.innerHTML = '';
+            (data.key_grammar_rules || []).forEach(r => rulesUl.innerHTML += `<li>${r}</li>`);
+
+            const mistakesUl = document.getElementById('analysisMistakesList');
+            mistakesUl.innerHTML = '';
+            (data.common_mistakes || []).forEach(m => mistakesUl.innerHTML += `<li>${m}</li>`);
+
+            const examplesList = document.getElementById('analysisExamplesList');
+            if (examplesList) {
+                examplesList.innerHTML = '';
+                (data.examples || []).forEach(ex => {
+                    examplesList.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 8px; border-left: 3px solid var(--accent-primary);">
+                            <div style="font-weight: 600; font-size: 1rem;">${ex.german}</div>
+                            <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">${ex.turkish}</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function renderMockTopicAnalysis(topic, level) {
+            renderTopicAnalysis({
+                topic: topic,
+                level: level,
+                summary_tr: `ÔÜá´©Å D─░KKAT: ┼Şu anda API Key girilmedi─şi i├ğin ge├ğici (Demo) veriler g├Âr├╝yorsunuz.\n\n'${topic}' konusu (${level} seviyesi) normalde yapay zeka taraf─▒ndan burada ├ğok detayl─▒ bir ┼şekilde a├ğ─▒klanacakt─▒r. Ger├ğek analiz sonu├ğlar─▒n─▒ g├Ârmek i├ğin l├╝tfen API Key'lerinizi .env dosyas─▒na (yerelde) veya Vercel paneline ekleyin.`,
+                key_grammar_rules: [
+                    "API Key eksik oldu─şu i├ğin kurallar listelenemiyor.",
+                    "L├╝tfen ge├ğerli bir Gemini veya Groq anahtar─▒ girin."
+                ],
+                common_mistakes: [
+                    "Demo Hata: API Key olmadan yapay zeka analizi yap─▒lamaz.",
+                    "L├╝tfen .env veya Vercel'den anahtarlar─▒n─▒z─▒ yap─▒land─▒r─▒n."
+                ]
+            });
+        }
+
+        // PDF Export
+        function initPDFExport() {
+            document.getElementById('btnExportPDFCurrent').addEventListener('click', () => {
+                if (!currentActiveAnalysisData) return;
+                const md = `
+# ${currentActiveAnalysisData.level} - ${currentActiveAnalysisData.topic}
+
+## Konu ├ûzeti
+${currentActiveAnalysisData.summary_tr}
+
+## Temel Gramer Kurallar─▒
+${(currentActiveAnalysisData.key_grammar_rules || []).map(r => '- ' + r).join('\n')}
+
+## S─▒k Yap─▒lan Hatalar
+${(currentActiveAnalysisData.common_mistakes || []).map(m => '- ' + m).join('\n')}
+                `;
+                downloadPDF(currentActiveAnalysisData.topic, md);
+            });
+
+            document.getElementById('btnGeneratePDFCustom').addEventListener('click', () => {
+                const title = document.getElementById('pdfReportTitle').value.trim() || "Almanca ├çal─▒┼şma Raporu";
+                const content = document.getElementById('pdfReportContent').value.trim();
+                if (content) downloadPDF(title, content);
+            });
+        }
+
+        async function downloadPDF(title, markdownContent) {
+            try {
+                const res = await fetch('/api/export-pdf', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        title: title,
+                        content_markdown: markdownContent,
+                        author: "Bet├╝l Alt─▒nkaynak Demirel"
+                    })
+                });
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Almanca_Rapor_${title.replace(/\s+/g, '_')}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } catch (err) {
+                alert("PDF indirilemedi.");
+            }
+        }
+
+        // Helpers
+        function showLoader(txt) {
+            document.getElementById('loaderText').innerText = txt || 'Yapay Zeka Analiz Yap─▒yor...';
+            document.getElementById('appLoader').style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.getElementById('appLoader').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

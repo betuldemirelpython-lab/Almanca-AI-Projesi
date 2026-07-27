@@ -1,6 +1,6 @@
 """
-Yapay Zeka Destekli Almanca Öğrenme Projesi
-Developer: Betül Altınkaynak Demirel
+Yapay Zeka Destekli Almanca ├û─şrenme Projesi
+Developer: Bet├╝l Alt─▒nkaynak Demirel
 Pydantic v2 Veri Modelleri
 """
 
@@ -28,34 +28,34 @@ class TranslationDirectionEnum(str, Enum):
     TR_TO_DE = "tr-de"
 
 
-# --- Metin Analizi & Yazım Koçu Modelleri ---
+# --- Metin Analizi & Yaz─▒m Ko├ğu Modelleri ---
 
 class WritingAnalysisRequest(BaseModel):
-    text: str = Field(..., description="Kullanıcının yazdığı Almanca metin")
+    text: str = Field(..., description="Kullan─▒c─▒n─▒n yazd─▒─ş─▒ Almanca metin")
     target_level: GermanLevelEnum = Field(GermanLevelEnum.B1, description="Hedeflenen Seviye (A1-C2)")
     provider: AIProviderEnum = Field(AIProviderEnum.GEMINI)
 
 
 class ErrorItem(BaseModel):
-    original: str = Field(..., description="Hatalı kullanılan kısım")
-    correction: str = Field(..., description="Doğru biçim")
-    error_type: str = Field(..., description="Gramer, Artikel, Sözdizimi, İmla, Kelime Seçimi")
-    explanation_tr: str = Field(..., description="Hataya dair Türkçe açıklama ve kural")
+    original: str = Field(..., description="Hatal─▒ kullan─▒lan k─▒s─▒m")
+    correction: str = Field(..., description="Do─şru bi├ğim")
+    error_type: str = Field(..., description="Gramer, Artikel, S├Âzdizimi, ─░mla, Kelime Se├ğimi")
+    explanation_tr: str = Field(..., description="Hataya dair T├╝rk├ğe a├ğ─▒klama ve kural")
 
 
 class WritingAnalysisResponse(BaseModel):
     original_text: str
     target_level: str
-    overall_score: int = Field(..., description="100 üzerinden verilen genel puan")
-    assessed_level: str = Field(..., description="Metnin değerlendirilen seviyesi")
-    corrected_text: str = Field(..., description="Hataları düzeltilmiş tam Almanca metin")
-    errors: List[ErrorItem] = Field(default_factory=list, description="Bulunan hatalar ve açıklamaları")
-    strengths: List[str] = Field(default_factory=list, description="Metindeki güçlü yönler")
-    improvements: List[str] = Field(default_factory=list, description="Geliştirilmesi gereken noktalar")
-    vocabulary_suggestions: List[Dict[str, str]] = Field(default_factory=list, description="Daha ileri düzey alternatif kelimeler")
+    overall_score: int = Field(..., description="100 ├╝zerinden verilen genel puan")
+    assessed_level: str = Field(..., description="Metnin de─şerlendirilen seviyesi")
+    corrected_text: str = Field(..., description="Hatalar─▒ d├╝zeltilmi┼ş tam Almanca metin")
+    errors: List[ErrorItem] = Field(default_factory=list, description="Bulunan hatalar ve a├ğ─▒klamalar─▒")
+    strengths: List[str] = Field(default_factory=list, description="Metindeki g├╝├ğl├╝ y├Ânler")
+    improvements: List[str] = Field(default_factory=list, description="Geli┼ştirilmesi gereken noktalar")
+    vocabulary_suggestions: List[Dict[str, str]] = Field(default_factory=list, description="Daha ileri d├╝zey alternatif kelimeler")
 
 
-# --- Konu Analizi & Özetleme Modelleri ---
+# --- Konu Analizi & ├ûzetleme Modelleri ---
 
 class TopicSummaryRequest(BaseModel):
     topic: str
@@ -80,20 +80,18 @@ class TopicSummaryResponse(BaseModel):
     topic: str
     level: str
     summary_tr: str
-    formula_structure: Optional[str] = Field(None, description="Cümle dizilimi ve yapısı formülü")
     key_grammar_rules: List[str] = Field(default_factory=list)
-    usage_notes: List[str] = Field(default_factory=list, description="Kullanım ipuçları ve püf noktaları")
     vocabulary: List[VocabularyItem] = Field(default_factory=list)
     examples: List[SentenceExample] = Field(default_factory=list)
     common_mistakes: List[str] = Field(default_factory=list)
     mini_quiz: List[Dict[str, Any]] = Field(default_factory=list)
 
 
-# --- İnteraktif Hikaye Modülü Modelleri ---
+# --- ─░nteraktif Hikaye Mod├╝l├╝ Modelleri ---
 
 class StoryRequest(BaseModel):
     level: GermanLevelEnum = Field(GermanLevelEnum.A1)
-    topic_theme: Optional[str] = Field("Günlük Yaşam")
+    topic_theme: Optional[str] = Field("G├╝nl├╝k Ya┼şam")
     provider: AIProviderEnum = Field(AIProviderEnum.GEMINI)
 
 
@@ -119,7 +117,7 @@ class StoryResponse(BaseModel):
     key_vocabulary: List[VocabularyItem] = Field(default_factory=list)
 
 
-# --- Fiil Çekimi Modelleri ---
+# --- Fiil ├çekimi Modelleri ---
 
 class PersonalPronouns(BaseModel):
     ich: str
@@ -152,7 +150,7 @@ class VerbConjugationResponse(BaseModel):
     example_sentences: List[SentenceExample] = Field(default_factory=list)
 
 
-# --- Çeviri & Sözlük Modelleri ---
+# --- ├çeviri & S├Âzl├╝k Modelleri ---
 
 class TranslationRequest(BaseModel):
     text: str
@@ -182,6 +180,6 @@ class TranslationResponse(BaseModel):
 
 class PDFExportRequest(BaseModel):
     title: str
-    subtitle: Optional[str] = "Betül Altınkaynak Demirel - Yapay Zeka Destekli Almanca Öğrenme Raporu"
+    subtitle: Optional[str] = "Bet├╝l Alt─▒nkaynak Demirel - Yapay Zeka Destekli Almanca ├û─şrenme Raporu"
     content_markdown: str
-    author: Optional[str] = "Betül Altınkaynak Demirel"
+    author: Optional[str] = "Bet├╝l Alt─▒nkaynak Demirel"

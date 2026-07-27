@@ -80,7 +80,9 @@ class TopicSummaryResponse(BaseModel):
     topic: str
     level: str
     summary_tr: str
+    formula_structure: Optional[str] = Field(None, description="Cümle dizilimi ve yapısı formülü")
     key_grammar_rules: List[str] = Field(default_factory=list)
+    usage_notes: List[str] = Field(default_factory=list, description="Kullanım ipuçları ve püf noktaları")
     vocabulary: List[VocabularyItem] = Field(default_factory=list)
     examples: List[SentenceExample] = Field(default_factory=list)
     common_mistakes: List[str] = Field(default_factory=list)

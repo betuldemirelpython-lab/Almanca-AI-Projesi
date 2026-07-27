@@ -247,29 +247,47 @@ class AIService:
         return {
             "topic": topic,
             "level": level,
-            "summary_tr": f"'{topic}' konusu ({level} seviyesi), Almanca öğreniminde kilit rol oynar. Bu konuda cümle yapısı, fiil konumlandırması ve ilgili edatların kullanımı temel esastır.",
+            "summary_tr": f"'{topic}' konusu ({level} seviyesi), Almancada iletişim ve dilbilgisi temelini oluşturan en kritik konulardan biridir.\n\nBu konuda temel amaç, cümle yapısında doğru öge dizilimini kavrama ve dilbilgisel kuralları eksiksiz uygulamaktır. Almanca cümle yapısında fiillerin konumu, ismin halleri (Kasus) ve artikeller doğrudan birbiriyle bağlantılıdır. Bu konuyu tam olarak kavradığınızda hem okuma/anlama hem de ifade yeteneğiniz belirgin derecede artacaktır.",
+            "formula_structure": "[Özne / Subjekt] + [Fiil / Verb (2. Pozisyon)] + [Nesne / Dativ/Akkusativ] + ... + [İkinci Fiil / Infinitiv / Partizip II]",
             "key_grammar_rules": [
-                f"1. '{topic}' kullanımında ana cümlede fiil her zaman 2. pozisyondadır.",
-                "2. İsmin hallerine (Kasus) dikkat edilmeli, artikel uygun şekilde çekimlenmelidir.",
-                "3. Çoğul ve tekil isim kullanımında fiil uyumu sağlanmalıdır."
+                f"1. Pozisyon Kuralı: '{topic}' konusunda ana cümlelerde çekimlenmiş fiil KESİNLİKLE 2. pozisyondadır.",
+                "2. Artikel & Kasus Uyumu: Kullanılan isimlerin artikelleri (der/die/das) cümlenin haline (Nominativ, Akkusativ, Dativ) göre çekimlenir.",
+                "3. Çift Fiil Kullanımı: Cümlede yardımcı veya modal fiil varsa, esas fiil cümlenin EN SONUNA yalın (Infinitiv) veya Partizip II formunda gider.",
+                "4. Olumsuzluk (Negation): İsim olumsuzlamalarında 'kein/keine', fiil ve sıfat olumsuzlamalarında ise 'nicht' tercih edilir."
+            ],
+            "usage_notes": [
+                "💡 Püf Noktası: Türkçede fiil cümlenin sonunda yer alırken, Almanca ana cümlelerde fiil mutlaka 2. sırada olmalıdır.",
+                "📌 Dikkat: İsimlerin baş harfleri Almancada her zaman BÜYÜK harfle yazılır (örn: das Buch, die Sprache).",
+                "🎯 Öneri: Yeni bir kelime öğrenirken mutlaka artikeli (der/die/das) ve çoğul biçimiyle (Plural) birlikte ezberleyin."
             ],
             "vocabulary": [
                 {"german": "das Lernen", "turkish": "öğrenme", "article": "das", "plural": None},
-                {"german": "die Regel", "turkish": "kural", "article": "die", "plural": "die Regeln"}
+                {"german": "die Regel", "turkish": "kural", "article": "die", "plural": "die Regeln"},
+                {"german": "der Satz", "turkish": "cümle", "article": "der", "plural": "die Sätze"},
+                {"german": "das Beispiel", "turkish": "örnek", "article": "das", "plural": "die Beispiele"}
             ],
             "examples": [
-                {"german": "⚠️ API Key Eksik", "turkish": "Lütfen Vercel panelinden API Key girin."}
+                {"german": "Ich lerne jeden Tag Deutsch.", "turkish": "Her gün Almanca öğreniyorum."},
+                {"german": "Er hat gestern ein Buch gekauft.", "turkish": "Dün bir kitap satın aldı."},
+                {"german": "Kannst du mir bitte helfen?", "turkish": "Bana yardım edebilir misin?"},
+                {"german": "Wir gehen ins Kino, weil wir Zeit haben.", "turkish": "Zamanımız olduğu için sinemaya gidiyoruz."}
             ],
             "common_mistakes": [
-                "⚠️ HATA: Sistem demo modunda çalışıyor.",
-                "API Key girilmediği için gerçek hatalar listelenemez."
+                "Yanlış: Ich nach Hause gehe. -> Doğru: Ich gehe nach Hause. (Ana cümlede fiil sonda değil, 2. sırada olmalıdır.)",
+                "Yanlış: Er kann sprechen Deutsch gut. -> Doğru: Er kann gut Deutsch sprechen. (Modal fiilli cümlelerde esas fiil cümlenin en sonuna mastar olarak gider.)"
             ],
             "mini_quiz": [
                 {
-                    "question": f"'{topic}' konusunda fiil ana cümlede kaçıncı sırada yer alır?",
-                    "options": ["A) 1. sırada", "B) 2. sırada", "C) En sonda"],
+                    "question": f"'{topic}' konusunda Almanca ana cümlede çekimli fiil kaçıncı sırada yer almalıdır?",
+                    "options": ["A) 1. sırada", "B) 2. sırada", "C) Cümlenin en sonunda", "D) Özneden hemen önce"],
                     "correct_answer": "B) 2. sırada",
-                    "explanation": "Almanca kurallı ana cümlelerde fiil her zaman 2. pozisyondadır."
+                    "explanation": "Almancada düz ve kurallı ana cümlelerde çekimli fiil her zaman 2. pozisyondadır."
+                },
+                {
+                    "question": "Cümlede modal bir fiil (können, müssen vb.) kullanıldığında esas fiil cümlenin neresinde yer alır?",
+                    "options": ["A) Modal fiilden hemen sonra", "B) Özneden önce", "C) Cümlenin en sonunda mastar (Infinitiv) halde", "D) Hiç kullanılmaz"],
+                    "correct_answer": "C) Cümlenin en sonunda mastar (Infinitiv) halde",
+                    "explanation": "Modal fiil 2. sıraya geçer ve esas fiili cümlenin en sonuna yalın mastar haliyle iter."
                 }
             ]
         }

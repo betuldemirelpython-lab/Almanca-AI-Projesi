@@ -56,38 +56,55 @@ Lütfen kesinlikle aşağıdaki JSON formatında yanıt ver:
 """
 
 TOPIC_ANALYSIS_PROMPT = """
-Aşağıdaki Almanca konusunu ve seviyesini detaylı analiz et.
+Aşağıdaki Almanca konusunu ve seviyesini en ince detayına kadar derinlemesine, kapsayıcı ve eksiksiz bir ders anlatımı şeklinde analiz et. Anlatım çok yüzeysel veya kısa OLMAMALIDIR.
 
 Konu: {topic}
 Seviye: {level}
 
-Lütfen şu JSON formatında yanıt ver:
+ÖNEMLİ TALİMATLAR:
+1. "summary_tr": Konunun dilbilgisi mantığını, hangi durumlarda kullanıldığını ve Türkçedeki karşılığını en az 2-3 detaylı paragraf halinde açıkla.
+2. "formula_structure": Konunun genel cümle dizilimi şemasını ve formülünü göster (örn: "Özne + Modalverb + Nesne + ... + Hauptverb (Infinitiv)").
+3. "key_grammar_rules": Konuyla ilgili en az 4-6 detaylı kural, özel istisna veya artikel/çekim değişim kuralı ekle.
+4. "usage_notes": Türkçeden Almancaya geçerken dikkat edilmesi gereken 3-4 püf noktası, nüans ve ipucu sun.
+5. "vocabulary": Konuyla doğrudan ilgili en az 4-6 kilit Almanca kelime ve Türkçe karşılıklarını, artikellerini (der/die/das) ve çoğullarını ekle.
+6. "examples": Farklı durumları (Olumlu, Olumsuz, Soru ve Yan Cümle) temsil eden en az 5-6 zengin örnek Almanca cümle ve Türkçe çevirilerini ekle.
+7. "common_mistakes": Türk öğrenicilerin bu konuda sıklıkla yaptığı en az 3-4 yaygın hatayı "Yanlış Kullanım -> Doğru Kullanım (Neden yanlış olduğuna dair açıklama)" formatında ekle.
+8. "mini_quiz": Öğrenilenleri test etmek için en az 3 adet mini test sorusu (soru, 3-4 şık, doğru cevap ve açıklaması) üret.
+
+Lütfen yanıtı KESİNLİKLE aşağıdaki JSON formatında ver:
 {{
   "topic": "{topic}",
   "level": "{level}",
-  "summary_tr": "Konunun detaylı Türkçe açıklaması ve mantığı...",
+  "summary_tr": "Konunun detaylı ve kapsamlı Türkçe açıklaması, kullanım mantığı ve kökeni...",
+  "formula_structure": "Özne + [Yardımcı Fiil] + Nesne + [Esas Fiil (Partizip II / Mastar)]",
   "key_grammar_rules": [
-    "Kural 1 açıklaması",
-    "Kural 2 açıklaması"
+    "Kural 1: Detaylı kural açıklaması ve istisnalar...",
+    "Kural 2: Artikel ve ek değişimleri...",
+    "Kural 3: Cümledeki ögelerin sıralaması..."
+  ],
+  "usage_notes": [
+    "İpucu 1: Türkçeyle karıştırılan noktalar...",
+    "İpucu 2: Günlük konuşma dili ile resmi yazım dili arasındaki fark..."
   ],
   "vocabulary": [
-    {{"german": "das Buch", "turkish": "kitap", "article": "das", "plural": "die Bücher"}}
+    {{"german": "das Buch", "turkish": "kitap", "article": "das", "plural": "die Bücher"}},
+    {{"german": "der Satz", "turkish": "cümle", "article": "der", "plural": "die Sätze"}}
   ],
   "examples": [
-    {{"german": "Örnek 1...", "turkish": "Çeviri 1..."}},
-    {{"german": "Örnek 2...", "turkish": "Çeviri 2..."}},
-    {{"german": "Örnek 3...", "turkish": "Çeviri 3..."}}
+    {{"german": "Ich habe ein Buch gelesen.", "turkish": "Bir kitap okudum."}},
+    {{"german": "Hast du den Brief geschrieben?", "turkish": "Mektubu yazdın mı?"}},
+    {{"german": "Er kommt nicht, weil er krank ist.", "turkish": "O gelemiyor çünkü hasta."}}
   ],
   "common_mistakes": [
-    "Konuya özel sık yapılan bir hata örneği (Lütfen aşağıdaki örneği kopyalama, konuya özgü üret!)",
-    "Yanlış: [Yanlış Kullanım] -> Doğru: [Doğru Kullanım]"
+    "Yanlış: Ich habe nach Hause gegangen. -> Doğru: Ich bin nach Hause gegangen. (Gehen yer değiştirme bildirdiği için 'sein' kullanılır.)",
+    "Yanlış: Er kann Deutsch sprechen gut. -> Doğru: Er kann gut Deutsch sprechen. (Mastar fiil cümlenin en sonuna gider.)"
   ],
   "mini_quiz": [
     {{
       "question": "Soru metni...",
-      "options": ["A) Seçenek 1", "B) Seçenek 2"],
+      "options": ["A) Seçenek 1", "B) Seçenek 2", "C) Seçenek 3"],
       "correct_answer": "A) Seçenek 1",
-      "explanation": "Neden A şıkkı olduğu açıklaması..."
+      "explanation": "Doğru cevabın detaylı açıklaması..."
     }}
   ]
 }}

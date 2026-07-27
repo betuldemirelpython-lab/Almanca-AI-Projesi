@@ -899,24 +899,32 @@
             <div class="glass-card">
                 <h2>Almanca - Türkçe Akıllı Sözlük & Çevirici</h2>
                 <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
-                    Almanca veya Türkçe sözcük / cümle yazın. Artikeller (der/die/das), çoğul halleri, okunuşları ve örnek cümleler ile birlikte öğrenin.
+                    Almanca veya Türkçe sözcük / cümle yazın. Artikeller (der/die/das), çoğul halleri, okunuşları ve sesli telaffuz ile birlikte öğrenin.
                 </p>
 
                 <div class="trans-box">
                     <div style="display: flex; flex-direction: column;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                             <label style="font-weight: 700; font-size: 0.9rem;">Girdi Metni</label>
-                            <select id="transDirection" class="select-input" style="padding: 0.25rem 0.5rem;">
-                                <option value="de-tr">Almanca ➔ Türkçe</option>
-                                <option value="tr-de">Türkçe ➔ Almanca</option>
-                            </select>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <button onclick="speakInputText()" class="audio-btn" style="font-size: 0.85rem;" title="Girdi Metnini Dinle">
+                                    <i class="fa-solid fa-volume-high"></i> Dinle
+                                </button>
+                                <select id="transDirection" class="select-input" style="padding: 0.25rem 0.5rem;">
+                                    <option value="de-tr">Almanca ➔ Türkçe</option>
+                                    <option value="tr-de">Türkçe ➔ Almanca</option>
+                                </select>
+                            </div>
                         </div>
                         <textarea id="transInput" class="form-input" rows="6" placeholder="Çevirmek istediğiniz Almanca veya Türkçe metni yazın..."></textarea>
                     </div>
 
                     <div style="display: flex; flex-direction: column;">
-                        <div style="margin-bottom: 0.5rem; display: flex; align-items: center; height: 34px;">
+                        <div style="margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; height: 34px;">
                             <label style="font-weight: 700; font-size: 0.9rem;">Çıktı Metni (Tam Çeviri)</label>
+                            <button onclick="speakOutputText()" class="audio-btn" style="color: var(--accent-emerald);" title="Çeviriyi Sesli Dinle">
+                                <i class="fa-solid fa-volume-high"></i> Dinle
+                            </button>
                         </div>
                         <div class="form-input" style="flex: 1; background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.3); overflow-y: auto;">
                             <p id="mainTranslationText" style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin: 0; line-height: 1.5;">Çeviri sonucu burada görünecek...</p>
@@ -928,25 +936,28 @@
                     <i class="fa-solid fa-language"></i> Metni Çevir & İncele
                 </button>
 
-                        <div id="dictCardResult" class="dict-card">
-                            <h3 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">SÖZLÜK KARTI & DİL BİLGİSİ</h3>
-                            <div id="dictContentEmpty" style="color: var(--text-muted); text-align: center; padding: 2rem 0;">
-                                <i class="fa-solid fa-book-open" style="font-size: 2.5rem; opacity: 0.4; margin-bottom: 0.5rem;"></i>
-                                <p>Çeviri sonucunu görmek için sol taraftan arama yapın.</p>
-                            </div>
-                            <div id="dictContentActive" style="display: none;">
-                                <div style="margin-bottom: 1rem;">
-                                    <span id="dictArticleBadge" class="article-badge article-das">das</span>
-                                    <span id="dictGermanWord" style="font-size: 1.4rem; font-weight: 800;">Wort</span>
-                                    <span id="dictPhonetic" style="color: var(--text-muted); margin-left: 0.5rem; font-style: italic;">[vɔrt]</span>
-                                </div>
-                                <p style="font-size: 1.1rem; color: var(--accent-emerald); font-weight: 700; margin-bottom: 0.75rem;" id="dictTurkishWord">Türkçe: Kelime</p>
-                                <p id="dictPlural" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;"><b>Çoğul:</b> die Wörter</p>
-                                
-                                <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--accent-primary); margin-bottom: 0.5rem;">Örnek Cümleler</h4>
-                                <div id="dictExamplesList" style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
-                            </div>
+                <div id="dictCardResult" class="dict-card">
+                    <h3 style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">SÖZLÜK KARTI & DİL BİLGİSİ</h3>
+                    <div id="dictContentEmpty" style="color: var(--text-muted); text-align: center; padding: 2rem 0;">
+                        <i class="fa-solid fa-book-open" style="font-size: 2.5rem; opacity: 0.4; margin-bottom: 0.5rem;"></i>
+                        <p>Çeviri sonucunu görmek için sol taraftan arama yapın.</p>
+                    </div>
+                    <div id="dictContentActive" style="display: none;">
+                        <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                            <span id="dictArticleBadge" class="article-badge article-das">das</span>
+                            <span id="dictGermanWord" style="font-size: 1.4rem; font-weight: 800;">Wort</span>
+                            <button id="btnSpeakDictWord" onclick="speakText(document.getElementById('dictGermanWord').innerText)" class="audio-btn" style="font-size: 1.1rem; color: var(--accent-primary);" title="Kelimeyi Dinle">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </button>
+                            <span id="dictPhonetic" style="color: var(--text-muted); font-style: italic;">[vɔrt]</span>
                         </div>
+                        <p style="font-size: 1.1rem; color: var(--accent-emerald); font-weight: 700; margin-bottom: 0.75rem;" id="dictTurkishWord">Türkçe: Kelime</p>
+                        <p id="dictPlural" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;"><b>Çoğul:</b> die Wörter</p>
+                        
+                        <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--accent-primary); margin-bottom: 0.5rem;">Örnek Cümleler & Sesli Dinleme</h4>
+                        <div id="dictExamplesList" style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -955,7 +966,7 @@
             <div class="glass-card">
                 <h2>Almanca Konu Anlatımı & Derin AI Analizi</h2>
                 <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
-                    Merak ettiğiniz herhangi bir Almanca konusunu yazın (örn: *Passiv, Konjunktiv II, Wechselpräpositionen, Nominalstil*). Yapay zeka konuyu özetlesin, kuralları ve örnekleri sunsun.
+                    Merak ettiğiniz herhangi bir Almanca konusunu yazın (örn: *Passiv, Konjunktiv II, Wechselpräpositionen, Nominalstil*). Yapay zeka konuyu tüm detayları, cümle formülleri, kuralları, püf noktaları ve test sorularıyla sunsun.
                 </p>
 
                 <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
@@ -981,25 +992,52 @@
                         </button>
                     </div>
 
-                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                        <h4 style="color: var(--accent-primary); margin-bottom: 0.5rem;"><i class="fa-solid fa-book"></i> Konu Özeti</h4>
-                        <p id="analysisSummaryText" style="line-height: 1.6; color: var(--text-main); font-size: 0.95rem;"></p>
+                    <!-- FORMULA STRUCTURE BANNER -->
+                    <div id="analysisFormulaBox" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1)); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--accent-primary); margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--accent-primary); margin-bottom: 0.5rem;"><i class="fa-solid fa-diagram-project"></i> Cümle Yapısı Şeması & Formül</h4>
+                        <div id="analysisFormulaText" style="font-family: monospace; font-size: 1.05rem; font-weight: 700; color: #60A5FA; background: var(--bg-secondary); padding: 0.75rem 1rem; border-radius: 8px; word-break: break-word;"></div>
                     </div>
 
-                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                        <h4 style="color: #3B82F6; margin-bottom: 0.75rem;"><i class="fa-solid fa-list-ul"></i> Örnek Cümleler</h4>
-                        <div id="analysisExamplesList" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                    <!-- DETAILED SUMMARY -->
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--accent-primary); margin-bottom: 0.75rem;"><i class="fa-solid fa-book-open"></i> Detaylı Konu Anlatımı & Mantığı</h4>
+                        <div id="analysisSummaryText" style="line-height: 1.7; color: var(--text-main); font-size: 0.95rem;"></div>
                     </div>
 
+                    <!-- RULES & USAGE NOTES GRID -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
                         <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
                             <h4 style="color: var(--accent-emerald); margin-bottom: 0.75rem;"><i class="fa-solid fa-check-double"></i> Ana Dilbilgisi Kuralları</h4>
-                            <ul id="analysisRulesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6;"></ul>
+                            <ul id="analysisRulesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; display: flex; flex-direction: column; gap: 0.5rem;"></ul>
                         </div>
                         <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px;">
-                            <h4 style="color: var(--accent-amber); margin-bottom: 0.75rem;"><i class="fa-solid fa-triangle-exclamation"></i> Sık Yapılan Hatalar</h4>
-                            <ul id="analysisMistakesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; color: var(--accent-rose);"></ul>
+                            <h4 style="color: #A78BFA; margin-bottom: 0.75rem;"><i class="fa-solid fa-lightbulb"></i> Kullanım İpuçları & Püf Noktaları</h4>
+                            <ul id="analysisNotesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; display: flex; flex-direction: column; gap: 0.5rem;"></ul>
                         </div>
+                    </div>
+
+                    <!-- VOCABULARY CARDS -->
+                    <div id="analysisVocabSection" style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--accent-secondary); margin-bottom: 0.75rem;"><i class="fa-solid fa-spell-check"></i> Konu Kelimeleri & Artikeller</h4>
+                        <div id="analysisVocabGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem;"></div>
+                    </div>
+
+                    <!-- EXAMPLES LIST WITH AUDIO -->
+                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h4 style="color: #3B82F6; margin-bottom: 0.75rem;"><i class="fa-solid fa-volume-high"></i> Sesli Örnek Cümleler</h4>
+                        <div id="analysisExamplesList" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                    </div>
+
+                    <!-- COMMON MISTAKES -->
+                    <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--accent-amber); margin-bottom: 0.75rem;"><i class="fa-solid fa-triangle-exclamation"></i> Sık Yapılan Hatalar & Doğruları</h4>
+                        <ul id="analysisMistakesList" style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.6; color: var(--accent-rose); display: flex; flex-direction: column; gap: 0.5rem;"></ul>
+                    </div>
+
+                    <!-- MINI QUIZ SECTION -->
+                    <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--accent-emerald); margin-bottom: 1rem;"><i class="fa-solid fa-circle-question"></i> Mini Quiz & Kendini Test Et</h4>
+                        <div id="analysisQuizArea" style="display: flex; flex-direction: column; gap: 1.25rem;"></div>
                     </div>
                 </div>
             </div>
@@ -1463,13 +1501,31 @@ ${currentStoryData.full_translation_tr}
         }
 
         // Web Speech API Pronunciation
-        function speakText(text) {
+        function speakText(text, lang = 'de-DE') {
+            if (!text || !text.trim()) return;
             if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'de-DE';
+                utterance.lang = lang;
                 utterance.rate = 0.9;
                 window.speechSynthesis.speak(utterance);
             }
+        }
+
+        function speakInputText() {
+            const txt = document.getElementById('transInput').value.trim();
+            if (!txt) return;
+            const dir = document.getElementById('transDirection').value;
+            const lang = dir === 'de-tr' ? 'de-DE' : 'tr-TR';
+            speakText(txt, lang);
+        }
+
+        function speakOutputText() {
+            const txt = document.getElementById('mainTranslationText').innerText.trim();
+            if (!txt || txt === 'Çeviri sonucu burada görünecek...') return;
+            const dir = document.getElementById('transDirection').value;
+            const lang = dir === 'de-tr' ? 'tr-TR' : 'de-DE';
+            speakText(txt, lang);
         }
 
         // --- FİİL ÇEKİM MATRİSİ ---
@@ -1636,10 +1692,16 @@ ${currentStoryData.full_translation_tr}
             const exList = document.getElementById('dictExamplesList');
             exList.innerHTML = '';
             (entry.examples || []).forEach(ex => {
+                const safeDe = (ex.german || '').replace(/'/g, "\\'");
                 exList.innerHTML += `
-                    <div style="background: rgba(255,255,255,0.03); padding: 0.5rem; border-radius: 8px;">
-                        <p style="font-weight: 600;">${ex.german}</p>
-                        <p style="color: var(--text-muted); font-size: 0.8rem;">${ex.turkish}</p>
+                    <div style="background: rgba(255,255,255,0.03); padding: 0.6rem 0.85rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+                        <div>
+                            <p style="font-weight: 600; margin: 0; font-size: 0.95rem;">${ex.german}</p>
+                            <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0.2rem 0 0;">${ex.turkish}</p>
+                        </div>
+                        <button onclick="speakText('${safeDe}')" class="audio-btn" style="flex-shrink: 0;" title="Cümleyi Dinle">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
                     </div>
                 `;
             });
@@ -1676,27 +1738,154 @@ ${currentStoryData.full_translation_tr}
             currentActiveAnalysisData = data;
             document.getElementById('topicAnalysisResult').style.display = 'block';
             document.getElementById('analysisTitle').innerText = `${data.level} - ${data.topic}`;
-            document.getElementById('analysisSummaryText').innerText = data.summary_tr;
 
+            // Formula Structure
+            const formulaBox = document.getElementById('analysisFormulaBox');
+            const formulaText = document.getElementById('analysisFormulaText');
+            if (data.formula_structure) {
+                formulaBox.style.display = 'block';
+                formulaText.innerText = data.formula_structure;
+            } else {
+                formulaBox.style.display = 'none';
+            }
+
+            // Multi-paragraph Summary
+            const summaryDiv = document.getElementById('analysisSummaryText');
+            summaryDiv.innerHTML = (data.summary_tr || '')
+                .split('\n\n')
+                .map(p => `<p style="margin-bottom: 0.8rem;">${p.replace(/\n/g, '<br>')}</p>`)
+                .join('');
+
+            // Key Grammar Rules
             const rulesUl = document.getElementById('analysisRulesList');
             rulesUl.innerHTML = '';
-            (data.key_grammar_rules || []).forEach(r => rulesUl.innerHTML += `<li>${r}</li>`);
+            (data.key_grammar_rules || []).forEach(r => {
+                rulesUl.innerHTML += `<li style="margin-bottom: 0.4rem;">${r}</li>`;
+            });
 
-            const mistakesUl = document.getElementById('analysisMistakesList');
-            mistakesUl.innerHTML = '';
-            (data.common_mistakes || []).forEach(m => mistakesUl.innerHTML += `<li>${m}</li>`);
+            // Usage Notes
+            const notesUl = document.getElementById('analysisNotesList');
+            notesUl.innerHTML = '';
+            (data.usage_notes || []).forEach(n => {
+                notesUl.innerHTML += `<li style="margin-bottom: 0.4rem;">${n}</li>`;
+            });
 
+            // Vocabulary Grid
+            const vocabSec = document.getElementById('analysisVocabSection');
+            const vocabGrid = document.getElementById('analysisVocabGrid');
+            if (data.vocabulary && data.vocabulary.length > 0) {
+                vocabSec.style.display = 'block';
+                vocabGrid.innerHTML = '';
+                data.vocabulary.forEach(v => {
+                    const artClass = v.article ? `article-${v.article.toLowerCase()}` : '';
+                    const safeGerm = (v.german || '').replace(/'/g, "\\'");
+                    vocabGrid.innerHTML += `
+                        <div style="background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 10px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                ${v.article ? `<span class="article-badge ${artClass}">${v.article}</span>` : ''}
+                                <span style="font-weight: 700; font-size: 0.95rem;">${v.german}</span>
+                                <span onclick="speakText('${safeGerm}')" class="audio-btn" style="cursor: pointer; margin-left: 0.3rem;" title="Dinle"><i class="fa-solid fa-volume-high"></i></span>
+                                <div style="font-size: 0.8rem; color: var(--accent-emerald); margin-top: 0.2rem;">${v.turkish}</div>
+                                ${v.plural ? `<div style="font-size: 0.75rem; color: var(--text-muted);">Çoğul: ${v.plural}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                vocabSec.style.display = 'none';
+            }
+
+            // Sentence Examples with Audio
             const examplesList = document.getElementById('analysisExamplesList');
             if (examplesList) {
                 examplesList.innerHTML = '';
                 (data.examples || []).forEach(ex => {
+                    const safeDe = (ex.german || '').replace(/'/g, "\\'");
                     examplesList.innerHTML += `
-                        <div style="background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 8px; border-left: 3px solid var(--accent-primary);">
-                            <div style="font-weight: 600; font-size: 1rem;">${ex.german}</div>
-                            <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">${ex.turkish}</div>
+                        <div style="background: rgba(255,255,255,0.03); padding: 0.85rem 1rem; border-radius: 10px; border-left: 4px solid var(--accent-primary); display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 1.05rem; color: var(--text-main);">${ex.german}</div>
+                                <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">${ex.turkish}</div>
+                            </div>
+                            <button onclick="speakText('${safeDe}')" class="btn-audio-control" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" title="Dinle">
+                                <i class="fa-solid fa-volume-high"></i> Dinle
+                            </button>
                         </div>
                     `;
                 });
+            }
+
+            // Common Mistakes
+            const mistakesUl = document.getElementById('analysisMistakesList');
+            mistakesUl.innerHTML = '';
+            (data.common_mistakes || []).forEach(m => {
+                mistakesUl.innerHTML += `<li style="margin-bottom: 0.5rem; background: rgba(244,63,94,0.05); padding: 0.6rem; border-radius: 8px;">${m}</li>`;
+            });
+
+            // Mini Quiz Area
+            const quizArea = document.getElementById('analysisQuizArea');
+            quizArea.innerHTML = '';
+            if (data.mini_quiz && data.mini_quiz.length > 0) {
+                data.mini_quiz.forEach((q, qIdx) => {
+                    const qBox = document.createElement('div');
+                    qBox.style.cssText = 'background: rgba(255,255,255,0.02); padding: 1.25rem; border-radius: 10px; border: 1px solid var(--border-color);';
+                    
+                    let optionsHTML = '';
+                    (q.options || []).forEach((opt) => {
+                        const safeOpt = opt.replace(/"/g, '&quot;');
+                        optionsHTML += `
+                            <button class="quiz-option-btn" data-qindex="${qIdx}" data-opt="${safeOpt}" style="text-align: left; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-main); padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s ease;">
+                                ${opt}
+                            </button>
+                        `;
+                    });
+
+                    qBox.innerHTML = `
+                        <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem; color: var(--text-main);">
+                            <span style="color: var(--accent-emerald);">Soru ${qIdx + 1}:</span> ${q.question}
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.8rem;">
+                            ${optionsHTML}
+                        </div>
+                        <div id="quizExp_${qIdx}" style="display: none; padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; line-height: 1.5;"></div>
+                    `;
+                    quizArea.appendChild(qBox);
+                });
+
+                // Attach Quiz Option Event Listeners
+                quizArea.querySelectorAll('.quiz-option-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const qIdx = parseInt(btn.getAttribute('data-qindex'));
+                        const selectedOpt = btn.getAttribute('data-opt');
+                        const quizData = data.mini_quiz[qIdx];
+                        const expDiv = document.getElementById(`quizExp_${qIdx}`);
+                        
+                        const isCorrect = selectedOpt.trim().startsWith(quizData.correct_answer.trim().substring(0, 2)) || 
+                                          selectedOpt.trim() === quizData.correct_answer.trim();
+
+                        if (isCorrect) {
+                            btn.style.background = 'rgba(16, 185, 129, 0.2)';
+                            btn.style.borderColor = 'var(--accent-emerald)';
+                            btn.style.color = 'var(--accent-emerald)';
+                            expDiv.style.display = 'block';
+                            expDiv.style.background = 'rgba(16, 185, 129, 0.1)';
+                            expDiv.style.border = '1px solid var(--accent-emerald)';
+                            expDiv.style.color = 'var(--accent-emerald)';
+                            expDiv.innerHTML = `<b>✅ Doğru Cevap!</b> ${quizData.explanation || ''}`;
+                        } else {
+                            btn.style.background = 'rgba(244, 63, 94, 0.2)';
+                            btn.style.borderColor = 'var(--accent-rose)';
+                            btn.style.color = 'var(--accent-rose)';
+                            expDiv.style.display = 'block';
+                            expDiv.style.background = 'rgba(244, 63, 94, 0.1)';
+                            expDiv.style.border = '1px solid var(--accent-rose)';
+                            expDiv.style.color = 'var(--accent-rose)';
+                            expDiv.innerHTML = `<b>❌ Yanlış Cevap.</b> Doğru Şık: <b>${quizData.correct_answer}</b><br>${quizData.explanation || ''}`;
+                        }
+                    });
+                });
+            } else {
+                quizArea.innerHTML = `<p style="color: var(--text-muted); font-size: 0.85rem;">Bu konu için henüz quiz sorusu üretilmedi.</p>`;
             }
         }
 
@@ -1704,14 +1893,35 @@ ${currentStoryData.full_translation_tr}
             renderTopicAnalysis({
                 topic: topic,
                 level: level,
-                summary_tr: `⚠️ DİKKAT: Şu anda API Key girilmediği için geçici (Demo) veriler görüyorsunuz.\n\n'${topic}' konusu (${level} seviyesi) normalde yapay zeka tarafından burada çok detaylı bir şekilde açıklanacaktır. Gerçek analiz sonuçlarını görmek için lütfen API Key'lerinizi .env dosyasına (yerelde) veya Vercel paneline ekleyin.`,
+                summary_tr: `'${topic}' konusu (${level} seviyesi), Almancanın temel yapı taşlarından biridir. Bu konuda isim çekimleri, fiil pozisyonları ve artikel kuralları büyük önem taşır.\n\nSistem şu an demo modunda çalışmaktadır. Yapay zeka ile tam analiz için lütfen Vercel veya .env dosyasından API anahtarınızı girin.`,
+                formula_structure: "[Özne] + [Fiil (2. Sıra)] + [Nesne] + ... + [İkinci Fiil (Sonda)]",
                 key_grammar_rules: [
-                    "API Key eksik olduğu için kurallar listelenemiyor.",
-                    "Lütfen geçerli bir Gemini veya Groq anahtarı girin."
+                    "Ana cümlelerde fiil 2. pozisyondadır.",
+                    "Artikeller ismin haline (Nominativ, Akkusativ, Dativ) göre değişir.",
+                    "Modal fiil cümlenin 2. sırasındayken esas fiil mastar (Infinitiv) halde en sona gider."
+                ],
+                usage_notes: [
+                    "İpucu: Almanca öğrenirken isimleri mutlaka artikelleriyle ezberleyin.",
+                    "Türkçeden farklı olarak fiil ana cümlede en sonda değil, 2. sıradadır."
+                ],
+                vocabulary: [
+                    { german: "das Buch", turkish: "kitap", article: "das", plural: "die Bücher" },
+                    { german: "die Sprache", turkish: "dil", article: "die", plural: "die Sprachen" }
+                ],
+                examples: [
+                    { german: "Ich lerne jeden Tag Deutsch.", turkish: "Her gün Almanca öğreniyorum." },
+                    { german: "Wir trinken heute Kaffee.", turkish: "Bugün kahve içiyoruz." }
                 ],
                 common_mistakes: [
-                    "Demo Hata: API Key olmadan yapay zeka analizi yapılamaz.",
-                    "Lütfen .env veya Vercel'den anahtarlarınızı yapılandırın."
+                    "Yanlış: Ich nach Hause gehe. -> Doğru: Ich gehe nach Hause."
+                ],
+                mini_quiz: [
+                    {
+                        question: "Almanca düz ana cümlede fiil kaçıncı sırada yer almalıdır?",
+                        options: ["A) 1. sırada", "B) 2. sırada", "C) En sonda"],
+                        correct_answer: "B) 2. sırada",
+                        explanation: "Almanca ana cümlelerde fiil her zaman 2. pozisyondadır."
+                    }
                 ]
             });
         }
